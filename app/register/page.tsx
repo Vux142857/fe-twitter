@@ -3,31 +3,32 @@
 'use client'
 import Image from 'next/image'
 import daisyImg from "@/public/daisy-flowers-blue-3840x2160-12883.jpeg"
+import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
-
+import { RegisterReqBody } from '@/services/auth.service'
 const Register = () => {
     const router = useRouter()
+    const [dob, setDob] = useState(new Date())
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         username: '',
         password: '',
         confirmPassword: '',
-        profileImage: null,
+        date_of_birth: dob
     })
     const [matchPassword, setMatchPassword] = useState(true)
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        const { name, value, files } = e.target;
+        const { name, value } = e.target;
         setFormData(prevData => ({
             ...prevData,
             [name]: value,
-            [name]: name === 'profileImage' ? (files && files[0]) : value
         }));
     };
     useEffect(() => {
@@ -37,15 +38,19 @@ const Register = () => {
     const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         try {
-            const registerForm = new FormData();
-            Object.keys(formData).forEach(key => registerForm.append(key, formData[key]))
-
-            const response = await fetch('/api/register', {
-                method: 'POST',
-                body: registerForm
+            const res = await signIn('Sign Up', {
+                name: formData,
+                email: formData.email,
+                username: formData.username,
+                password: formData.password,
+                confirm_password: formData.confirmPassword,
+                date_of_birth: dob.toISOString(),
+                redirect: false,
             })
-            if (response.ok) {
-                router.push('/login')
+            if (res?.error) {
+                setError(res.error)
+            } else {
+                router.push('/')
             }
         } catch (error) {
             console.log(error)
@@ -95,7 +100,7 @@ const Register = () => {
                         <div className='form-control items-center'>
                             <label htmlFor="DatePicker" className="mr-3 text-2xl text-white">Date of birth</label>
                             <DatePicker selected={dob} onChange={(date) => setDob(date || dob)}
-                                className="p-3 text-white transition bg-black border-2 rounded-md outline-none w-fulltext-lg border-neutral-800 focus:border-sky-500 focus:border-2 disabled:bg-neutral-900 disabled:opacity-70 disabled:cursor-not-allowed" />
+                                className="p-3 text-white transition bg-primary-content border-2 rounded-md outline-none w-fulltext-lg border-neutral-800 focus:border-secondary focus:border-2 disabled:bg-neutral-900 disabled:opacity-70 disabled:cursor-not-allowed" />
                         </div>
                         <div className='form-control'>
                             <label className="label">
@@ -107,12 +112,12 @@ const Register = () => {
                         <div className="form-control">
                             <button type='submit' className="btn btn-primary" disabled={!matchPassword} >Register</button>
                         </div>
-                        <div className="form-control mt-2">
+                        {/* <div className="form-control mt-2">
                             <button className="btn" onClick={loginWithGoogle}>
                                 Login with Google
                                 <FcGoogle className='ml-2' />
                             </button>
-                        </div>
+                        </div> */}
                     </form>
                 </div>
             </div>

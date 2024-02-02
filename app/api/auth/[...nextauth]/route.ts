@@ -66,7 +66,6 @@ const handler = NextAuth({
               name,
               date_of_birth,
               username } = credentials as unknown as RegisterReqBody;
-            console.log('Check credentials', credentials)
             const { result, message } = await userServices.register({
               email,
               password,
