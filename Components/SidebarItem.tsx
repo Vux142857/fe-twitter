@@ -16,7 +16,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   onClick,
 }) => {
   const router = useRouter()
-  
+
   const handleClick = useCallback(() => {
     if (onClick) {
       return onClick()
@@ -25,15 +25,15 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       router.push(href)
     }
   }, [router, onClick, href])
-  
+
   return (
     <div onClick={handleClick} className="flex flex-row items-center">
-      <div className="relative flex items-center justify-center p-4 rounded-full cursor-pointer h-14 w-14 hover:bg-slate-300 hover:bg-opacity-10 lg:hidden">
-        <Icon size={28} color="white" />
+      <div className="relative flex items-center justify-center p-4 rounded-full cursor-pointer h-14 w-14 hover:bg-base-100 lg:hidden">
+        <Icon size={28} color="primary" />
       </div>
-      <div className="relative items-center hidden gap-4 p-4 rounded-full cursor-pointer lg:flex hover:bg-slate-300 hover:bg-opacity-10">
-        <Icon size={24} color="white" />
-        <p className="hidden text-xl text-white lg:block">{label}</p>
+      <div className="relative items-center hidden gap-4 p-4 rounded-full cursor-pointer lg:flex hover:bg-base-100">
+        <Icon size={24} color="primary" />
+        <p className="hidden text-xl text-primary-content lg:block">{label}</p>
       </div>
     </div>
   );

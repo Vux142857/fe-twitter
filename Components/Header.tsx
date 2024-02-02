@@ -20,12 +20,12 @@ const Header: React.FC<HeaderProps> = ({ label, showBackArrow }) => {
                     showBackArrow && (
                         < BiArrowBack
                             onClick={handleBack}
-                            color="white"
+                            color="secondary"
                             size={20}
                             className="transition cursor-pointer hover:opacity-70"
                         />)
                 }
-                <h1 className="text-xl font-semibold text-white">{label}</h1>
+                <h1 className="text-xl font-semibold text-primary-content">{label}</h1>
             </div>
         </div>
     );

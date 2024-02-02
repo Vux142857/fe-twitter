@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  @apply: h-full bg-black
-}
-
 .typing-effect-container {
   font-family: 'Dancing Script', cursive;
   /* Chọn font-family tùy chọn */
@@ -34,5 +30,5 @@
 }
 
 body {
-  @apply: h-full bg-black
+  @apply: h-full
 }
