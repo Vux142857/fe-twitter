@@ -1,0 +1,20 @@
+.typing-effect-container {
+    font-family: 'Dancing Script', cursive; /* Chọn font-family tùy chọn */
+    font-size: 24px; /* Chọn kích thước chữ tùy chọn */
+    padding: 20px; /* Chọn padding tùy chọn */
+    border: 1px solid #ccc; /* Chọn border tùy chọn */
+    display: inline-block; /* Hiển thị inline-block để chỉ chiếm không gian cần thiết */
+  }
+  
+  /* Hiệu ứng nhấp nháy của ký tự cuối cùng */
+  .typing-effect-container span::after {
+    content: '|'; /* Hiển thị ký tự nhấp nháy (có thể là dấu gạch đứng hoặc ký tự khác) */
+    animation: blink-caret 0.75s infinite alternate; /* Hiệu ứng nhấp nháy */
+  }
+  
+  @keyframes blink-caret {
+    to {
+      opacity: 0;
+    }
+  }
+  

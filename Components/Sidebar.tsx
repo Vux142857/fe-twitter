@@ -35,7 +35,7 @@ const Sidebar = () => {
           {items.map((item) => (
             <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
           ))}
-          {/* {session && session.user && session.user.id && <SidebarItem onClick={() => signOut({ redirect: false })} label="Logout" icon={BiLogOut} />} */}
+          {session && session.user && session.user.id && <SidebarItem onClick={() => signOut({ redirect: false })} label="Logout" icon={BiLogOut} />}
           <SidebarTweetButton />
         </div>
       </div>
