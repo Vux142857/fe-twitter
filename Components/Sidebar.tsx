@@ -9,7 +9,7 @@ import { signOut, useSession } from "next-auth/react";
 
 const Sidebar = () => {
   const { data: session } = useSession();
-
+  console.log('session', session);
   const items = [
     {
       label: "Home",
@@ -35,7 +35,7 @@ const Sidebar = () => {
           {items.map((item) => (
             <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
           ))}
-          {session && session.user && session.user.id && <SidebarItem onClick={() => signOut({ redirect: false })} label="Logout" icon={BiLogOut} />}
+          {session && session.user && <SidebarItem onClick={() => signOut({ redirect: false })} label="Logout" icon={BiLogOut} />}
           <SidebarTweetButton />
         </div>
       </div>

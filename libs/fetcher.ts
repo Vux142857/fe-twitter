@@ -1,9 +1,23 @@
-import axios from 'axios';
+import Axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
+
+const instance = Axios.create(); 
+const axios = setupCache(instance);
 
 class Fetcher {
+    private accessToken: string
+    constructor() {
+        this.accessToken = ''
+    }
     get(url: string) {
         return axios
-            .get(url, { validateStatus: filterStatus })
+            .get(url, {
+                validateStatus: filterStatus,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + this.accessToken
+                }
+            })
             .then((res) => res.data)
             .catch(filterError);
     }
@@ -12,6 +26,12 @@ class Fetcher {
             .post(url, data, { validateStatus: filterStatus })
             .then((res) => res.data)
             .catch(filterError);
+    }
+    setAccessToken(accessToken: string) {
+        this.accessToken = accessToken
+    }
+    getAccessToken() {
+        return this.accessToken
     }
 }
 

@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: false,
   env: {
     customKey: "my-value",
     HOST: "http://localhost:3000",

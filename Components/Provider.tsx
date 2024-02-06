@@ -8,7 +8,9 @@ interface ProviderProps {
 const Provider: React.FC<ProviderProps> = ({ children, session }: any) => {
     return (
         <>
-            <SessionProvider session={session}>{children}</SessionProvider>
+            <SessionProvider session={session} refetchInterval={60 * 15}>
+                {children}
+            </SessionProvider>
         </>
     )
 }
