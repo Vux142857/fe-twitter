@@ -1,31 +1,47 @@
-// /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import fetcher from "@/libs/fetcher"; // Import the Fetcher class
+import Layout from "@/Components/Layout/Layout";
+import { userServices } from "@/services/user.services";
+import UserView from "@/Components/User/UserView";
 
 const MyProfile = () => {
     const { data: session } = useSession();
-    const [profile, setProfile] = useState(null);
+    const [profile, setProfile] = useState({
+        avatar: '',
+        cover_photo: '',
+        username: '',
+        email: '',
+        name: '',
+        bio: '',
+        website: '',
+        location: '',
+        date_of_birth: '',
+        followed: 0,
+        following: 0
+    });
+    const [isCurrentUser, setIsCurrentUser] = useState(false);
     const accessToken = session?.user.accessToken;
 
     useEffect(() => {
-        fetcher.setAccessToken(accessToken as string);
         const fetchData = async () => {
-            const data = await fetcher.get('http://localhost:3000/user/me');
-            setProfile(data)
+            userServices.setAccessToken(accessToken as string);
+            const res = await userServices.getMe()
+            const data = res?.data;
+            const { user } = data;
+            if (user) {
+                setProfile(user);
+                setIsCurrentUser(true);
+            }
         }
-        fetchData().catch((e) => {
-            // handle the error as needed
-            console.error('An error occurred while fetching the data: ', e)
-        })
-    }, [profile])
+        fetchData()
+    }, [accessToken]);
 
-    // Render profile data
     return (
-        <>
-            <p>{profile ? JSON.stringify(profile) : 'Hello world'}</p>
-        </>
+        <Layout labelHeader="Profile">
+            <UserView user={profile} isCurrentUser />
+        </Layout>
     );
 }
 

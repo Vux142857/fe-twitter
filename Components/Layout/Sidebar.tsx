@@ -23,7 +23,7 @@ const Sidebar = () => {
     },
     {
       label: "Profile",
-      href: "/user",
+      href: "/me",
       icon: FaUser,
     },
   ];

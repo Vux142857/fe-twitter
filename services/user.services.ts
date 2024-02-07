@@ -16,6 +16,12 @@ export interface LoginReqBody {
 }
 
 class UserServices {
+
+    private accessToken: string
+
+    constructor() {
+        this.accessToken = ''
+    }
     async register(payload: RegisterReqBody) {
         return await fetcher.post(`${HOST}/user/register`, payload)
     }
@@ -25,12 +31,25 @@ class UserServices {
     }
 
     async getUserProfile(username: string) {
-        const res = await fetcher.get(`${HOST}/user/${username}`)
+        return await fetcher.get(`${HOST}/user/${username}`)
     }
 
     async getMe() {
-        const res = await fetcher.get(`${HOST}/user/me`)
+        return await fetcher.getWithAuth(`${HOST}/user/me`, this.accessToken)
     }
+
+    setAccessToken(accessToken: string) {
+        this.accessToken = accessToken
+    }
+    
+    // Use for test
+    getAccessToken() {
+        return this.accessToken
+    }
+
+    // async editProfile(username: string, payload: any) {
+    //     return await fetcher.put(`${HOST}/user/${username}`, payload)
+    // }
 }
 
 export const userServices = new UserServices()
