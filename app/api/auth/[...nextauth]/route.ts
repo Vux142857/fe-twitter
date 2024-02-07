@@ -1,5 +1,5 @@
 import { verifyToken } from "@/libs/jwt"
-import { userServices, LoginReqBody, RegisterReqBody } from "@/services/user.services"
+import userServices, { LoginReqBody, RegisterReqBody } from "@/services/user.services"
 import NextAuth from "next-auth/next"
 import CredentialsProvider from "next-auth/providers/credentials"
 const handler = NextAuth({
@@ -128,7 +128,7 @@ const handler = NextAuth({
       }
       return session
     }
-  },
+  }
 })
 
 function toISODateString(numericDate: number) {

@@ -31,7 +31,17 @@ class Fetcher {
             .then((res) => res.data)
             .catch(filterError);
     }
-
+    patch(url: string, data: any, accessToken: string) {
+        return axios
+            .patch(url, data, {
+                validateStatus: filterStatus,
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            })
+            .then((res) => res.data)
+            .catch(filterError);
+    }
 }
 
 // Utils

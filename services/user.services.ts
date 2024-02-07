@@ -1,3 +1,4 @@
+import { EditBody } from "@/constants/dataBody"
 import fetcher from "@/libs/fetcher"
 
 const SERVER = process.env.SERVER as string
@@ -38,18 +39,19 @@ class UserServices {
         return await fetcher.getWithAuth(`${SERVER}/user/me`, this.accessToken)
     }
 
+    async editProfile(payload: EditBody) {
+        return await fetcher.patch(`${SERVER}/user/me`, payload, this.accessToken)
+    }
+
     setAccessToken(accessToken: string) {
         this.accessToken = accessToken
     }
-    
+
     // Use for test
     getAccessToken() {
         return this.accessToken
     }
-
-    // async editProfile(username: string, payload: any) {
-    //     return await fetcher.put(`${SERVER}/user/${username}`, payload)
-    // }
 }
 
-export const userServices = new UserServices()
+const userServices = new UserServices()
+export default userServices

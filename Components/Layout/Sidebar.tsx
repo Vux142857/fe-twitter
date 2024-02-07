@@ -1,23 +1,26 @@
 'use client'
 import { BsHouseFill, BsBellFill } from "react-icons/bs";
-import { BiLogOut } from 'react-icons/bi'
+import { BiLogIn, BiLogOut, BiRegistered } from 'react-icons/bi'
 import { FaUser } from "react-icons/fa";
 import SidebarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
 import SidebarTweetButton from "./SidebarTweetButton";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
-  const { data: session } = useSession();
+  const router = useRouter()
+  const { data: session, status } = useSession();
+  console.log(session)
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
-    const user = session?.user
-    if (user) {
+    if (status === "authenticated") {
+      console.log(status)
       setIsLogin(true)
     }
 
-  }, [session])
+  }, [status, router])
 
   const handleLogout = () => {
     signOut({ redirect: false })
@@ -45,11 +48,15 @@ const Sidebar = () => {
       <div className="flex flex-col items-center">
         <div className="space-y-2 lg:w-[180px]">
           <SidebarLogo />
-          {items.map((item) => (
+          {isLogin ? items.map((item) => (
             <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
-          ))}
+          )) :
+            <>
+              <SidebarItem onClick={() => { router.push('/login') }} label="Login" icon={BiLogIn} />
+            </>
+          }
           {isLogin && <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />}
-          <SidebarTweetButton />
+          <SidebarTweetButton isLogin={isLogin} />
         </div>
       </div>
     </div>

@@ -1,50 +1,66 @@
-import axios from "axios";
+'use client'
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-
 import useEditModal from "@/hooks/useEditModal";
-
 import Input from "../Input";
 import Modal from "../Modals/Modal";
 import ImageUpload from "../ImageUpload";
-import { UserData } from "@/constants/dataBody";
+import { EditBody, UserData } from "@/constants/dataBody";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import userServices from "@/services/user.services";
 
 interface EditModalProps {
     user: UserData;
+    accessToken: string;
 }
-const EditModal: React.FC<EditModalProps> = ({ user }) => {
+const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
     const editModal = useEditModal();
     const [profileImage, setProfileImage] = useState('');
     const [coverImage, setCoverImage] = useState('');
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [bio, setBio] = useState('');
-
+    const [dob, setDob] = useState(new Date());
+    const [location, setLocation] = useState('');
+    const [website, setWebsite] = useState('');
     useEffect(() => {
         setProfileImage(user?.avatar)
         setCoverImage(user?.cover_photo)
         setName(user?.name)
         setUsername(user?.username)
         setBio(user?.bio)
-    }, [user?.name, user?.username, user?.bio, user?.avatar, user?.cover_photo]);
+        setDob(new Date(user?.date_of_birth))
+        setLocation(user?.location)
+        setWebsite(user?.website)
+    }, [user?.name, user?.username, user?.bio, user?.avatar, user?.cover_photo, user?.date_of_birth, user?.location, user?.website]);
 
     const [isLoading, setIsLoading] = useState(false);
 
     const onSubmit = useCallback(async () => {
         try {
             setIsLoading(true);
-
-            await axios.patch('/api/edit', { name, username, bio, profileImage, coverImage });
-
+            const editBody: EditBody = {
+                name,
+                username,
+                bio,
+                location,
+                website,
+                avatar: profileImage,
+                cover_photo: coverImage,
+                date_of_birth: dob.toISOString()
+            }
+            userServices.setAccessToken(accessToken);
+            const res = await userServices.editProfile(editBody);
+            console.log(res);
             toast.success('Updated');
-
             editModal.onClose();
         } catch (error) {
             toast.error('Something went wrong');
         } finally {
             setIsLoading(false);
         }
-    }, [editModal, name, username, bio, profileImage, coverImage]);
+    }, [name, username, bio, location, website, profileImage, coverImage, dob, accessToken, editModal]);
 
     const bodyContent = (
         <div className="flex flex-col gap-4">
@@ -68,6 +84,20 @@ const EditModal: React.FC<EditModalProps> = ({ user }) => {
                 value={bio}
                 disabled={isLoading}
             />
+            <Input
+                placeholder="Location"
+                onChange={(e) => setLocation(e.target.value)}
+                value={location}
+                disabled={isLoading}
+            />
+            <Input
+                placeholder="Website"
+                onChange={(e) => setWebsite(e.target.value)}
+                value={website}
+                disabled={isLoading}
+            />
+            <DatePicker selected={dob} onChange={(date) => setDob(date || dob)}
+                className="p-3 text-white transition bg-primary-content border-2 rounded-md outline-none w-fulltext-lg border-neutral-800 focus:border-secondary focus:border-2 disabled:bg-neutral-900 disabled:opacity-70 disabled:cursor-not-allowed" />
         </div>
     )
 

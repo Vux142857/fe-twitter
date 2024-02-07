@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
-import { RegisterReqBody } from '@/services/auth.service'
 const Register = () => {
     const router = useRouter()
     const [dob, setDob] = useState(new Date())

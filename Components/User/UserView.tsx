@@ -6,9 +6,10 @@ import EditModal from "../Modals/EditModal";
 interface UserViewProps {
     user: UserData;
     isCurrentUser: boolean;
+    accessToken?: string;
 }
 
-const UserView: React.FC<UserViewProps> = ({ user, isCurrentUser }) => {
+const UserView: React.FC<UserViewProps> = ({ user, isCurrentUser, accessToken }) => {
     return (
         <>
             <Toaster />
@@ -27,7 +28,7 @@ const UserView: React.FC<UserViewProps> = ({ user, isCurrentUser }) => {
                 following={0}
                 isCurrentUser={isCurrentUser}
             />
-            <EditModal user={user} />
+            {accessToken && <EditModal user={user} accessToken={accessToken} />}
         </>
     );
 }

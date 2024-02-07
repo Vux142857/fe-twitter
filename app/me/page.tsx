@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Layout from "@/Components/Layout/Layout";
-import { userServices } from "@/services/user.services";
+import userServices from "@/services/user.services";
 import UserView from "@/Components/User/UserView";
 
 const MyProfile = () => {
@@ -40,7 +40,11 @@ const MyProfile = () => {
 
     return (
         <Layout labelHeader="Profile">
-            <UserView user={profile} isCurrentUser />
+            <UserView
+                user={profile}
+                isCurrentUser={isCurrentUser}
+                accessToken={accessToken}
+            />
         </Layout>
     );
 }
