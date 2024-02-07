@@ -6,10 +6,23 @@ import SidebarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
 import SidebarTweetButton from "./SidebarTweetButton";
 import { signOut, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 const Sidebar = () => {
   const { data: session } = useSession();
-  console.log('session', session);
+  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    const user = session?.user
+    if (user) {
+      setIsLogin(true)
+    }
+
+  }, [session])
+
+  const handleLogout = () => {
+    signOut({ redirect: false })
+    setIsLogin(false)
+  }
   const items = [
     {
       label: "Home",
@@ -35,7 +48,7 @@ const Sidebar = () => {
           {items.map((item) => (
             <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
           ))}
-          {session && session.user && <SidebarItem onClick={() => signOut({ redirect: false })} label="Logout" icon={BiLogOut} />}
+          {isLogin && <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />}
           <SidebarTweetButton />
         </div>
       </div>
