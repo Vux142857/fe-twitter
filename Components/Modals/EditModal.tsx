@@ -4,13 +4,13 @@ import { toast } from "react-hot-toast";
 import useEditModal from "@/hooks/useEditModal";
 import Input from "../Input";
 import Modal from "../Modals/Modal";
-import ImageUpload from "../ImageUpload";
 import { EditBody, UserData } from "@/constants/dataBody";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import userServices from "@/services/user.services";
 import mediaServices from "@/services/media.services";
 import { IoIosImages } from "react-icons/io";
+import { BiTrash } from "react-icons/bi";
 
 interface EditModalProps {
     user: UserData;
@@ -69,8 +69,8 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
                 cover_photo: coverUrl,
                 date_of_birth: dob.toISOString()
             }
-            console.log(editBody)
-            const res = await userServices.editProfile(editBody);
+
+            await userServices.editProfile(editBody);
             toast.success('Updated');
             editModal.onClose();
         } catch (error) {
@@ -81,22 +81,66 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
         }
     }, [name, username, bio, location, website, profileImage, coverImage, dob, accessToken, editModal]);
 
+    const handleRemoveImage = (name: string) => {
+        if (name === 'profile') {
+            setProfileImage(null);
+        }
+        if (name === 'coverImage') {
+            setCoverImage(null);
+        }
+    }
+
     const bodyContent = (
         <div className="flex flex-col gap-4">
-            {/* <ImageUpload value={profileImage} disabled={isLoading} onChange={(image) => setProfileImage(image)} label="Upload profile image" /> */}
-            <input
-                type="file"
-                name="profileImage"
-                accept='image/*' onChange={(e) => {
-                    setProfileImage(e.target.files?.[0] || null);
-                }}
-            />
-            <input
-                type="file"
-                name="coverImage"
-                accept='image/*' onChange={(e) => setCoverImage(e.target.files?.[0] || null)}
-            />
-            {/* <ImageUpload value={coverImage} disabled={isLoading} onChange={(image) => setCoverImage(image)} label="Upload cover image" /> */}
+            {!profileImage && (
+                <>
+                    <div className="label">
+                        <span className="text-primary-content">CHOOSE PROFILE IMAGE:</span>
+                    </div>
+                    <input
+                        type="file"
+                        name="profileImage"
+                        className="file-input file-input-bordered file-input-secondary w-full max-w-xs"
+                        accept='image/*' onChange={(e) => {
+                            setProfileImage(e.target.files?.[0] || null);
+                        }}
+                    />
+                </>
+            )}
+            {profileImage && (
+                <div className="relative w-60 cursor-move break-inside-avoid">
+                    <img src={URL.createObjectURL(profileImage)} alt="work" />
+                    <button type="button" className="btn absolute right-0 top-0 p-1 hover:text-secondary-content 
+                    rounded-none
+                    text-xl" onClick={() => { handleRemoveImage('profile') }}>
+                        <BiTrash />
+                    </button>
+                </div>
+            )}
+            {!coverImage && (
+                <>
+                    <div className="label">
+                        <span className="text-primary-content">CHOOSE COVER IMAGE:</span>
+                    </div>
+                    <input
+                        type="file"
+                        name="coverImage"
+                        className="file-input file-input-bordered file-input-secondary w-full max-w-xs"
+                        placeholder="Cover Image"
+                        accept='image/*' onChange={(e) => setCoverImage(e.target.files?.[0] || null)}
+                    />
+                </>
+            )}
+            {coverImage && (
+                <div className="relative w-60 cursor-move break-inside-avoid">
+                    <img src={URL.createObjectURL(coverImage)} alt="work" />
+                    <button type="button" className="btn absolute right-0 top-0 p-1 hover:text-secondary-content 
+                    rounded-none
+                    text-xl" onClick={() => { handleRemoveImage('cover') }}>
+                        <BiTrash />
+                    </button>
+                </div>
+            )}
             <Input
                 placeholder="Name"
                 onChange={(e) => setName(e.target.value)}

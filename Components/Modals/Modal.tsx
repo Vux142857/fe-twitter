@@ -18,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit, title, body, a
     if (disabled) {
       return;
     }
-  
+
     onClose();
   }, [onClose, disabled]);
 
@@ -95,7 +95,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit, title, body, a
               </button>
             </div>
             {/*body*/}
-            <div className="relative p-10 flex-auto">
+            <div className="relative p-10 pt-0 flex-auto">
               {body}
             </div>
             {/*footer*/}
