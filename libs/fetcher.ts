@@ -25,6 +25,17 @@ class Fetcher {
             .then((res) => res)
             .catch(filterError);
     }
+    postWithAuth(url: string, data: any, accessToken: string) {
+        return axios
+            .post(url, data, {
+                validateStatus: filterStatus,
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            })
+            .then((res) => res.data)
+            .catch(filterError);
+    }
     post(url: string, data: any) {
         return axios
             .post(url, data, { validateStatus: filterStatus })

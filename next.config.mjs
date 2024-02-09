@@ -7,6 +7,9 @@ const nextConfig = {
     JWT_SECRET_ACCESS_TOKEN: "@vu150802",
     NEXTAUTH_SECRET: "@vu070802",
   },
+  images: {
+    domains: ["localhost"],
+  },
 };
 
 export default nextConfig;

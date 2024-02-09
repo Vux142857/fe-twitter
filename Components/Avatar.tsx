@@ -29,7 +29,8 @@ const Avatar: React.FC<AvatarProps> = ({ avatarURL, username, isLarge, hasBorder
             <Image
                 src={avatarURL || defaultAvatar}
                 alt="avatar"
-                sizes="100%"
+                width={isLarge ? 128 : 48}
+                height={isLarge ? 128 : 48}
                 onClick={onClick}
                 style={{ borderRadius: "100%", objectFit: "cover" }}
             />

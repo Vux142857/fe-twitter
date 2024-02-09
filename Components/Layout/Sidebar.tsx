@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 const Sidebar = () => {
   const router = useRouter()
   const { data: session, status } = useSession();
-  console.log(session)
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
     if (status === "authenticated") {
