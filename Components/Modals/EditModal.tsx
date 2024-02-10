@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -9,7 +10,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import userServices from "@/services/user.services";
 import mediaServices from "@/services/media.services";
-import { IoIosImages } from "react-icons/io";
 import { BiTrash } from "react-icons/bi";
 
 interface EditModalProps {
@@ -51,12 +51,10 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
             let coverUrl = '';
             if (profileImage) {
                 const { data } = await mediaServices.uploadSingleImage(profileImageData);
-                console.log(data)
                 avatarUrl = data?.url || '';
             }
             if (coverImage) {
                 const { data } = await mediaServices.uploadSingleImage(coverImageData);
-                console.log(data)
                 coverUrl = data?.url || '';
             }
             const editBody: EditBody = {

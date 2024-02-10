@@ -22,6 +22,7 @@ const MyProfile = () => {
         following: 0
     });
     const [isCurrentUser, setIsCurrentUser] = useState(false);
+    const [label, setLabel] = useState('Profile');
     const accessToken = session?.user.accessToken;
 
     useEffect(() => {
@@ -33,13 +34,14 @@ const MyProfile = () => {
             if (user) {
                 setProfile(user);
                 setIsCurrentUser(true);
+                setLabel(user.username);
             }
         }
         fetchData()
     }, [accessToken]);
 
     return (
-        <Layout labelHeader="Profile">
+        <Layout labelHeader={label}>
             <UserView
                 user={profile}
                 isCurrentUser={isCurrentUser}

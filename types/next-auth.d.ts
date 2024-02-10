@@ -8,11 +8,12 @@ declare module 'next-auth' {
         exp?: number
     }
 
-    interface Session {
+    interface Session extends NextAuth.Session {
         user: {
             accessToken: string
             id: string
-        }
+            username: string
+        },
     }
 
 }

@@ -8,18 +8,35 @@ import SidebarTweetButton from "./SidebarTweetButton";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import userServices from "@/services/user.services";
 
 const Sidebar = () => {
   const router = useRouter()
   const { data: session, status } = useSession();
+  const user = session?.user;
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
-    if (status === "authenticated") {
-      console.log(status)
-      setIsLogin(true)
+    if (user) {
+      const { accessToken } = user;
+      userServices.setAccessToken(accessToken as string);
+    } else {
+      return () => { }
     }
-
-  }, [status, router])
+    const fetchData = async () => {
+      const res = await userServices.getMe()
+      const data = res?.data;
+      const { user } = data;
+      if (session) {
+        session.user.username = user.username;
+      }
+    }
+    fetchData().then(() => {
+      setIsLogin(true)
+    }).catch((error) => {
+      console.error('Error during fetching user data:', error);
+      setIsLogin(false)
+    })
+  }, [status, router, user, session])
 
   const handleLogout = () => {
     signOut({ redirect: false })
