@@ -23,12 +23,7 @@ const Sidebar = () => {
       return () => { }
     }
     const fetchData = async () => {
-      const res = await userServices.getMe()
-      const data = res?.data;
-      const { user } = data;
-      if (session) {
-        session.user.username = user.username;
-      }
+      await userServices.getMe()
     }
     fetchData().then(() => {
       setIsLogin(true)

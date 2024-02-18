@@ -24,8 +24,12 @@ const handler = NextAuth({
                   secretKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
                 });
               if (decoded_access_token) {
+                userServices.setAccessToken(result.accessToken);
+                const res = await userServices.getMe()
+                const data = res?.data
                 const user = {
                   id: decoded_access_token.user_id,
+                  username: data?.user.username,
                   accessToken: result.accessToken,
                   exp: decoded_access_token.exp
                 };
@@ -74,7 +78,6 @@ const handler = NextAuth({
               date_of_birth,
               username
             });
-
             if (result && result.accessToken && result.refreshToken) {
               const decoded_access_token = await verifyToken(
                 {
@@ -84,6 +87,7 @@ const handler = NextAuth({
               if (decoded_access_token) {
                 const user = {
                   id: decoded_access_token.user_id,
+                  username: username,
                   accessToken: result.accessToken,
                   exp: decoded_access_token.exp
                 };
@@ -111,6 +115,7 @@ const handler = NextAuth({
       try {
         if (user) {
           token.id = user.id;
+          token.username = user.username;
           token.accessToken = user.accessToken;
           token.session_exp = user.exp;
         }
@@ -124,6 +129,7 @@ const handler = NextAuth({
       if (token) {
         session.user.id = token.id as string
         session.user.accessToken = token.accessToken as string
+        session.user.username = token.username as string
         session.expires = toISODateString(token.session_exp as number) as string
       }
       return session
