@@ -15,15 +15,15 @@ const Sidebar = () => {
   const { data: session, status } = useSession();
   const user = session?.user;
   const [isLogin, setIsLogin] = useState(false);
+  let accessToken = ''
   useEffect(() => {
     if (user) {
-      const { accessToken } = user;
-      userServices.setAccessToken(accessToken as string);
+      const accessToken = user.accessToken;
     } else {
       return () => { }
     }
     const fetchData = async () => {
-      await userServices.getMe()
+      await userServices.getMe(accessToken)
     }
     fetchData().then(() => {
       setIsLogin(true)

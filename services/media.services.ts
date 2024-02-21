@@ -2,17 +2,9 @@ import fetcher from "@/libs/fetcher"
 
 const SERVER = process.env.SERVER as string
 class MediaService {
-    private accessToken: string
-    constructor() {
-        this.accessToken = ''
-    }
 
-    setAccessToken(accessToken: string) {
-        this.accessToken = accessToken
-    }
-
-    async uploadSingleImage(file: any) {
-        return await fetcher.postWithAuth(`${SERVER}/media/upload-image`, file, this.accessToken)
+    async uploadSingleImage(file: any, accessToken: string) {
+        return await fetcher.postWithAuth(`${SERVER}/media/upload-image`, file, accessToken)
     }
 }
 

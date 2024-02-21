@@ -45,16 +45,14 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
             console.log(profileImageData)
             const coverImageData = new FormData()
             coverImageData.append('file', coverImage as Blob)
-            mediaServices.setAccessToken(accessToken);
-            userServices.setAccessToken(accessToken);
             let avatarUrl = '';
             let coverUrl = '';
             if (profileImage) {
-                const { data } = await mediaServices.uploadSingleImage(profileImageData);
+                const { data } = await mediaServices.uploadSingleImage(profileImageData, accessToken);
                 avatarUrl = data?.url || '';
             }
             if (coverImage) {
-                const { data } = await mediaServices.uploadSingleImage(coverImageData);
+                const { data } = await mediaServices.uploadSingleImage(coverImageData, accessToken);
                 coverUrl = data?.url || '';
             }
             const editBody: EditBody = {
@@ -68,7 +66,7 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
                 date_of_birth: dob.toISOString()
             }
 
-            await userServices.editProfile(editBody);
+            await userServices.editProfile(editBody, accessToken);
             toast.success('Updated');
             editModal.onClose();
         } catch (error) {

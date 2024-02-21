@@ -27,8 +27,7 @@ const MyProfile = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            userServices.setAccessToken(accessToken as string);
-            const res = await userServices.getMe()
+            const res = await userServices.getMe(accessToken as string)
             const data = res?.data;
             const { user } = data;
             if (user) {

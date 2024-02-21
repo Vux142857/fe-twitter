@@ -24,8 +24,7 @@ const handler = NextAuth({
                   secretKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
                 });
               if (decoded_access_token) {
-                userServices.setAccessToken(result.accessToken);
-                const res = await userServices.getMe()
+                const res = await userServices.getMe(result.accessToken)
                 const data = res?.data
                 const user = {
                   id: decoded_access_token.user_id,
