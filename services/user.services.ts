@@ -37,6 +37,10 @@ class UserServices {
     async editProfile(payload: EditBody, accessToken: string) {
         return await fetcher.patch(`${SERVER}/user/me`, payload, accessToken)
     }
+
+    async refreshToken(refreshToken: string) {
+        return await fetcher.post(`${SERVER}/user/refresh-token`, { refresh_token: refreshToken })
+    }
 }
 
 const userServices = new UserServices()

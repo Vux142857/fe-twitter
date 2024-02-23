@@ -12,18 +12,18 @@ import userServices from "@/services/user.services";
 
 const Sidebar = () => {
   const router = useRouter()
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const user = session?.user;
   const [isLogin, setIsLogin] = useState(false);
-  let accessToken = ''
   useEffect(() => {
-    if (user) {
-      const accessToken = user.accessToken;
-    } else {
-      return () => { }
+    console.log(session)
+    if (session?.error) {
+      setIsLogin(false)
+      router.push('/login')
+      return
     }
     const fetchData = async () => {
-      await userServices.getMe(accessToken)
+      await userServices.getMe(user?.accessToken)
     }
     fetchData().then(() => {
       setIsLogin(true)
@@ -31,7 +31,7 @@ const Sidebar = () => {
       console.error('Error during fetching user data:', error);
       setIsLogin(false)
     })
-  }, [status, router, user, session])
+  }, [user, session])
 
   const handleLogout = () => {
     signOut({ redirect: false })

@@ -1,5 +1,6 @@
 import { verifyToken } from "@/libs/jwt"
 import userServices, { LoginReqBody, RegisterReqBody } from "@/services/user.services"
+import { JWT } from "next-auth/jwt"
 import NextAuth from "next-auth/next"
 import CredentialsProvider from "next-auth/providers/credentials"
 const handler = NextAuth({
@@ -18,19 +19,27 @@ const handler = NextAuth({
             const { result, message } = await userServices.login({ email, password });
 
             if (result && result.accessToken && result.refreshToken) {
-              const decoded_access_token = await verifyToken(
-                {
-                  token: result.accessToken,
-                  secretKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
-                });
-              if (decoded_access_token) {
-                const res = await userServices.getMe(result.accessToken)
-                const data = res?.data
+              const [decodedRT, decodeAT] = await Promise.all([
+                verifyToken(
+                  {
+                    token: result.refreshToken,
+                    secretKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
+                  }),
+                verifyToken(
+                  {
+                    token: result.accessToken,
+                    secretKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
+                  })
+              ])
+              if (decodedRT) {
+                const res = await userServices.getMe(result.accessToken);
                 const user = {
-                  id: decoded_access_token.user_id,
-                  username: data?.user.username,
+                  id: decodedRT.user_id,
+                  username: res && res.data && res.data.user && res.data.user.username,
                   accessToken: result.accessToken,
-                  exp: decoded_access_token.exp
+                  refreshToken: result.refreshToken,
+                  exp: decodedRT.exp,
+                  expAT: decodeAT.exp
                 };
                 return user;
               } else {
@@ -78,17 +87,26 @@ const handler = NextAuth({
               username
             });
             if (result && result.accessToken && result.refreshToken) {
-              const decoded_access_token = await verifyToken(
-                {
-                  token: result.accessToken,
-                  secretKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
-                });
-              if (decoded_access_token) {
+              const [decodedRT, decodeAT] = await Promise.all([
+                verifyToken(
+                  {
+                    token: result.refreshToken,
+                    secretKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
+                  }),
+                verifyToken(
+                  {
+                    token: result.accessToken,
+                    secretKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
+                  })
+              ])
+              if (decodedRT) {
                 const user = {
-                  id: decoded_access_token.user_id,
+                  id: decodedRT.user_id,
                   username: username,
                   accessToken: result.accessToken,
-                  exp: decoded_access_token.exp
+                  refreshToken: result.refreshToken,
+                  exp: decodedRT.exp,
+                  expAT: decodeAT.exp
                 };
                 return user;
               } else {
@@ -113,23 +131,36 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       try {
         if (user) {
-          token.id = user.id;
-          token.username = user.username;
-          token.accessToken = user.accessToken;
-          token.session_exp = user.exp;
+          return {
+            id: user.id,
+            username: user.username,
+            accessToken: user.accessToken,
+            refreshToken: user.refreshToken,
+            exp: user.exp,
+            expAT: user.expAT
+          }
+        }
+        console.log(token.expAT + " " + Date.now() / 1000);
+        console.log(token.expAT as number > Date.now() / 1000);
+        if (token.expAT as number > Date.now() / 1000) {
+          console.log('Access token is still valid:', token);
+          return token;
+        } else {
+          console.log('User token has expired, refreshing access token...');
+          return await refreshAccessToken(token.refreshToken as string, token);
         }
       } catch (error) {
         console.error('Error during JWT processing:', error);
         return token;
       }
-      return token;
     },
     async session({ session, token, user }) {
       if (token) {
         session.user.id = token.id as string
         session.user.accessToken = token.accessToken as string
         session.user.username = token.username as string
-        session.expires = toISODateString(token.session_exp as number) as string
+        session.expires = toISODateString(token.exp as number) as string
+        session.error = token.error as string
       }
       return session
     }
@@ -143,5 +174,34 @@ function toISODateString(numericDate: number) {
   }
   const date = new Date(numericDate * 1000); // Convert seconds to milliseconds
   return date.toISOString();
+}
+
+async function refreshAccessToken(refreshToken: string, token: JWT) {
+  try {
+    console.log('Refreshing access token:', refreshToken)
+    const response = await userServices.refreshToken(refreshToken)
+    const refreshedTokens = await response.result
+    if (!refreshedTokens) {
+      throw 'Error refreshing access token'
+    }
+    const decodedRT = await verifyToken(
+      {
+        token: refreshedTokens.refreshToken,
+        secretKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
+      });
+    const newToken = {
+      ...token,
+      accessToken: refreshedTokens.accessToken,
+      session_exp: decodedRT.exp
+    }
+    console.log('New token:', newToken)
+    return newToken
+  } catch (error) {
+    console.log('Error refreshing access token:', error)
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    }
+  }
 }
 export { handler as GET, handler as POST }

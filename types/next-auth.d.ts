@@ -5,8 +5,10 @@ declare module 'next-auth' {
     interface User {
         id?: string
         accessToken?: string
+        refreshToken?: string
         username?: string
-        exp?: number
+        exp?: number // Numberic time stamp seconds - experation time of user
+        expAT?: number // Numberic time stamp seconds - experation time of access token
     }
 
     interface Session extends NextAuth.Session {
@@ -15,6 +17,7 @@ declare module 'next-auth' {
             id: string
             username: string
         },
+        error?: string
     }
 
 }
