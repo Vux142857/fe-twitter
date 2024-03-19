@@ -14,7 +14,7 @@ class Fetcher {
                     'Authorization': 'Bearer ' + accessToken
                 }
             })
-            .then((res) => res)
+            .then((res) => res.data)
             .catch(filterError);
     }
     get(url: string) {

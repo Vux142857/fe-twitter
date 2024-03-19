@@ -143,14 +143,14 @@ const handler = NextAuth({
         console.log(token.expAT + " " + Date.now() / 1000);
         console.log(token.expAT as number > Date.now() / 1000);
         if (token.expAT as number > Date.now() / 1000) {
-          console.log('Access token is still valid:', token);
+          // console.log('Access token is still valid:', token);
           return token;
         } else {
-          console.log('User token has expired, refreshing access token...');
+          // console.log('User token has expired, refreshing access token...');
           return await refreshAccessToken(token.refreshToken as string, token);
         }
       } catch (error) {
-        console.error('Error during JWT processing:', error);
+        // console.error('Error during JWT processing:', error);
         return token;
       }
     },
@@ -169,7 +169,7 @@ const handler = NextAuth({
 
 function toISODateString(numericDate: number) {
   if (!numericDate || isNaN(numericDate)) {
-    console.error('Invalid numericDate:', numericDate);
+    // console.error('Invalid numericDate:', numericDate);
     return null;
   }
   const date = new Date(numericDate * 1000); // Convert seconds to milliseconds
@@ -178,7 +178,7 @@ function toISODateString(numericDate: number) {
 
 async function refreshAccessToken(refreshToken: string, token: JWT) {
   try {
-    console.log('Refreshing access token:', refreshToken)
+    // console.log('Refreshing access token:', refreshToken)
     const response = await userServices.refreshToken(refreshToken)
     const refreshedTokens = await response.result
     if (!refreshedTokens) {
@@ -194,10 +194,9 @@ async function refreshAccessToken(refreshToken: string, token: JWT) {
       accessToken: refreshedTokens.accessToken,
       session_exp: decodedRT.exp
     }
-    console.log('New token:', newToken)
     return newToken
   } catch (error) {
-    console.log('Error refreshing access token:', error)
+    // console.log('Error refreshing access token:', error)
     return {
       ...token,
       error: "RefreshAccessTokenError",

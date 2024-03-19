@@ -16,7 +16,6 @@ const Sidebar = () => {
   const user = session?.user;
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
-    console.log(session)
     if (session?.error) {
       setIsLogin(false)
       router.push('/login')
