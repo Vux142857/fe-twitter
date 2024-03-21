@@ -7,9 +7,8 @@ const SidebarLogo = () => {
   return (
     <div
       onClick={() => router.push("/")}
-      className="flex items-center justify-center rounded-full transition cursor-pointer h-14 w-14 hover:bg-blue-300 hover:bg-opacity-10"
+      className="flex items-center justify-center rounded-full transition cursor-pointer h-14 w-14 hover:bg-blue-300 hover:bg-opacity-10 m-auto"
     >
-
       <Image src={IconDaisy} alt="Daisy" />
     </div>
   );

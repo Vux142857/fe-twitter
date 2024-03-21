@@ -4,16 +4,20 @@ import Image from 'next/image'
 import daisyImg from "@/public/daisy-flowers-blue-3840x2160-12883.jpeg"
 import TypingEffect from '@/Components/TypingEffect'
 import Link from 'next/link'
-import { signIn } from 'next-auth/react'
-import { useState } from 'react'
+import { signIn, useSession } from 'next-auth/react'
+import {  useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { FcGoogle } from 'react-icons/fc'
 
 const Login = () => {
+    const router = useRouter()
+    // const {data: session} = useSession()
+    // if (session) {
+    //     router.push('/')
+    // }
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
-    const router = useRouter()
     const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         try {
@@ -32,7 +36,7 @@ const Login = () => {
         }
     }
 
-    const loginWithGoogle = () => { signIn('google', { callbackUrl: '/' }) }
+    // const loginWithGoogle = () => { signIn('google', { callbackUrl: '/' }) }
     return (
         <div className="hero min-h-screen bg-base-200" style={{ backgroundImage: 'url(https://i.pinimg.com/originals/d2/e4/ed/d2e4ed3306b60642a22aceb4f49c6e9d.jpg)' }}>
             <div className="hero-content flex-col lg:flex-row-reverse">
@@ -57,12 +61,12 @@ const Login = () => {
                         <div className="form-control mt-6">
                             <button className="btn btn-primary" type='submit'>Login</button>
                         </div>
-                        <div className="form-control mt-2">
+                        {/* <div className="form-control mt-2">
                             <button className="btn" onClick={loginWithGoogle}>
                                 Login with Google
                                 <FcGoogle className='ml-2' />
                             </button>
-                        </div>
+                        </div> */}
                         <div className='form-control'>
                             <label className="label">
                                 <span className="label-text">Do not have account?

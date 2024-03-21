@@ -27,9 +27,10 @@ const MyProfile = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            console.log('accessToken', accessToken)
             const res = await userServices.getMe(accessToken as string)
-            const data = res?.data;
-            const { user } = data;
+            console.log(res)
+            const { user } = res;
             if (user) {
                 setProfile(user);
                 setIsCurrentUser(true);

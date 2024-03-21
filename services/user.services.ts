@@ -41,6 +41,10 @@ class UserServices {
     async refreshToken(refreshToken: string) {
         return await fetcher.post(`${SERVER}/user/refresh-token`, { refresh_token: refreshToken })
     }
+
+    async logout(refreshToken: string, accessToken) {
+        return await fetcher.postWithAuth(`${SERVER}/user/logout`, { refresh_token: refreshToken }, accessToken)
+    }
 }
 
 const userServices = new UserServices()

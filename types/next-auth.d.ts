@@ -14,6 +14,7 @@ declare module 'next-auth' {
     interface Session extends NextAuth.Session {
         user: {
             accessToken: string
+            refreshToken: string
             id: string
             username: string
         },

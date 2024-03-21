@@ -158,6 +158,7 @@ const handler = NextAuth({
       if (token) {
         session.user.id = token.id as string
         session.user.accessToken = token.accessToken as string
+        session.user.refreshToken = token.refreshToken as string
         session.user.username = token.username as string
         session.expires = toISODateString(token.exp as number) as string
         session.error = token.error as string

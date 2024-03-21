@@ -32,8 +32,9 @@ const Sidebar = () => {
     })
   }, [user, session])
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     signOut({ redirect: false })
+    await userServices.logout(user?.refreshToken, user?.accessToken)
     setIsLogin(false)
   }
   const items = [
@@ -54,22 +55,34 @@ const Sidebar = () => {
     },
   ];
   return (
-    <div className="h-full col-span-1 pr-4 md:pr-2 bg-secondary">
-      <div className="flex flex-col items-center">
-        <div className="space-y-2 lg:w-[180px]">
-          <SidebarLogo />
-          {isLogin ? items.map((item) => (
-            <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
-          )) :
-            <>
-              <SidebarItem onClick={() => { router.push('/login') }} label="Login" icon={BiLogIn} />
-            </>
-          }
-          {isLogin && <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />}
-          <SidebarTweetButton isLogin={isLogin} />
+    <>
+      <div className="h-full col-span-1 pr-4 md:pr-2 bg-primary fixed">
+        <div className="flex flex-col items-center">
+          <div className="space-y-2 lg:w-[180px]">
+            <SidebarLogo />
+            {session ? items.map((item) => (
+              <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
+            )) :
+              <>
+                <SidebarItem onClick={() => { router.push('/login') }} label="Login" icon={BiLogIn} />
+              </>
+            }
+            {session
+              &&
+              <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />
+              &&
+              <SidebarTweetButton isLogin={isLogin} />
+            }
+          </div>
         </div>
       </div>
-    </div>
+      <div className="h-full col-span-1 pr-4 md:pr-2 bg-primary">
+        <div className="flex flex-col items-center">
+          <div className="space-y-2 lg:w-[180px]">
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

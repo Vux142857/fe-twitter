@@ -1,12 +1,9 @@
 import Layout from "@/Components/Layout/Layout";
-export default function Home({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import Newfeeds from "@/Components/Layout/Newfeeds";
+export default function Home() {
   return (
     <Layout labelHeader="Home">
-      {children}
+      <Newfeeds/>
     </Layout>
   );
 }
