@@ -56,7 +56,7 @@ const Sidebar = () => {
   ];
   return (
     <>
-      <div className="h-full col-span-1 pr-4 md:pr-2 bg-primary fixed">
+      <div className="h-full col-span-1 pr-4 md:pr-2 fixed">
         <div className="flex flex-col items-center">
           <div className="space-y-2 lg:w-[180px]">
             <SidebarLogo />
@@ -76,7 +76,7 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
-      <div className="h-full col-span-1 pr-4 md:pr-2 bg-primary">
+      <div className="h-full col-span-1 pr-4 md:pr-2">
         <div className="flex flex-col items-center">
           <div className="space-y-2 lg:w-[180px]">
           </div>
