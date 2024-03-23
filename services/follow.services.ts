@@ -4,15 +4,15 @@ import fetcher from "@/libs/fetcher"
 const SERVER = process.env.SERVER as string
 
 class FollowServices {
-    async getFollow(accessToken: string, tweetId: string) {
-        return await fetcher.getWithAuth(`${SERVER}/follow/get-follow/${tweetId}`, accessToken)
+    async getFollow(accessToken: string, userId: string) {
+        return await fetcher.getWithAuth(`${SERVER}/user/follow/${userId}`, accessToken)
     }
 
-    async follow(accessToken: string, tweetId: string) {
-        return await fetcher.postWithAuth(`${SERVER}/follow/create-follow/${tweetId}`, {}, accessToken)
+    async follow(accessToken: string, userId: string) {
+        return await fetcher.postWithAuth(`${SERVER}/user/follow`, { following_user_id: userId }, accessToken)
     }
-    async unfollow(accessToken: string, tweetId: string) {
-        return await fetcher.deleteWithAuth(`${SERVER}/follow/unfollow/${tweetId}`, accessToken)
+    async unfollow(accessToken: string, userId: string) {
+        return await fetcher.deleteWithAuth(`${SERVER}/user/unfollow/${userId}`, accessToken)
     }
 }
 

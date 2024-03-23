@@ -23,7 +23,7 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
     });
     const [label, setLabel] = useState('Profile');
     const { data: session } = useSession();
-
+    const [isCurrentUser, setIsCurrentUser] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             const res = await userServices.getUserProfile(params.username)
@@ -31,6 +31,7 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
             if (user) {
                 setProfile(user);
                 setLabel(user.username);
+                setIsCurrentUser(session?.user.username === user.username);
             }
         }
         fetchData()
@@ -40,7 +41,7 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
         <Layout labelHeader={label}>
             <UserView
                 user={profile}
-                isCurrentUser={false}
+                isCurrentUser={isCurrentUser}
                 accessToken={session ? session?.user.accessToken : ''}
             />
         </Layout>

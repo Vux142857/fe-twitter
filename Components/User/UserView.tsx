@@ -18,7 +18,7 @@ const UserView: React.FC<UserViewProps> = ({ user, isCurrentUser, accessToken })
                 coverPhotoURL={user.cover_photo}
                 username={user.username} />
             <UserBio
-                _id={user._id}
+                _id={user._id.toString()}
                 username={user.username}
                 name={user.name}
                 bio={user.bio}
@@ -28,7 +28,6 @@ const UserView: React.FC<UserViewProps> = ({ user, isCurrentUser, accessToken })
                 followed={0}
                 following={0}
                 isCurrentUser={isCurrentUser}
-                accessToken={accessToken}
             />
             {accessToken && <EditModal user={user} accessToken={accessToken} />}
         </>
