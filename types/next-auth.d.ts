@@ -7,6 +7,7 @@ declare module 'next-auth' {
         accessToken?: string
         refreshToken?: string
         username?: string
+        avatar?: string
         exp?: number // Numberic time stamp seconds - experation time of user
         expAT?: number // Numberic time stamp seconds - experation time of access token
     }
@@ -17,6 +18,7 @@ declare module 'next-auth' {
             refreshToken: string
             id: string
             username: string
+            avatar: string
         },
         error?: string
     }

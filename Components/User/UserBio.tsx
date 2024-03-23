@@ -1,6 +1,6 @@
 'use client'
 import { format } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { BiCalendar } from 'react-icons/bi';
 import Button from '../Button';
 import useEditModal from '@/hooks/useEditModal';

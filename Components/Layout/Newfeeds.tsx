@@ -2,6 +2,10 @@
 import useNewfeeds from "@/hooks/useGetNewfeeds"
 import { useRouter } from "next/navigation"
 import { use, useCallback, useEffect, useRef, useState } from "react"
+import PostItem from "../Post/PostItem"
+import Avatar from "../Avatar"
+import { format } from 'date-fns';
+import { AiFillHeart, AiOutlineMessage } from "react-icons/ai"
 
 const Newfeeds = () => {
   const router = useRouter()
@@ -23,13 +27,19 @@ const Newfeeds = () => {
       router.push('/')
     }
   }, [pageNumber])
+  const LikeIcon = AiFillHeart
+
   return (
     <>
-      {newfeeds.map((post, index) => {
+      {newfeeds.map((data, index) => {
         if (newfeeds.length === index + 1) {
-          return <div ref={lastNewfeedsElementRef} key={post}>{post}</div>
+          return (
+            <div key={index} ref={lastNewfeedsElementRef}><PostItem data={data} /></div>
+          )
         } else {
-          return <div key={post}>{post}</div>
+          return (
+            <div key={index}><PostItem data={data} /></div>
+          )
         }
       })}
       <div>{loading && 'Loading...'}</div>

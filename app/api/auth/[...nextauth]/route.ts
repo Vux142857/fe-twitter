@@ -38,6 +38,7 @@ const handler = NextAuth({
                   username: res && res.data && res.data.user && res.data.user.username,
                   accessToken: result.accessToken,
                   refreshToken: result.refreshToken,
+                  avatar: res && res.data && res.data.user && res.data.user.avatar,
                   exp: decodedRT.exp,
                   expAT: decodeAT.exp
                 };
@@ -100,11 +101,13 @@ const handler = NextAuth({
                   })
               ])
               if (decodedRT) {
+                const res = await userServices.getMe(result.accessToken);
                 const user = {
                   id: decodedRT.user_id,
                   username: username,
                   accessToken: result.accessToken,
                   refreshToken: result.refreshToken,
+                  avatart: res && res.data && res.data.user && res.data.user.avatar,
                   exp: decodedRT.exp,
                   expAT: decodeAT.exp
                 };
@@ -136,12 +139,13 @@ const handler = NextAuth({
             username: user.username,
             accessToken: user.accessToken,
             refreshToken: user.refreshToken,
+            avatar: user.avatar,
             exp: user.exp,
             expAT: user.expAT
           }
         }
-        console.log(token.expAT + " " + Date.now() / 1000);
-        console.log(token.expAT as number > Date.now() / 1000);
+        // console.log(token.expAT + " " + Date.now() / 1000);
+        // console.log(token.expAT as number > Date.now() / 1000);
         if (token.expAT as number > Date.now() / 1000) {
           // console.log('Access token is still valid:', token);
           return token;
@@ -160,6 +164,7 @@ const handler = NextAuth({
         session.user.accessToken = token.accessToken as string
         session.user.refreshToken = token.refreshToken as string
         session.user.username = token.username as string
+        session.user.avatar = token.avatar as string
         session.expires = toISODateString(token.exp as number) as string
         session.error = token.error as string
       }

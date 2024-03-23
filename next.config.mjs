@@ -7,10 +7,9 @@ const nextConfig = {
     JWT_SECRET_ACCESS_TOKEN: "@vu150802",
     JWT_SECRET_REFRESH_TOKEN: "@vu140923",
     NEXTAUTH_SECRET: "@vu070802",
-    HOST: "http://localhost:3000/",
   },
   images: {
-    domains: ["localhost"],
+    domains: ["localhost", "png.pngtree.com"],
   },
 };
 

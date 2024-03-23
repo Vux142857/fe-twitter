@@ -15,7 +15,7 @@ const Layout = ({
             <div className="container h-full max-w-20xl mx-auto xl:px-30">
                 <div className="grid h-full grid-cols-4 relative">
                     <Sidebar />
-                    <div className="h-full col-span-3 lg:col-span-2 border-x-[1px] border-neutral-800 relative">
+                    <div className="h-full bg-primary col-span-3 lg:col-span-2 border-x-[1px] border-neutral-800 relative">
                         <Header showBackArrow label={labelHeader} />
                         {children}
                     </div>

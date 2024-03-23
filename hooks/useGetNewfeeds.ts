@@ -15,12 +15,12 @@ const useNewfeeds = (pageNumber: number) => {
         axios({
             method: 'GET',
             // /tweet/trending/views?limit=10&type=1&skip=0
-            url: process.env.HOST + "tweet/trending/views",
-            params: { limit: 10, type: 0, skip },
+            url: process.env.SERVER + "/tweet/trending/views",
+            params: { limit: 3, type: 0, skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {
             setNewfeeds(prevBooks => {
-                return [...new Set([...prevBooks, ...res.data.result.tweetsByViews.map((b) => b.content)])]
+                return [...new Set([...prevBooks, ...res.data.result.tweetsByViews])]
             })
             setHasMore(res.data.result.tweetsByViews.length > 0)
             setLoading(false)

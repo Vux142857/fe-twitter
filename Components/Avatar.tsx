@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback } from "react";
 import defaultAvatar from "@/public/default-avatar-icon-of-social-media-user-vector.jpg";
-
+import { useRouter } from "next/navigation";
 interface AvatarProps {
     avatarURL: string;
     username: string;
@@ -12,12 +12,13 @@ interface AvatarProps {
 }
 
 const Avatar: React.FC<AvatarProps> = ({ avatarURL, username, isLarge, hasBorder }) => {
-
+    const router = useRouter();
     const onClick = useCallback((event: any) => {
         event.stopPropagation()
-        const url = `/${username}`
+        const url = `/users/${username}`
+        router.push(url)
     }, [])
-
+    const avatarSrc = (avatarURL != '') ? avatarURL : defaultAvatar;
     return (
         <div className={`
         ${isLarge ? "h-32 w-32" : "h-12 w-12"} 
@@ -28,7 +29,7 @@ const Avatar: React.FC<AvatarProps> = ({ avatarURL, username, isLarge, hasBorder
         cursor-pointer
         `}>
             <Image
-                src={avatarURL || defaultAvatar}
+                src={avatarSrc}
                 alt="avatar"
                 width={isLarge ? 128 : 48}
                 height={isLarge ? 128 : 48}
