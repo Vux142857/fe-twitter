@@ -1,14 +1,10 @@
 'use client'
 import useNewfeeds from "@/hooks/useGetNewfeeds"
-import { useRouter } from "next/navigation"
-import { use, useCallback, useEffect, useRef, useState } from "react"
+import { redirect } from 'next/navigation'
+import { useCallback, useEffect, useRef, useState } from "react"
 import PostItem from "../Post/PostItem"
-import Avatar from "../Avatar"
-import { format } from 'date-fns';
-import { AiFillHeart, AiOutlineMessage } from "react-icons/ai"
 
 const Newfeeds = () => {
-  const router = useRouter()
   const [pageNumber, setPageNumber] = useState(1)
   const { loading, newfeeds, error, hasMore } = useNewfeeds(pageNumber)
   const observer = useRef<IntersectionObserver | undefined>()
@@ -17,20 +13,22 @@ const Newfeeds = () => {
     if (observer.current) observer.current.disconnect()
     observer.current = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasMore) {
-        setPageNumber((prevPageNumber) => prevPageNumber + 1)
+        setTimeout(() => {
+          setPageNumber((prevPageNumber) => prevPageNumber + 1)
+        }, 2000)
       }
     })
     if (node) observer.current.observe(node)
   }, [loading, hasMore])
   useEffect(() => {
-    if (pageNumber === 10) {
-      router.push('/')
+    if (pageNumber > 8) {
+      redirect('/')
     }
-  }, [pageNumber])
-  const LikeIcon = AiFillHeart
+  }, [pageNumber]);
 
   return (
     <>
+      <div>{loading && 'Loading...'}</div>
       {newfeeds.map((data, index) => {
         if (newfeeds.length === index + 1) {
           return (
@@ -42,7 +40,6 @@ const Newfeeds = () => {
           )
         }
       })}
-      <div>{loading && 'Loading...'}</div>
       <div>{error && 'Error'}</div>
     </>
   )

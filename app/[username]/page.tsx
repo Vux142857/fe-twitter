@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Layout from "@/Components/Layout/Layout";
 import userServices from "@/services/user.services";
 import UserView from "@/Components/User/UserView";
+import { useSession } from "next-auth/react";
 
-const MyProfile = () => {
-    const { data: session } = useSession();
+const MyProfile = ({ params }: { params: { username: string } }) => {
     const [profile, setProfile] = useState({
+        _id: '',
         avatar: '',
         cover_photo: '',
         username: '',
@@ -21,31 +21,27 @@ const MyProfile = () => {
         followed: 0,
         following: 0
     });
-    const [isCurrentUser, setIsCurrentUser] = useState(false);
     const [label, setLabel] = useState('Profile');
-    const accessToken = session?.user.accessToken;
+    const { data: session } = useSession();
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log('accessToken', accessToken)
-            const res = await userServices.getMe(accessToken as string)
-            console.log(res)
+            const res = await userServices.getUserProfile(params.username)
             const { user } = res;
             if (user) {
                 setProfile(user);
-                setIsCurrentUser(true);
                 setLabel(user.username);
             }
         }
         fetchData()
-    }, [accessToken]);
+    }, []);
 
     return (
         <Layout labelHeader={label}>
             <UserView
                 user={profile}
-                isCurrentUser={isCurrentUser}
-                accessToken={accessToken}
+                isCurrentUser={false}
+                accessToken={session ? session?.user.accessToken : ''}
             />
         </Layout>
     );

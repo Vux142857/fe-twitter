@@ -1,13 +1,11 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai';
 import { format } from 'date-fns';
-
-// import useLike from '@/hooks/useLike';
-
 import Avatar from '../Avatar';
 import { useSession } from 'next-auth/react';
+import likeServices from '@/services/like.services';
 interface PostItemProps {
     data: dataProps;
 }
@@ -41,18 +39,23 @@ export interface dataProps {
 const PostItem: React.FC<PostItemProps> = ({ data }) => {
     const router = useRouter();
     const currentUser = useSession().data?.user;
+    const [like, setLike] = useState(data.likes);
     const [hasLiked, setHasLiked] = useState(false);
     // const { hasLiked, toggleLike } = useLike({ postId: data.id, currentUser?.id });
     // const { hasLiked, toggleLike } = { hasLiked: false, toggleLike: () => { } };
     useEffect(() => {
-        if (currentUser) {
-            
-            setHasLiked(true);
+        const fetchData = async () => {
+            return await likeServices.getLike(currentUser?.accessToken, data._id)
         }
-    },[])
+        fetchData().then(res => {
+            if (res.result.like) {
+                setHasLiked(true);
+            }
+        }).catch(() => {})
+    }, [])
     const goToUser = useCallback((ev: any) => {
         ev.stopPropagation();
-        router.push(`/users/${data.author.username}`)
+        router.push(`/${data.author.username}`)
     }, [router, data.author?._id.toString()]);
 
     const goToPost = useCallback(() => {
@@ -61,17 +64,21 @@ const PostItem: React.FC<PostItemProps> = ({ data }) => {
 
     const onLike = useCallback(async (ev: any) => {
         ev.stopPropagation();
-
         if (!currentUser) {
             return router.push('/login')
         }
+        if (hasLiked) {
+            setHasLiked(false);
+            setLike(like - 1);
+            await likeServices.unlike(currentUser.accessToken, data._id)
+        } else {
+            setHasLiked(true);
+            setLike(like + 1);
+            await likeServices.like(currentUser.accessToken, data._id)
+        }
+    }, [hasLiked]);
 
-        toggleLike();
-    }, [toggleLike]);
-
-    // const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
-    const LikeIcon = AiFillHeart
-    console.log(data.author.avatar)
+    const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart
     return (
         <div
             onClick={goToPost}
@@ -129,11 +136,11 @@ const PostItem: React.FC<PostItemProps> = ({ data }) => {
                 hover:text-sky-500">
                             <AiOutlineMessage size={20} />
                             <p>
-                                {/* {data.comments?.length || 0} */}
+                                {data.comments || 0}
                             </p>
                         </div>
                         <div
-                            // onClick={onLike}
+                            onClick={onLike}
                             className="
                 flex 
                 flex-row 
@@ -144,10 +151,9 @@ const PostItem: React.FC<PostItemProps> = ({ data }) => {
                 transition 
                 hover:text-red-500
             ">
-                            {/* <LikeIcon color={hasLiked ? 'red' : ''} size={20} /> */}
-                            <LikeIcon color={'red'} size={20} />
+                            <LikeIcon color={hasLiked ? 'red' : ''} size={20} />
                             <p>
-                                {data.likes}
+                                {like}
                             </p>
                         </div>
                     </div>

@@ -22,7 +22,7 @@ class Fetcher {
             .get(url, {
                 validateStatus: filterStatus
             })
-            .then((res) => res)
+            .then((res) => res.data)
             .catch(filterError);
     }
     postWithAuth(url: string, data: any, accessToken: string) {
@@ -36,6 +36,19 @@ class Fetcher {
             .then((res) => res.data)
             .catch(filterError);
     }
+
+    deleteWithAuth(url: string, accessToken: string) {
+        return axios
+            .delete(url, {
+                validateStatus: filterStatus,
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            })
+            .then((res) => res.data)
+            .catch(filterError);
+    }
+
     post(url: string, data: any) {
         return axios
             .post(url, data, { validateStatus: filterStatus })

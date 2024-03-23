@@ -1,10 +1,13 @@
 'use client'
 import { format } from 'date-fns';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { BiCalendar } from 'react-icons/bi';
+import { useRouter } from 'next/navigation';
 import Button from '../Button';
 import useEditModal from '@/hooks/useEditModal';
+import followServices from '@/services/follow.services';
 interface UserBioProps {
+    _id: string
     username: string;
     name: string;
     bio: string;
@@ -14,13 +17,29 @@ interface UserBioProps {
     followed: number;
     following: number;
     isCurrentUser?: boolean;
+    accessToken?: string;
 }
-const UserBio: React.FC<UserBioProps> = ({ bio, dateOfBirth, name, username, followed, following, isCurrentUser }) => {
+const UserBio: React.FC<UserBioProps> = ({ _id, bio, dateOfBirth, name, username, followed, following, isCurrentUser, accessToken }) => {
     const editModal = useEditModal();
+    const router = useRouter();
     const dob = useMemo(() => {
         if (!dateOfBirth) return;
         return format(new Date(dateOfBirth), 'MMMM dd, yyyy');
     }, [dateOfBirth]);
+    const [hasFollowed, setFollowed] = useState(false);
+    const onFollow = useCallback(async (ev: any) => {
+        ev.stopPropagation();
+        if (!isCurrentUser) {
+            return router.push('/login')
+        }
+        if (hasFollowed) {
+            setFollowed(false);
+            await followServices.unfollow(accessToken, _id)
+        } else {
+            setFollowed(true);
+            await followServices.follow(accessToken, _id)
+        }
+    }, [hasFollowed]);
     return (
         <div className="border-b-2 border-neutral-200 pb-4 mt-4">
             <div className='flex justify-end p-2'>
@@ -28,7 +47,7 @@ const UserBio: React.FC<UserBioProps> = ({ bio, dateOfBirth, name, username, fol
                     <Button secondary label="Edit" onClick={editModal.onOpen} />
                 ) : (
                     <Button
-                        onClick={() => { }}
+                        onClick={onFollow}
                         label={'Follow'}
                         secondary
                     />

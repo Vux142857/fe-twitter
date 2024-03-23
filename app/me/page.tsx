@@ -1,50 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Layout from "@/Components/Layout/Layout";
-import userServices from "@/services/user.services";
 import UserView from "@/Components/User/UserView";
 
 const MyProfile = () => {
     const { data: session } = useSession();
+    console.log(session?.user?.profile)
     const [profile, setProfile] = useState({
-        avatar: '',
-        cover_photo: '',
-        username: '',
-        email: '',
-        name: '',
-        bio: '',
-        website: '',
-        location: '',
-        date_of_birth: '',
+        avatar: '' || session?.user?.profile?.avatar,
+        cover_photo: '' || session?.user?.profile?.cover_photo,
+        username: '' || session?.user?.profile?.username,
+        email: '' || session?.user?.profile?.email,
+        name: '' || session?.user?.profile?.name,
+        bio: '' || session?.user?.profile?.bio,
+        website: '' || session?.user?.profile?.website,
+        location: '' || session?.user?.profile?.location,
+        date_of_birth: '' || session?.user?.profile?.date_of_birth,
         followed: 0,
         following: 0
     });
-    const [isCurrentUser, setIsCurrentUser] = useState(false);
-    const [label, setLabel] = useState('Profile');
     const accessToken = session?.user.accessToken;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            console.log('accessToken', accessToken)
-            const res = await userServices.getMe(accessToken as string)
-            console.log(res)
-            const { user } = res;
-            if (user) {
-                setProfile(user);
-                setIsCurrentUser(true);
-                setLabel(user.username);
-            }
-        }
-        fetchData()
-    }, [accessToken]);
-
     return (
-        <Layout labelHeader={label}>
+        <Layout labelHeader={session?.user?.profile?.username}>
             <UserView
                 user={profile}
-                isCurrentUser={isCurrentUser}
+                isCurrentUser={true}
                 accessToken={accessToken}
             />
         </Layout>

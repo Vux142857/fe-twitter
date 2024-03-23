@@ -1,5 +1,6 @@
 import { verifyToken } from "@/libs/jwt"
 import userServices, { LoginReqBody, RegisterReqBody } from "@/services/user.services"
+import { set } from "date-fns"
 import { JWT } from "next-auth/jwt"
 import NextAuth from "next-auth/next"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -33,15 +34,7 @@ const handler = NextAuth({
               ])
               if (decodedRT) {
                 const res = await userServices.getMe(result.accessToken);
-                const user = {
-                  id: decodedRT.user_id,
-                  username: res && res.data && res.data.user && res.data.user.username,
-                  accessToken: result.accessToken,
-                  refreshToken: result.refreshToken,
-                  avatar: res && res.data && res.data.user && res.data.user.avatar,
-                  exp: decodedRT.exp,
-                  expAT: decodeAT.exp
-                };
+                const user = setUserSession(res, result, decodedRT, decodeAT);
                 return user;
               } else {
                 console.error('Error decoding access token');
@@ -102,15 +95,7 @@ const handler = NextAuth({
               ])
               if (decodedRT) {
                 const res = await userServices.getMe(result.accessToken);
-                const user = {
-                  id: decodedRT.user_id,
-                  username: username,
-                  accessToken: result.accessToken,
-                  refreshToken: result.refreshToken,
-                  avatart: res && res.data && res.data.user && res.data.user.avatar,
-                  exp: decodedRT.exp,
-                  expAT: decodeAT.exp
-                };
+                const user = setUserSession(res, result, decodedRT, decodeAT);
                 return user;
               } else {
                 console.error('Error decoding access token');
@@ -140,6 +125,7 @@ const handler = NextAuth({
             accessToken: user.accessToken,
             refreshToken: user.refreshToken,
             avatar: user.avatar,
+            profile: user.profile,
             exp: user.exp,
             expAT: user.expAT
           }
@@ -165,6 +151,7 @@ const handler = NextAuth({
         session.user.refreshToken = token.refreshToken as string
         session.user.username = token.username as string
         session.user.avatar = token.avatar as string
+        session.user.profile = token.profile
         session.expires = toISODateString(token.exp as number) as string
         session.error = token.error as string
       }
@@ -210,3 +197,17 @@ async function refreshAccessToken(refreshToken: string, token: JWT) {
   }
 }
 export { handler as GET, handler as POST }
+
+// Utils
+const setUserSession = (res: any, result: any, decodedRT: any, decodeAT) => {
+  return {
+    id: decodedRT.user_id,
+    username: res && res.user && res.user.username,
+    accessToken: result.accessToken,
+    refreshToken: result.refreshToken,
+    avatar: res && res.user && res.user.avatar,
+    profile: res && res.user,
+    exp: decodedRT.exp,
+    expAT: decodeAT.exp
+  };
+}

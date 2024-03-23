@@ -5,17 +5,16 @@ const SERVER = process.env.SERVER as string
 
 class LikeServices {
     async getLike(accessToken: string, tweetId: string) {
-        return await fetcher.getWithAuth(`${SERVER}/like/${tweetId}`, accessToken)
+        return await fetcher.getWithAuth(`${SERVER}/like/get-like/${tweetId}`, accessToken)
     }
 
-    async refreshToken(refreshToken: string) {
-        return await fetcher.post(`${SERVER}/user/refresh-token`, { refresh_token: refreshToken })
+    async like(accessToken: string, tweetId: string) {
+        return await fetcher.postWithAuth(`${SERVER}/like/create-like/${tweetId}`, {}, accessToken)
     }
-
-    async logout(refreshToken: string, accessToken) {
-        return await fetcher.postWithAuth(`${SERVER}/user/logout`, { refresh_token: refreshToken }, accessToken)
+    async unlike(accessToken: string, tweetId: string) {
+        return await fetcher.deleteWithAuth(`${SERVER}/like/unlike/${tweetId}`, accessToken)
     }
 }
 
 const likeServices = new LikeServices()
-export default LikeServices
+export default likeServices

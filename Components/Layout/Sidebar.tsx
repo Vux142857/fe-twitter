@@ -21,15 +21,11 @@ const Sidebar = () => {
       router.push('/login')
       return
     }
-    const fetchData = async () => {
-      await userServices.getMe(user?.accessToken)
-    }
-    fetchData().then(() => {
+    if (session?.user) {
       setIsLogin(true)
-    }).catch((error) => {
-      console.error('Error during fetching user data:', error);
+    } else {
       setIsLogin(false)
-    })
+    }
   }, [user, session])
 
   const handleLogout = async () => {
@@ -69,8 +65,8 @@ const Sidebar = () => {
             }
             {session
               &&
-              <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />
-              &&
+              <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />}
+            {session &&
               <SidebarTweetButton isLogin={isLogin} />
             }
           </div>
