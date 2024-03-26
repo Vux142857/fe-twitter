@@ -2,7 +2,7 @@ import axios, { Canceler } from "axios";
 import { useEffect, useState } from "react";
 const LIMIT_POST = 4
 
-const useNewfeeds = (pageNumber: number) => {
+const useGetTweetsByUser = (pageNumber: number, user_id: string, accessToken: string) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [newfeeds, setNewfeeds] = useState<any[]>([])
@@ -14,17 +14,20 @@ const useNewfeeds = (pageNumber: number) => {
         let cancel: Canceler
         axios({
             method: 'GET',
-            // /tweet/trending/views?limit=10&type=1&skip=0
-            url: process.env.SERVER + "/tweet/trending/views",
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            url: process.env.SERVER + `/tweet/${user_id}/tweets`,
             params: { limit: LIMIT_POST, type: 0, skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {
             setNewfeeds(prev => {
-                return [...new Set([...prev, ...res.data.result.tweetsByViews])]
+                console.log(prev)
+                return [...new Set([...prev, ...res.data.result.tweetsByUser])]
             })
-            setHasMore(res.data.result.tweetsByViews.length > 0)
+            setHasMore(res.data.result.tweetsByUser.length > 0)
             setLoading(false)
-            console.log(res.data.result.tweetsByViews)
+            console.log(res.data.result.tweetsByUser)
         }).catch(e => {
             if (axios.isCancel(e)) return
             setError(true)
@@ -34,4 +37,4 @@ const useNewfeeds = (pageNumber: number) => {
     return { loading, error, newfeeds, hasMore }
 }
 
-export default useNewfeeds;
+export default useGetTweetsByUser;

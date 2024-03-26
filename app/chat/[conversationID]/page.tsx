@@ -7,13 +7,15 @@ import socket from "@/libs/socket";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Message } from "../page";
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import MessageElement from "@/Components/Chat/MessageElement";
 import conversationServices from "@/services/conversation.service";
+import Avatar from "@/Components/Avatar";
 
 const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
   const searchParams = useSearchParams()
   const { data: session } = useSession();
+  const router = useRouter();
   const [value, setValue] = useState("");
   const [usersInRoom, setUsersInRoom] = useState<User[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -23,57 +25,56 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
     conversation: params.conversationID,
     userID: toUser,
     username: "",
-    avatar: ""
+    avatar: "",
   });
-
   useEffect(() => {
+    console.log('fetching data', params.conversationID, user?.accessToken)
     const fetchData = async () => await conversationServices.getConversation(params.conversationID, user?.accessToken)
     fetchData()
       .then((res) => {
-        console.log('res', res)
+        if (!res?.result) {
+          return router.push('/chat')
+        }
         const { sender, receiver } = res?.result
-        console.log('sender', sender)
-        console.log('receiver', receiver)
         if (sender?._id.toString() === user?.id) {
           setSelectedUser({
             conversation: params.conversationID,
             userID: receiver._id.toString(),
             username: receiver.username,
-            avatar: receiver.avatar
+            avatar: receiver.avatar,
           })
         } else {
           setSelectedUser({
             conversation: params.conversationID,
             userID: sender._id.toString(),
             username: sender.username,
-            avatar: sender.avatar
+            avatar: sender.avatar,
           })
         }
       })
       .catch((error) => {
+        router.push('/chat')
         console.error('Error during fetching conversation data:', error);
       })
+  }, [session])
+
+  useEffect(() => {
     socket.auth = { id: user?.id, username: user?.username, accessToken: user?.accessToken };
     socket.connect();
-
     socket.on("users", (users) => {
       const arrayOfUsers: User[] = Object.values(users);
       setUsersInRoom(arrayOfUsers)
     });
-
-    return () => {
-      socket.disconnect();
-    }
-  }, []);
-
-  useEffect(() => {
     socket.on("receive message", (message) => {
       console.log(message)
       if (message.from !== user?.id) {
         setMessages((prev) => [...prev, { to: message.to, from: message.from, content: message.content, fromSelf: false }]);
       }
     });
-  }, [])
+    return () => {
+      socket.disconnect();
+    }
+  }, []);
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -91,30 +92,27 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
     setMessages((prev) => [...prev, { to: message.to, from: message.from, content: message.content, fromSelf: true }]);
     setValue("");
   }
-
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSubmit(event); 
+    }
+  };
   return (
     <LayoutChat conversations={usersInRoom}>
       <div className="flex-1 justify-between flex flex-col h-screen">
         <div
           className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200"
         >
-          <div className="relative flex items-center space-x-4">
-            <div className="relative">
-              <span className="absolute text-green-500 right-0 bottom-0">
-                <svg width="20" height="20">
-                  <circle cx="8" cy="8" r="8" fill="currentColor"></circle>
-                </svg>
-              </span>
-              <img
-                src={selectedUser.avatar}
-                alt={selectedUser.username}
-                className="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
+          <div className="flex flex-wrap gap-8">
+            <div className="avatar">
+              <Avatar
+                avatarURL={selectedUser?.avatar}
+                username={selectedUser?.username}
               />
             </div>
-            <div className="flex flex-col leading-tight">
-              <div className="text-2xl mt-1 flex items-center">
-                <span className="text-gray-700 mr-3">{selectedUser.username}</span>
-              </div>
+            <div className="m-auto border-b-black">
+              <p className="text-primary-content text-xl">{selectedUser?.username}</p>
             </div>
           </div>
         </div>
@@ -130,6 +128,8 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
             <input
               type="text"
               onChange={handleValueChange} value={value}
+              autoFocus
+              onKeyDown={handleKeyDown}
               placeholder="Write your message!"
               className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
             />

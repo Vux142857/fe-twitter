@@ -5,9 +5,11 @@ import Layout from "@/Components/Layout/Layout";
 import userServices from "@/services/user.services";
 import UserView from "@/Components/User/UserView";
 import { useSession } from "next-auth/react";
+import TweetsByUser from "@/Components/Layout/TweetsByUser";
 
 const MyProfile = ({ params }: { params: { username: string } }) => {
     const { data: session } = useSession();
+    const [accessToken, setAccessToken] = useState('')
     const [profile, setProfile] = useState({
         _id: '',
         avatar: '',
@@ -32,10 +34,11 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
                 setProfile(user);
                 setLabel(user.username);
                 setIsCurrentUser(session?.user.username === user.username);
+                setAccessToken(session?.user.accessToken);
             }
         }
         fetchData()
-    }, []);
+    }, [session]);
 
     return (
         <Layout labelHeader={label}>
@@ -44,6 +47,7 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
                 isCurrentUser={isCurrentUser}
                 accessToken={session ? session?.user.accessToken : ''}
             />
+            {accessToken && <TweetsByUser user_id={profile._id} accessToken={accessToken} />}
         </Layout>
     );
 }

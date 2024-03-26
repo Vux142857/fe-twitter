@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { useSession } from "next-auth/react";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/Components/Layout/Layout";
 import UserView from "@/Components/User/UserView";
+import TweetsByUser from "@/Components/Layout/TweetsByUser";
 
 const MyProfile = () => {
     const { data: session } = useSession();
@@ -45,6 +46,7 @@ const MyProfile = () => {
                 isCurrentUser={true}
                 accessToken={accessToken}
             />
+            {accessToken && <TweetsByUser user_id={profile._id} accessToken={accessToken} />}
         </Layout>
     );
 }
