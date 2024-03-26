@@ -7,6 +7,7 @@ import UserView from "@/Components/User/UserView";
 import { useSession } from "next-auth/react";
 
 const MyProfile = ({ params }: { params: { username: string } }) => {
+    const { data: session } = useSession();
     const [profile, setProfile] = useState({
         _id: '',
         avatar: '',
@@ -22,7 +23,6 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
         following: 0
     });
     const [label, setLabel] = useState('Profile');
-    const { data: session } = useSession();
     const [isCurrentUser, setIsCurrentUser] = useState(false);
     useEffect(() => {
         const fetchData = async () => {

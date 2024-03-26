@@ -15,11 +15,9 @@ interface UserBioProps {
     website?: string;
     location?: string;
     dateOfBirth: string;
-    followed: number;
-    following: number;
     isCurrentUser?: boolean;
 }
-const UserBio: React.FC<UserBioProps> = ({ _id, bio, dateOfBirth, name, username, followed, following, isCurrentUser }) => {
+const UserBio: React.FC<UserBioProps> = ({ _id, bio, dateOfBirth, name, username, isCurrentUser }) => {
     const { data: session } = useSession();
     const editModal = useEditModal();
     const router = useRouter();
@@ -87,11 +85,11 @@ const UserBio: React.FC<UserBioProps> = ({ _id, bio, dateOfBirth, name, username
                 </div>
                 <div className="flex flex-row items-center mt-4 gap-6">
                     <div className="flex flex-row items-center gap-1">
-                        <p className="text-primary-content">{following}</p>
+                        {/* <p className="text-primary-content">{following}</p> */}
                         <p className="text-neutral-500">Following</p>
                     </div>
                     <div className="flex flex-row items-center gap-1">
-                        <p className="text-primary-content">{followed}</p>
+                        {/* <p className="text-primary-content">{followed}</p> */}
                         <p className="text-neutral-500">Followers</p>
                     </div>
                 </div>

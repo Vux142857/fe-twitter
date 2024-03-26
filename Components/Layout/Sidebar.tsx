@@ -1,6 +1,6 @@
 'use client'
-import { BsHouseFill, BsBellFill } from "react-icons/bs";
-import { BiLogIn, BiLogOut, BiRegistered } from 'react-icons/bi'
+import { BsHouseFill, BsBellFill, BsFillBookmarkFill } from "react-icons/bs";
+import { BiLogIn, BiLogOut, BiSolidMessage } from 'react-icons/bi'
 import { FaUser } from "react-icons/fa";
 import SidebarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
@@ -26,7 +26,7 @@ const Sidebar = () => {
     } else {
       setIsLogin(false)
     }
-  }, [user, session])
+  }, [session])
 
   const handleLogout = async () => {
     signOut({ redirect: false })
@@ -43,6 +43,16 @@ const Sidebar = () => {
       label: "Notifications",
       href: "/notifications",
       icon: BsBellFill,
+    },
+    {
+      label: "Bookmarks",
+      href: "/bookmarks",
+      icon: BsFillBookmarkFill,
+    },
+    {
+      label: "Messages",
+      href: "/chat",
+      icon: BiSolidMessage,
     },
     {
       label: "Profile",
