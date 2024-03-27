@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Button from "../Button";
 
@@ -110,4 +110,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit, title, body, a
   );
 }
 
-export default Modal;
+export default memo(Modal);

@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { IconType } from "react-icons";
 
 interface SidebarItemProps {
@@ -39,4 +39,4 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   );
 };
 
-export default SidebarItem;
+export default memo(SidebarItem);

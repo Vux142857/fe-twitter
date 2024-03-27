@@ -1,6 +1,7 @@
 import FollowBar from "@/Components/Layout/FollowBar";
 import Header from "@/Components/Layout/Header";
 import Sidebar from "@/Components/Layout/Sidebar";
+import { memo } from "react";
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -25,4 +26,4 @@ const Layout = ({
         </div>);
 }
 
-export default Layout;
+export default memo(Layout);

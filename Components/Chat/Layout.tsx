@@ -2,6 +2,7 @@
 import { Message } from "@/app/chat/page"
 import UserInChat from "./UserInChat"
 import Link from "next/link"
+import { memo } from "react"
 
 export interface User {
     conversation: string
@@ -24,7 +25,7 @@ const LayoutChat: React.FC<LayoutChatProps> = ({ children, conversations }) => {
     return (
         <div className="drawer lg:drawer-open">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-            <div className="drawer-content p-8 relative">
+            <div className="drawer-content relative">
                 {/* Page content here */}
                 {children}
             </div>
@@ -50,4 +51,4 @@ const LayoutChat: React.FC<LayoutChatProps> = ({ children, conversations }) => {
     );
 }
 
-export default LayoutChat;
+export default memo(LayoutChat);

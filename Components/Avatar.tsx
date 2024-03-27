@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import Image from "next/image";
-import { useCallback } from "react";
+import { memo, use, useCallback } from "react";
 import defaultAvatar from "@/public/default-avatar-icon-of-social-media-user-vector.jpg";
 import { useRouter } from "next/navigation";
 interface AvatarProps {
@@ -17,7 +17,7 @@ const Avatar: React.FC<AvatarProps> = ({ avatarURL, username, isLarge, hasBorder
         event.stopPropagation()
         const url = `/${username}`
         router.push(url)
-    }, [])
+    }, [username])
     const avatarSrc = (avatarURL != '') ? avatarURL : defaultAvatar;
     return (
         <div className={`
@@ -40,4 +40,4 @@ const Avatar: React.FC<AvatarProps> = ({ avatarURL, username, isLarge, hasBorder
     );
 }
 
-export default Avatar;
+export default memo(Avatar);

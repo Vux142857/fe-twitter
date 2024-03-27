@@ -1,6 +1,6 @@
 "use client"
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { BiArrowBack } from "react-icons/bi";
 
 interface HeaderProps {
@@ -37,4 +37,4 @@ const Header: React.FC<HeaderProps> = ({ label, showBackArrow }) => {
     );
 }
 
-export default Header;
+export default memo(Header);

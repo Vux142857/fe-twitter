@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation"; // Import from next/router
 import IconDaisy from "@/public/iconDS.svg"
+import { memo } from "react";
 const SidebarLogo = () => {
   const router = useRouter(); // Use useNavigation
 
@@ -14,4 +15,4 @@ const SidebarLogo = () => {
   );
 };
 
-export default SidebarLogo;
+export default memo(SidebarLogo);

@@ -1,6 +1,7 @@
 'use client'
 import { useParams, usePathname } from "next/navigation"
 import Avatar from "../Avatar"
+import { memo } from "react"
 
 /* eslint-disable @next/next/no-img-element */
 interface UserInChatProps {
@@ -30,4 +31,4 @@ const UserInChat: React.FC<UserInChatProps> = ({ hasNewMessages, username, userI
     );
 }
 
-export default UserInChat;
+export default memo(UserInChat);

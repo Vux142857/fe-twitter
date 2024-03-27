@@ -1,7 +1,7 @@
 'use client'
 import useNewfeeds from "@/hooks/useGetNewfeeds"
 import { redirect } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
 import PostItem from "../Post/PostItem"
 
 const Newfeeds = () => {
@@ -45,4 +45,4 @@ const Newfeeds = () => {
   )
 }
 
-export default Newfeeds;
+export default memo(Newfeeds);

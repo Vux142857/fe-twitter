@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import useEditModal from "@/hooks/useEditModal";
 import Input from "../Input";
@@ -185,4 +185,4 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
     );
 }
 
-export default EditModal;
+export default memo(EditModal);

@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation"; // Import from next/router
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import Icon from "../../public/iconTheme.svg";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,4 +31,4 @@ const SidebarTweetButton: React.FC<SidebarTweetButtonProps> = ({ isLogin }) => {
   );
 };
 
-export default SidebarTweetButton;
+export default memo(SidebarTweetButton);

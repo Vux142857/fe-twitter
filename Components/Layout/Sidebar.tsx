@@ -6,7 +6,7 @@ import SidebarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
 import SidebarTweetButton from "./SidebarTweetButton";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import userServices from "@/services/user.services";
 
@@ -15,7 +15,7 @@ const Sidebar = () => {
   const { data: session } = useSession();
   const user = session?.user;
   const [isLogin, setIsLogin] = useState(false);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (session?.error) {
       setIsLogin(false)
       router.push('/login')
@@ -66,17 +66,17 @@ const Sidebar = () => {
         <div className="flex flex-col items-center">
           <div className="space-y-2 lg:w-[180px]">
             <SidebarLogo />
-            {session ? items.map((item) => (
+            {isLogin ? items.map((item) => (
               <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
             )) :
               <>
                 <SidebarItem onClick={() => { router.push('/login') }} label="Login" icon={BiLogIn} />
               </>
             }
-            {session
+            {isLogin
               &&
               <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />}
-            {session &&
+            {isLogin &&
               <SidebarTweetButton isLogin={isLogin} />
             }
           </div>

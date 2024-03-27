@@ -1,6 +1,6 @@
 'use client'
 import { format } from 'date-fns';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { BiCalendar } from 'react-icons/bi';
 import { useRouter } from 'next/navigation';
 import Button from '../Button';
@@ -98,4 +98,4 @@ const UserBio: React.FC<UserBioProps> = ({ _id, bio, dateOfBirth, name, username
     );
 }
 
-export default UserBio;
+export default memo(UserBio);

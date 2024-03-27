@@ -1,3 +1,5 @@
+import { memo } from "react"
+
 /* eslint-disable @next/next/no-img-element */
 interface MessageElementProps {
     content: string
@@ -45,4 +47,4 @@ const MessageElement: React.FC<MessageElementProps> = ({ content, fromSelf }) =>
     )
 }
 
-export default MessageElement;
+export default memo(MessageElement);

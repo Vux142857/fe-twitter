@@ -7,56 +7,45 @@ import socket from "@/libs/socket";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Message } from "../page";
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import MessageElement from "@/Components/Chat/MessageElement";
 import conversationServices from "@/services/conversation.service";
 import Avatar from "@/Components/Avatar";
 
 const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
-  const searchParams = useSearchParams()
   const { data: session } = useSession();
   const router = useRouter();
   const [value, setValue] = useState("");
   const [usersInRoom, setUsersInRoom] = useState<User[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
-  const toUser = searchParams.get('to')
-  const user = session?.user;
+  const [user, setUser] = useState(session?.user)
   const [selectedUser, setSelectedUser] = useState<User>({
     conversation: params.conversationID,
-    userID: toUser,
+    userID: "",
     username: "",
     avatar: "",
   });
   useEffect(() => {
-    console.log('fetching data', params.conversationID, user?.accessToken)
-    const fetchData = async () => await conversationServices.getConversation(params.conversationID, user?.accessToken)
-    fetchData()
-      .then((res) => {
+    setUser(session?.user);
+    const fetchData = async () => {
+      try {
+        const res = await conversationServices.getConversation(params.conversationID, session?.user.accessToken);
         if (!res?.result) {
-          return router.push('/chat')
+          router.push('/chat');
+          return;
         }
-        const { sender, receiver } = res?.result
-        if (sender?._id.toString() === user?.id) {
-          setSelectedUser({
-            conversation: params.conversationID,
-            userID: receiver._id.toString(),
-            username: receiver.username,
-            avatar: receiver.avatar,
-          })
-        } else {
-          setSelectedUser({
-            conversation: params.conversationID,
-            userID: sender._id.toString(),
-            username: sender.username,
-            avatar: sender.avatar,
-          })
-        }
-      })
-      .catch((error) => {
-        router.push('/chat')
+        const { sender, receiver } = res.result;
+        const selectedUser = sender?._id.toString() === session?.user.id
+          ? { conversation: params.conversationID, userID: receiver._id.toString(), username: receiver.username, avatar: receiver.avatar }
+          : { conversation: params.conversationID, userID: sender._id.toString(), username: sender.username, avatar: sender.avatar };
+        setSelectedUser(selectedUser);
+      } catch (error) {
         console.error('Error during fetching conversation data:', error);
-      })
-  }, [session])
+        router.push('/chat');
+      }
+    };
+    fetchData();
+  }, [session]);
 
   useEffect(() => {
     socket.auth = { id: user?.id, username: user?.username, accessToken: user?.accessToken };
@@ -95,16 +84,16 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      handleSubmit(event); 
+      handleSubmit(event);
     }
   };
   return (
     <LayoutChat conversations={usersInRoom}>
       <div className="flex-1 justify-between flex flex-col h-screen">
         <div
-          className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200"
+          className="flex sm:items-center justify-between py-3 px-3 border-b-2 border-gray-200"
         >
-          <div className="flex flex-wrap gap-8">
+          <div className="flex flex-wrap gap-4">
             <div className="avatar">
               <Avatar
                 avatarURL={selectedUser?.avatar}

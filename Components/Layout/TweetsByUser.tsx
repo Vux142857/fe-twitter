@@ -1,6 +1,6 @@
 'use client'
 import { redirect } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
 import PostItem from "../Post/PostItem"
 import useGetTweetsByUser from "@/hooks/useGetTweetsByUser"
 
@@ -45,4 +45,4 @@ const TweetsByUser = ({ user_id, accessToken }: { user_id: string, accessToken: 
   )
 }
 
-export default TweetsByUser;
+export default memo(TweetsByUser);

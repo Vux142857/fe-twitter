@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai';
 import { format } from 'date-fns';
 import Avatar from '../Avatar';
@@ -163,4 +163,4 @@ const PostItem: React.FC<PostItemProps> = ({ data }) => {
     )
 }
 
-export default PostItem;
+export default memo(PostItem);
