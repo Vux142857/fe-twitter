@@ -2,10 +2,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import LayoutChat, { User } from "@/Components/Chat/Layout";
-import UserInChat from "@/Components/Chat/UserInChat";
 import socket from "@/libs/socket";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export interface Message {

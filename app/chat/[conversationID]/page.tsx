@@ -5,28 +5,34 @@
 import LayoutChat, { User } from "@/Components/Chat/Layout";
 import socket from "@/libs/socket";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Message } from "../page";
 import { useRouter } from 'next/navigation'
 import MessageElement from "@/Components/Chat/MessageElement";
 import conversationServices from "@/services/conversation.service";
 import Avatar from "@/Components/Avatar";
+import useMessages from "@/hooks/useGetMessages";
 
 const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [value, setValue] = useState("");
   const [usersInRoom, setUsersInRoom] = useState<User[]>([]);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [user, setUser] = useState(session?.user)
+  const [data, setMessages] = useState<Message[]>([]);
   const [selectedUser, setSelectedUser] = useState<User>({
     conversation: params.conversationID,
     userID: "",
     username: "",
     avatar: "",
   });
+  const [pageNumber, setPageNumber] = useState(1)
+  const user = useRef(session?.user);
   useEffect(() => {
-    setUser(session?.user);
+    user.current = session?.user;
+  }, [session]);
+  const { loading, messages, error, hasMore } = useMessages(pageNumber, params.conversationID, user.current?.accessToken)
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await conversationServices.getConversation(params.conversationID, session?.user.accessToken);
@@ -41,22 +47,28 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
         setSelectedUser(selectedUser);
       } catch (error) {
         console.error('Error during fetching conversation data:', error);
-        router.push('/chat');
+        router.push('/');
       }
     };
     fetchData();
   }, [session]);
 
   useEffect(() => {
-    socket.auth = { id: user?.id, username: user?.username, accessToken: user?.accessToken };
+    if (messages.length > 0) {
+      setMessages(messages.map((message) => ({ to: message.to, from: message.from, content: message.content, fromSelf: message.from === user.current?.id })));
+      console.log(hasMore)
+    }
+  }, [pageNumber, messages]);
+
+  useEffect(() => {
+    socket.auth = { id: user.current?.id, username: user.current?.username, accessToken: user.current?.accessToken };
     socket.connect();
     socket.on("users", (users) => {
       const arrayOfUsers: User[] = Object.values(users);
       setUsersInRoom(arrayOfUsers)
     });
     socket.on("receive message", (message) => {
-      console.log(message)
-      if (message.from !== user?.id) {
+      if (message.from !== user.current?.id) {
         setMessages((prev) => [...prev, { to: message.to, from: message.from, content: message.content, fromSelf: false }]);
       }
     });
@@ -70,12 +82,19 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
     setValue(e.target.value);
   }
 
+  const handleLoadMore = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setPageNumber(pageNumber + 1);
+  }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (value === "") return;
     const message = {
-      from: user?.id,
+      from: user.current?.id,
       content: value,
       to: selectedUser.userID,
+      conversation_id: params.conversationID
     }
     socket.emit("private message", message);
     setMessages((prev) => [...prev, { to: message.to, from: message.from, content: message.content, fromSelf: true }]);
@@ -108,7 +127,8 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
         <div
           className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
         >
-          {messages.map((message, index) => (
+          {hasMore && (<button className="btn btn-block" onClick={handleLoadMore}>Load more</button>)}
+          {data.map((message, index) => (
             <MessageElement content={message.content} fromSelf={message.fromSelf} key={index} />
           ))}
         </div>
