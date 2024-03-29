@@ -46,7 +46,7 @@ const Sidebar = () => {
     },
     {
       label: "Bookmarks",
-      href: "/bookmarks",
+      href: "/bookmark",
       icon: BsFillBookmarkFill,
     },
     {

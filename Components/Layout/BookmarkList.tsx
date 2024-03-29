@@ -1,20 +1,12 @@
 'use client'
-import useNewfeeds from "@/hooks/useGetNewfeeds"
 import { redirect } from 'next/navigation'
-import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
-import PostItem from "../Post/PostItem"
-import { useSession } from "next-auth/react"
+import { memo, useCallback, useLayoutEffect, useRef, useState } from "react"
+import useGetBookmarksList from '@/hooks/useGetBookmarksList'
+import BookmarkItem from '../Post/BookmarkItem'
 
-const Newfeeds = () => {
-  const { data: session } = useSession()
-  const [accessToken, setAccessToken] = useState('')
+const BookmarkList = ({ accessToken }: { accessToken: string }) => {
   const [pageNumber, setPageNumber] = useState(1)
-  useEffect(() => {
-    if (session) {
-      setAccessToken(session.user.accessToken)
-    }
-  }, [session])
-  const { loading, newfeeds, error, hasMore } = useNewfeeds(pageNumber)
+  const { loading, bookmarks, error, hasMore } = useGetBookmarksList(pageNumber, accessToken)
   const observer = useRef<IntersectionObserver | undefined>()
   const lastNewfeedsElementRef = useCallback((node: HTMLDivElement | null) => {
     if (loading) return
@@ -37,14 +29,14 @@ const Newfeeds = () => {
   return (
     <>
       <div>{loading && 'Loading...'}</div>
-      {newfeeds.map((data, index) => {
-        if (newfeeds.length === index + 1) {
+      {bookmarks.map((data, index) => {
+        if (bookmarks.length === index + 1) {
           return (
-            <div key={index} ref={lastNewfeedsElementRef}><PostItem data={data} accessToken={accessToken} /></div>
+            <div key={index} ref={lastNewfeedsElementRef}><BookmarkItem tweet={data.tweet} author={data.author} /></div>
           )
         } else {
           return (
-            <div key={index}><PostItem data={data} accessToken={accessToken} /></div>
+            <div key={index}><BookmarkItem tweet={data.tweet} author={data.author} /></div>
           )
         }
       })}
@@ -53,4 +45,4 @@ const Newfeeds = () => {
   )
 }
 
-export default memo(Newfeeds);
+export default memo(BookmarkList);

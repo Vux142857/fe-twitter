@@ -1,4 +1,3 @@
-import { EditBody } from "@/constants/dataBody"
 import fetcher from "@/libs/fetcher"
 
 const SERVER = process.env.SERVER as string

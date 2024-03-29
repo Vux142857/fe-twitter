@@ -2,10 +2,10 @@ import axios, { Canceler } from "axios";
 import { useEffect, useState } from "react";
 const LIMIT_POST = 4
 
-const useNewfeeds = (pageNumber: number) => {
+const useGetBookmarksList = (pageNumber: number, accessToken: string) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
-    const [newfeeds, setNewfeeds] = useState<any[]>([])
+    const [bookmarks, setBookmarks] = useState<any[]>([])
     const [hasMore, setHasMore] = useState(false)
     const skip = (pageNumber - 1) * LIMIT_POST
     useEffect(() => {
@@ -14,23 +14,27 @@ const useNewfeeds = (pageNumber: number) => {
         let cancel: Canceler
         axios({
             method: 'GET',
-            // /tweet/trending/views?limit=10&type=1&skip=0
-            url: process.env.SERVER + "/tweet/trending/views",
-            params: { limit: LIMIT_POST, type: 0, skip },
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            url: process.env.SERVER + `/bookmark/get-bookmarks`,
+            params: { limit: LIMIT_POST, skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {
-            setNewfeeds(prev => {
-                return [...new Set([...prev, ...res.data.result.tweetsByViews])]
+            setBookmarks(prev => {
+                console.log(prev)
+                return [...new Set([...prev, ...res.data.result])]
             })
-            setHasMore(res.data.result.tweetsByViews.length > 0)
+            setHasMore(res.data.result.length > 0)
             setLoading(false)
+            console.log(res.data.result)
         }).catch(e => {
             if (axios.isCancel(e)) return
             setError(true)
         })
         return () => cancel()
     }, [pageNumber])
-    return { loading, error, newfeeds, hasMore }
+    return { loading, error, bookmarks, hasMore }
 }
 
-export default useNewfeeds;
+export default useGetBookmarksList;
