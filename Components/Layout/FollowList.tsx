@@ -5,6 +5,7 @@ import MyModal from "@/Components/Modals/MyModal";
 import Button from "@/Components/Button";
 import { useMentionStore, useTweetCircleStore } from "@/hooks/useChosenList";
 import useFollowList from "@/hooks/useGetFollowList";
+import { is } from "date-fns/locale";
 
 interface SelectUserProps {
   isLoading: boolean;
@@ -35,7 +36,11 @@ const SelectUser: React.FC<SelectUserProps> = ({ isLoading, user_id, accessToken
   }, [loading, hasMore])
 
   const onSubmit = useCallback(() => {
-    useChosenList(chosenList.map((user) => user._id))
+    if (isTweetCirle) {
+      useChosenList(chosenList.map((user) => user._id))
+    } else {
+      useChosenList(chosenList.map((user) => user.username))
+    }
   }, [chosenList]);
 
   const removeUser = useCallback((_id: string) => {
@@ -56,7 +61,7 @@ const SelectUser: React.FC<SelectUserProps> = ({ isLoading, user_id, accessToken
     <div className="flex flex-col gap-4">
       <div className="mb-2">
         <h4 className="mb-4 text-2xl font-bold">Followers</h4>
-        <div className='h-80 overflow-y-auto'>
+        <div className='overflow-y-auto'>
           <div className="flex flex-col gap-4">
             {followList.map((follower, index) => {
               if (followList.length === index + 1) {
@@ -91,7 +96,7 @@ const SelectUser: React.FC<SelectUserProps> = ({ isLoading, user_id, accessToken
       </div>
       <div >
         <h4 className="mb-4 text-2xl font-bold">Chosen</h4>
-        <div className='h-80 overflow-y-auto'>
+        <div className='overflow-y-auto'>
           <div className="flex flex-col gap-4">
             {chosenList.map((follower, index) => (
               <div key={index} className="flex items-center gap-2 justify-between flex-r">

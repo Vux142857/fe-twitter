@@ -8,9 +8,10 @@ interface InputProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   label?: string;
   accept?: string;
+  multiple?: boolean;
 }
 
-const Input: React.FC<InputProps> = ({ placeholder, value, type = "text", onChange, disabled, label, accept }) => {
+const Input: React.FC<InputProps> = ({ placeholder, value, type = "text", onChange, disabled, label, accept, multiple }) => {
   return (
     <div className="w-full">
       {label && <p className="text-xl text-primary-content font-semibold mb-2">{label}</p>}
@@ -21,6 +22,7 @@ const Input: React.FC<InputProps> = ({ placeholder, value, type = "text", onChan
         placeholder={placeholder}
         type={type}
         accept={accept}
+        multiple={multiple}
         className="
             w-full
             p-4 

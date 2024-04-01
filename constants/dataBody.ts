@@ -42,9 +42,9 @@ export enum TweetType {
 export interface Media {
     _id?: string
     user_id?: string
-    type: MediaType
+    type: MediaType | number
     url: string
-    status: StatusType
+    status: StatusType | number
     created_at?: Date
 }
 
