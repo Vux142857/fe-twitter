@@ -21,3 +21,37 @@ export interface EditBody {
     cover_photo: string
     date_of_birth: string
 }
+
+export enum TweetAudience {
+    TweetCircle,
+    Everyone
+}
+
+export enum MediaType {
+    Image,
+    Video,
+    Audio
+}
+
+export enum TweetType {
+    Tweet,
+    Retweet,
+    Comment
+}
+
+export interface Media {
+    _id?: string
+    user_id?: string
+    type: MediaType
+    url: string
+    status: StatusType
+    created_at?: Date
+}
+
+export enum StatusType {
+    Pending,
+    Done,
+    Failure,
+    Cancelled,
+    Abandoned
+}

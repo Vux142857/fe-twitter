@@ -1,26 +1,23 @@
 import { memo } from "react";
 
-interface InputProps {
+interface TextArea {
   placeholder?: string;
   value?: string;
-  type?: string;
   disabled?: boolean;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   label?: string;
   accept?: string;
 }
 
-const Input: React.FC<InputProps> = ({ placeholder, value, type = "text", onChange, disabled, label, accept }) => {
+const Input: React.FC<TextArea> = ({ placeholder, value, onChange, disabled, label }) => {
   return (
     <div className="w-full">
       {label && <p className="text-xl text-primary-content font-semibold mb-2">{label}</p>}
-      <input
+      <textarea
         disabled={disabled}
         onChange={onChange}
         value={value}
         placeholder={placeholder}
-        type={type}
-        accept={accept}
         className="
             w-full
             p-4 

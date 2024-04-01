@@ -1,6 +1,5 @@
 import { verifyToken } from "@/libs/jwt"
 import userServices, { LoginReqBody, RegisterReqBody } from "@/services/user.services"
-import { set } from "date-fns"
 import { JWT } from "next-auth/jwt"
 import NextAuth from "next-auth/next"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -130,8 +129,6 @@ const handler = NextAuth({
             expAT: user.expAT
           }
         }
-        // console.log(token.expAT + " " + Date.now() / 1000);
-        // console.log(token.expAT as number > Date.now() / 1000);
         if (token.expAT as number > Date.now() / 1000) {
           // console.log('Access token is still valid:', token);
           return token;
@@ -151,7 +148,6 @@ const handler = NextAuth({
         session.user.refreshToken = token.refreshToken as string
         session.user.username = token.username as string
         session.user.avatar = token.avatar as string
-        session.user.profile = token.profile
         session.expires = toISODateString(token.exp as number) as string
         session.error = token.error as string
       }
@@ -206,7 +202,6 @@ const setUserSession = (res: any, result: any, decodedRT: any, decodeAT) => {
     accessToken: result.accessToken,
     refreshToken: result.refreshToken,
     avatar: res && res.user && res.user.avatar,
-    profile: res && res.user,
     exp: decodedRT.exp,
     expAT: decodeAT.exp
   };

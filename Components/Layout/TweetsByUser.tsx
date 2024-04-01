@@ -28,7 +28,7 @@ const TweetsByUser = ({ user_id, accessToken }: { user_id: string, accessToken: 
 
   return (
     <>
-      <div>{loading && 'Loading...'}</div>
+      {loading && (<span className="loading loading-ring loading-lg"></span>)}
       {newfeeds.map((data, index) => {
         if (newfeeds.length === index + 1) {
           return (

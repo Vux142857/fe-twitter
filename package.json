@@ -13,7 +13,7 @@
     "axios-cache-interceptor": "^1.5.1",
     "date-fns": "^3.3.1",
     "jsonwebtoken": "^9.0.2",
-    "next": "14.1.0",
+    "next": "^14.2.0-canary.51",
     "next-auth": "^4.24.5",
     "react": "^18",
     "react-datepicker": "^6.0.0",

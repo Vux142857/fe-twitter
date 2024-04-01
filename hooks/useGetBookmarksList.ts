@@ -22,12 +22,10 @@ const useGetBookmarksList = (pageNumber: number, accessToken: string) => {
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {
             setBookmarks(prev => {
-                console.log(prev)
                 return [...new Set([...prev, ...res.data.result])]
             })
             setHasMore(res.data.result.length > 0)
             setLoading(false)
-            console.log(res.data.result)
         }).catch(e => {
             if (axios.isCancel(e)) return
             setError(true)

@@ -6,16 +6,19 @@ import SidebarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
 import SidebarTweetButton from "./SidebarTweetButton";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import userServices from "@/services/user.services";
+import useUserStore from "@/hooks/useMutateUser";
 
 const Sidebar = () => {
   const router = useRouter()
   const { data: session } = useSession();
+  const setCurrentUser = useUserStore((state) => state.setUserProfile)
+  const currentUser = useUserStore((state) => state.userProfile)
   const user = session?.user;
   const [isLogin, setIsLogin] = useState(false);
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (session?.error) {
       setIsLogin(false)
       router.push('/login')
@@ -23,6 +26,16 @@ const Sidebar = () => {
     }
     if (session?.user) {
       setIsLogin(true)
+      if (user && !currentUser) {
+        const fetchData = async () => {
+          return await userServices.getMe(user?.accessToken)
+        }
+        fetchData().then((res) => {
+          setCurrentUser(res?.user)
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
     } else {
       setIsLogin(false)
     }
@@ -66,18 +79,22 @@ const Sidebar = () => {
         <div className="flex flex-col items-center">
           <div className="space-y-2 lg:w-[180px]">
             <SidebarLogo />
-            {isLogin ? items.map((item) => (
-              <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
-            )) :
+            {isLogin ? (
+              <>
+                {
+                  items.map((item) => (
+                    <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
+                  ))
+                }
+                <>
+                  <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />
+                  <SidebarTweetButton isLogin={isLogin} />
+                </>
+              </>
+            ) :
               <>
                 <SidebarItem onClick={() => { router.push('/login') }} label="Login" icon={BiLogIn} />
               </>
-            }
-            {isLogin
-              &&
-              <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />}
-            {isLogin &&
-              <SidebarTweetButton isLogin={isLogin} />
             }
           </div>
         </div>
@@ -92,4 +109,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);

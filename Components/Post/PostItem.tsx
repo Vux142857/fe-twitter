@@ -50,11 +50,9 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken }) => {
                     bookmarkServices.getBookmark(accessToken, data._id)
                 ]);
                 if (likeResponse?.result.like) {
-                    console.log('likeResponse', likeResponse)
                     setHasLiked(true);
                 }
                 if (bookmarkResponse?.result.bookmark) {
-                    console.log('bookmarkResponse', bookmarkResponse)
                     setBookmark(true);
                 }
             } catch (error) {
@@ -207,4 +205,4 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken }) => {
     )
 }
 
-export default (PostItem);
+export default memo(PostItem);

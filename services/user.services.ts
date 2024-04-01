@@ -22,7 +22,6 @@ class UserServices {
         return await fetcher.post(`${SERVER}/user/register`, payload)
     }
     async login(payload: LoginReqBody) {
-        console.log('check payload', payload)
         return await fetcher.post(`${SERVER}/user/login`, payload)
     }
 

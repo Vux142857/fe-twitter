@@ -1,23 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { memo, useCallback, useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
-import useEditModal from "@/hooks/useEditModal";
 import Input from "../Input";
-import Modal from "../Modals/Modal";
-import { EditBody, UserData } from "@/constants/dataBody";
+import { EditBody } from "@/constants/dataBody";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import userServices from "@/services/user.services";
 import mediaServices from "@/services/media.services";
 import { BiTrash } from "react-icons/bi";
+import MyModal from "./MyModal";
+import useUserStore, { UserProfile } from "@/hooks/useMutateUser";
+import { useRouter } from "next/navigation";
 
 interface EditModalProps {
-    user: UserData;
+    user: UserProfile;
     accessToken: string;
 }
 const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
-    const editModal = useEditModal();
+    const setUser = useUserStore(state => state.setUserProfile);
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [coverImage, setCoverImage] = useState<File | null>(null);
     const [name, setName] = useState('');
@@ -26,6 +26,7 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
     const [dob, setDob] = useState(new Date());
     const [location, setLocation] = useState('');
     const [website, setWebsite] = useState('');
+    const router = useRouter();
     useEffect(() => {
         setName(user?.name)
         setUsername(user?.username)
@@ -34,15 +35,12 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
         setLocation(user?.location)
         setWebsite(user?.website)
     }, [user?.name, user?.username, user?.bio, user?.date_of_birth, user?.location, user?.website]);
-
     const [isLoading, setIsLoading] = useState(false);
-
     const onSubmit = useCallback(async () => {
         try {
             setIsLoading(true);
             const profileImageData = new FormData()
             profileImageData.append('file', profileImage as Blob)
-            console.log(profileImageData)
             const coverImageData = new FormData()
             coverImageData.append('file', coverImage as Blob)
             let avatarUrl = '';
@@ -65,26 +63,25 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
                 cover_photo: coverUrl,
                 date_of_birth: dob.toISOString()
             }
-
             await userServices.editProfile(editBody, accessToken);
-            toast.success('Updated');
-            editModal.onClose();
+            const result = await userServices.getMe(accessToken);
+            setUser(result?.user)
+            router.refresh();
         } catch (error) {
             console.log(error)
-            toast.error('Something went wrong');
         } finally {
             setIsLoading(false);
         }
-    }, [name, username, bio, location, website, profileImage, coverImage, dob, accessToken, editModal]);
+    }, [name, username, bio, location, website, profileImage, coverImage, dob, accessToken]);
 
-    const handleRemoveImage = (name: string) => {
+    const handleRemoveImage = useCallback((name: string) => {
         if (name === 'profile') {
             setProfileImage(null);
         }
         if (name === 'coverImage') {
             setCoverImage(null);
         }
-    }
+    }, [profileImage, coverImage])
 
     const bodyContent = (
         <div className="flex flex-col gap-4">
@@ -93,11 +90,10 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
                     <div className="label">
                         <span className="text-primary-content">CHOOSE PROFILE IMAGE:</span>
                     </div>
-                    <input
+                    <Input
                         type="file"
-                        name="profileImage"
-                        className="file-input file-input-bordered file-input-secondary w-full max-w-xs"
-                        accept='image/*' onChange={(e) => {
+                        accept="image/*"
+                        onChange={(e) => {
                             setProfileImage(e.target.files?.[0] || null);
                         }}
                     />
@@ -118,12 +114,11 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
                     <div className="label">
                         <span className="text-primary-content">CHOOSE COVER IMAGE:</span>
                     </div>
-                    <input
+                    <Input
                         type="file"
-                        name="coverImage"
-                        className="file-input file-input-bordered file-input-secondary w-full max-w-xs"
+                        accept="image/*"
                         placeholder="Cover Image"
-                        accept='image/*' onChange={(e) => setCoverImage(e.target.files?.[0] || null)}
+                        onChange={(e) => setCoverImage(e.target.files?.[0] || null)}
                     />
                 </>
             )}
@@ -132,7 +127,7 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
                     <img src={URL.createObjectURL(coverImage)} alt="work" />
                     <button type="button" className="btn absolute right-0 top-0 p-1 hover:text-secondary-content 
                     rounded-none
-                    text-xl" onClick={() => { handleRemoveImage('cover') }}>
+                    text-xl" onClick={() => { handleRemoveImage('coverImage') }}>
                         <BiTrash />
                     </button>
                 </div>
@@ -173,12 +168,10 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
     )
 
     return (
-        <Modal
+        <MyModal
             disabled={isLoading}
-            isOpen={editModal.isOpen}
             title="Edit your profile"
             actionLabel="Save"
-            onClose={editModal.onClose}
             onSubmit={onSubmit}
             body={bodyContent}
         />

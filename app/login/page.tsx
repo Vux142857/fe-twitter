@@ -7,14 +7,10 @@ import Link from 'next/link'
 import { signIn, useSession } from 'next-auth/react'
 import {  useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { FcGoogle } from 'react-icons/fc'
+// import { FcGoogle } from 'react-icons/fc'
 
 const Login = () => {
     const router = useRouter()
-    // const {data: session} = useSession()
-    // if (session) {
-    //     router.push('/')
-    // }
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')

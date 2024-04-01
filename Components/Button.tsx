@@ -3,7 +3,7 @@ interface ButtonProps {
     secondary?: boolean;
     fullWidth?: boolean;
     large?: boolean;
-    onClick: any;
+    onClick?: any;
     disabled?: boolean;
     outline?: boolean;
 }

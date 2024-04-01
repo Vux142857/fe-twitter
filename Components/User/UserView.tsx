@@ -1,10 +1,9 @@
-import { UserData } from "@/constants/dataBody";
 import UserHero from "@/Components/User/UserHero";
 import UserBio from "./UserBio";
-import { Toaster } from 'react-hot-toast';
-import EditModal from "../Modals/EditModal";
+import { UserProfile } from "@/hooks/useMutateUser";
+import { memo } from "react";
 interface UserViewProps {
-    user: UserData;
+    user: UserProfile;
     isCurrentUser: boolean;
     accessToken?: string;
 }
@@ -12,24 +11,17 @@ interface UserViewProps {
 const UserView: React.FC<UserViewProps> = ({ user, isCurrentUser, accessToken }) => {
     return (
         <>
-            <Toaster />
             <UserHero
                 avatarURL={user.avatar}
                 coverPhotoURL={user.cover_photo}
                 username={user.username} />
             <UserBio
-                _id={user._id}
-                username={user.username}
-                name={user.name}
-                bio={user.bio}
-                website={user.website}
-                location={user.location}
-                dateOfBirth={user.date_of_birth}
+                profile={user}
                 isCurrentUser={isCurrentUser}
+                accessToken={accessToken}
             />
-            {accessToken && <EditModal user={user} accessToken={accessToken} />}
         </>
     );
 }
 
-export default UserView;
+export default memo(UserView);

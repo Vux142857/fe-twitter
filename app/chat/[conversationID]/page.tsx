@@ -56,7 +56,6 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
   useEffect(() => {
     if (messages.length > 0) {
       setMessages(messages.map((message) => ({ to: message.to, from: message.from, content: message.content, fromSelf: message.from === user.current?.id })));
-      console.log(hasMore)
     }
   }, [pageNumber, messages]);
 
