@@ -1,131 +1,269 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
-import { memo, use, useCallback, useEffect, useRef, useState } from "react";
-import MyModal from "@/Components/Modals/MyModal";
-import Button from "@/Components/Button";
-import Avatar from "@/Components/Avatar";
-import { useMentionStore, useTweetCircleStore } from "@/hooks/useChosenList";
-import useFollowList from "@/hooks/useGetFollowList";
-
-interface SelectUserProps {
-  user_id: string;
-  accessToken: string;
-  isTweetCirle: boolean;
+import { useRouter } from 'next/navigation';
+import { memo, useCallback, useEffect, useState } from 'react';
+import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai';
+import { format } from 'date-fns';
+import Avatar from '../../Components/Avatar';
+import likeServices from '@/services/like.services';
+import { BsFillBookmarkFill, BsBookmark } from 'react-icons/bs';
+import bookmarkServices from '@/services/bookmark.services';
+import { MediaType } from '@/constants/dataBody';
+interface PostItemProps {
+  data: dataProps;
+  accessToken?: string;
 }
 
-const SelectUser: React.FC<SelectUserProps> = ({ user_id, accessToken, isTweetCirle }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [chosenList, setChosenList] = useState<any[]>([]);
-  const [pageNumber, setPageNumber] = useState(1)
-  const isFollower = true
-  const useChosenList = isTweetCirle ? useTweetCircleStore((state) => state.setTweetCircle) : useMentionStore((state) => state.setMention)
-  const { loading, followList, error, hasMore } = useFollowList(pageNumber, user_id, accessToken, isFollower)
+export interface dataProps {
+  _id?: string;
+  user_id?: string;
+  content?: string;
+  media?: any[];
+  mention?: string[];
+  parent_id?: string;
+  hashtag?: string[];
+  user_views?: number;
+  guest_views?: number;
+  tweet_circle?: string[];
+  type?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  likes?: number;
+  author?: {
+    _id?: string;
+    username?: string;
+    name?: string;
+    avatar?: string;
+  };
+  retweets?: number;
+  comments?: number;
+}
 
-  const observer = useRef<IntersectionObserver | undefined>()
-  const lastNewfeedsElementRef = useCallback((node: HTMLDivElement | null) => {
-    if (loading) return
-    if (observer.current) observer.current.disconnect()
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore) {
-        setTimeout(() => {
-          setPageNumber((prevPageNumber) => prevPageNumber + 1)
-        }, 2000)
+const mock = {
+  data: {
+    _id: "65e164adcc7876c59414c436",
+    user_id: "65cb7e5e5ba9399f3019fa9f",
+    audience: 1,
+    content: "Hello world",
+    media: [
+      {
+        url: "http://localhost:3000/static/video/5be0db99-9e75-487c-adec-eb91fab29d24.mp4",
+        type: 1,
+        status: 1,
+        _id: "660afe3cd26c52535acfb102"
       }
-    })
-    if (node) observer.current.observe(node)
-  }, [loading, hasMore])
+    ],
+    mention: [
+      "someone"
+    ],
+    parent_id: null,
+    hashtag: [
+      "111",
+      "2222",
+      "2333",
+      "222"
+    ],
+    user_views: 90,
+    guest_views: 0,
+    tweet_circle: [],
+    type: 0,
+    createdAt: "2024-03-01T05:16:29.916Z",
+    updatedAt: "2024-04-01T16:57:29.791Z",
+    likes: 0,
+    author: {
+      _id: "65cb7e5e5ba9399f3019fa9f",
+      name: "Vux",
+      username: "vu7a1",
+      avatar: "https://mytweets-bucket.s3.ap-southeast-1.amazonaws.com/images/259eb957878a6911628ec6100.jpg"
+    },
+    retweets: 0,
+    comments: 0
+  },
+  accessToken: "qweqweqweqweqweqwe"
+}
 
-  const onSubmit = useCallback(() => {
-    try {
-      useChosenList(chosenList.map((user) => user._id))
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setIsLoading(false);
+const PostItem: React.FC<PostItemProps> = (mockData) => {
+  const router = useRouter();
+  mockData = mock
+  const data = mock.data;
+  console.log(data.likes)
+  const accessToken = mock.accessToken;
+  const [like, setLike] = useState(data.likes);
+  const [hasLiked, setHasLiked] = useState(false);
+  const [hasBookmark, setBookmark] = useState(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [likeResponse, bookmarkResponse] = await Promise.all([
+          likeServices.getLike(accessToken, data._id),
+          bookmarkServices.getBookmark(accessToken, data._id)
+        ]);
+        if (likeResponse?.result.like) {
+          setHasLiked(true);
+        }
+        if (bookmarkResponse?.result.bookmark) {
+          setBookmark(true);
+        }
+      } catch (error) {
+        console.error('Error fetching like and bookmark data:', error);
+      }
     }
-  }, [accessToken]);
-
-  const removeUser = useCallback((_id: string) => {
-    setChosenList(chosenList.filter((user: any) => user._id !== _id));
-  }, [chosenList])
-
-  const addUser = useCallback((follower: any) => {
-    if (chosenList.find((user: any) => user._id === follower._id)) {
-      return;
+    if (accessToken) {
+      fetchData()
     }
-    setChosenList([...chosenList, follower]);
-  }, [chosenList])
+  }, [accessToken, data._id]);
+  const goToUser = useCallback((ev: any) => {
+    ev.stopPropagation();
+    router.push(`/${data.author.username}`)
+  }, [router, data.author?._id.toString()]);
 
-  const title = isTweetCirle ? 'Tweet circle' : 'Mention'
-  const action = isTweetCirle ? 'Save Twitter circle' : 'Save Mention'
+  const goToPost = useCallback((ev: any) => {
+    ev.stopPropagation();
+    router.push(`/posts/${data._id}`);
+  }, [router, data._id]);
 
-  const bodyContent = (
-    <div className="flex flex-col gap-4">
-      <div className="mb-2">
-        <h4 className="mb-4 text-2xl font-bold">Followers</h4>
-        <div className='h-80 overflow-y-auto'>
-          <div className="flex flex-col gap-4">
-            {followList.map((follower, index) => {
-              if (followList.length === index + 1) {
-                return (
-                  <div key={index} ref={lastNewfeedsElementRef} className="flex items-center justify-between gap-2">
-                    <div className="flex flex-col">
-                      <span className="font-bold">{follower.follower_user.name}</span>
-                      <span className="text-gray-500">@{follower.follower_user.username}</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <Button label="Add" onClick={() => addUser(follower.follower_user)} />
-                    </div>
-                  </div>
-                )
-              } else {
-                return (
-                  <div key={index} className="flex items-center justify-between gap-2">
-                    <div className="flex flex-col">
-                      <span className="font-bold">{follower.follower_user.name}</span>
-                      <span className="text-gray-500">@{follower.follower_user.username}</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <Button label="Add" onClick={() => addUser(follower.follower_user)} />
-                    </div>
-                  </div>
-                )
-              }
-            })}
+  const onLike = useCallback(async (ev: any) => {
+    ev.stopPropagation();
+    if (!accessToken) {
+      return router.push('/login')
+    }
+    if (hasLiked) {
+      setHasLiked(false);
+      if (like > 0) {
+        setLike(like - 1);
+        await likeServices.unlike(accessToken, data._id)
+      }
+    } else {
+      setHasLiked(true);
+      setLike(like + 1);
+      await likeServices.like(accessToken, data._id)
+    }
+  }, [hasLiked, data._id, accessToken]);
+
+  const onBookmark = useCallback(async (ev: any) => {
+    ev.stopPropagation();
+    if (!accessToken) {
+      return router.push('/login')
+    }
+    if (hasBookmark) {
+      setBookmark(false);
+      await bookmarkServices.unbookmark(accessToken, data._id)
+    } else {
+      setBookmark(true);
+      await bookmarkServices.bookmark(accessToken, data._id)
+    }
+  }, [hasBookmark, data._id, accessToken]);
+
+  const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart
+  const BookmarkIcon = hasBookmark ? BsFillBookmarkFill : BsBookmark
+  return (
+    <div
+      onClick={goToPost}
+      className="
+        border-b-[1px] 
+        border-neutral-800 
+        p-5 
+        cursor-pointer 
+        hover:bg-neutral-900 
+        transition
+      "
+    >
+      <div className="flex flex-row items-start gap-3">
+        <div>
+          <div className="flex flex-row items-center gap-2">
+            <Avatar username={data.author.username} avatarURL={data.author.avatar} isLarge={false} />
+            <p
+              onClick={goToUser}
+              className="
+                text-white 
+                font-semibold 
+                cursor-pointer 
+                hover:underline
+            ">
+              {data.author.name}
+            </p>
+            <span
+              onClick={goToUser}
+              className="
+                text-neutral-500
+                cursor-pointer
+                hover:underline
+                hidden
+                md:block
+            ">
+              @{data.author.username}
+            </span>
+            <span className="text-neutral-500 text-sm">
+              {format(new Date(data.createdAt), 'MMMM dd, yyyy')}
+            </span>
           </div>
-          <div>{error && 'Error'}</div>
-        </div>
-      </div>
-      <div >
-        <h4 className="mb-4 text-2xl font-bold">Chosen</h4>
-        <div className='h-80 overflow-y-auto'>
-          <div className="flex flex-col gap-4">
-            {chosenList.map((follower, index) => (
-              <div key={index} className="flex items-center gap-2 justify-between flex-r">
-                <div className="flex flex-col">
-                  <span className="font-bold">{follower.name}</span>
-                  <span className="text-gray-500">@{follower.username}</span>
-                </div>
-                <div className="flex flex-row">
-                  <Button label="Delete" onClick={() => removeUser(follower._id)} />
-                </div>
+          <div className="text-white mt-1">
+            {data.content}
+          </div>
+          <div className="flex flex-col mt-3">
+            {data.media.map((mediaItem) => (
+              <div key={mediaItem._id} className="flex flex-col items-center gap-2">
+                {/* Conditionally render media based on type */}
+                {mediaItem.type === MediaType.Video && (
+                  <video src={mediaItem.url} controls autoPlay />
+                )}
+                {mediaItem.type === MediaType.Image && (
+                  <img src={mediaItem.url} alt={`Image from ${data.author.username}`} />
+                )}
               </div>
             ))}
+          </div>
+          <div className="flex flex-row items-center mt-3 gap-10">
+            <div
+              className="
+                flex 
+                flex-row 
+                items-center 
+                text-neutral-500 
+                gap-2 
+                cursor-pointer 
+                transition 
+                hover:text-sky-500">
+              <AiOutlineMessage size={20} />
+              <p>
+                {data.comments || 0}
+              </p>
+            </div>
+            <div
+              onClick={onLike}
+              className="
+                flex 
+                flex-row 
+                items-center 
+                text-neutral-500 
+                gap-2 
+                cursor-pointer 
+                transition 
+                hover:text-red-500
+            ">
+              <LikeIcon color={hasLiked ? 'red' : ''} size={20} />
+              <p>
+                {like}
+              </p>
+            </div>
+            <div
+              onClick={onBookmark}
+              className="
+                flex 
+                flex-row 
+                items-center 
+                text-neutral-500 
+                gap-2 
+                cursor-pointer 
+                transition 
+                hover:text-blue-500
+            ">
+              <BookmarkIcon color={hasBookmark ? 'blue' : ''} size={20} />
+            </div>
           </div>
         </div>
       </div>
     </div>
   )
-
-  return (
-    <MyModal
-      disabled={isLoading}
-      title={title}
-      actionLabel={action}
-      onSubmit={onSubmit}
-      body={bodyContent}
-    />
-  );
 }
 
-export default memo(SelectUser);
+export default memo(PostItem);

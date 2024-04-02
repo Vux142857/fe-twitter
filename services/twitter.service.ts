@@ -4,6 +4,7 @@ import fetcher from "@/libs/fetcher"
 const SERVER = process.env.SERVER as string
 
 export interface TweetReqBody {
+    user_id?: string
     audience: TweetAudience
     content: string
     media: Media[]
@@ -15,8 +16,9 @@ export interface TweetReqBody {
 }
 
 class TweetServices {
-    async getTweetById(accessToken: string, userId: string) {
-        return await fetcher.getWithAuth(`${SERVER}/tweet/follow/${userId}`, accessToken)
+
+    async getTweetById(accessToken: string, tweet_id: string) {
+        return await fetcher.getWithAuth(`${SERVER}/tweet/${tweet_id}`, accessToken)
     }
 
     async postTweet(accessToken: string, data: TweetReqBody) {

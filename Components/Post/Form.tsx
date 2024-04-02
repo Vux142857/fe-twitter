@@ -19,7 +19,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId }) => {
   const { data: session } = useSession();
   const [user, setUser] = useState(session?.user);
   const [body, setBody] = useState<TweetReqBody>({
-    audience: TweetAudience.TweetCircle,
+    audience: TweetAudience.Everyone,
     content: '',
     type: isComment ? TweetType.Comment : TweetType.Tweet,
     tweet_circle: [],
@@ -104,6 +104,9 @@ const Form: React.FC<FormProps> = ({ isComment, postId }) => {
         }
         body.media = temp;
         body.tweet_circle = getTweetCircle;
+        if (body.tweet_circle.length > 0) {
+          body.audience = TweetAudience.TweetCircle;
+        }
         body.mention = getMention;
         body.content = content;
         body.hashtag = hashtagList;

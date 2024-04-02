@@ -4,10 +4,12 @@ import { redirect } from 'next/navigation'
 import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import PostItem from "../Post/PostItem"
 import { useSession } from "next-auth/react"
+import useUserStore from "@/hooks/useMutateUser"
 
 const Newfeeds = () => {
   const { data: session } = useSession()
   const [accessToken, setAccessToken] = useState('')
+  const currentUser = useUserStore(state => state.userProfile)
   const [pageNumber, setPageNumber] = useState(1)
   useEffect(() => {
     if (session) {
@@ -40,11 +42,11 @@ const Newfeeds = () => {
       {newfeeds.map((data, index) => {
         if (newfeeds.length === index + 1) {
           return (
-            <div key={index} ref={lastNewfeedsElementRef}><PostItem data={data} accessToken={accessToken} /></div>
+            <div key={index} ref={lastNewfeedsElementRef}><PostItem data={data} accessToken={accessToken} user={currentUser} /></div>
           )
         } else {
           return (
-            <div key={index}><PostItem data={data} accessToken={accessToken} /></div>
+            <div key={index}><PostItem data={data} accessToken={accessToken} user={currentUser} /></div>
           )
         }
       })}

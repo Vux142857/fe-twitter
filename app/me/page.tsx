@@ -24,7 +24,7 @@ const MyProfile = () => {
                     accessToken={accessToken}
                 />
             }
-            {accessToken && profile && <TweetsByUser user_id={profile._id.toString()} accessToken={accessToken} />}
+            {accessToken && profile && <TweetsByUser user_id={profile._id.toString()} accessToken={accessToken} user={profile} />}
         </Layout>
     );
 }

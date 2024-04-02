@@ -27,6 +27,7 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
     const [label, setLabel] = useState('Profile');
     const [isCurrentUser, setIsCurrentUser] = useState(false);
     useEffect(() => {
+        setAccessToken(session?.user?.accessToken)
         const fetchData = async () => {
             const res = await userServices.getUserProfile(params.username)
             const { user } = res;
@@ -38,7 +39,7 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
             }
         }
         fetchData()
-    }, [session]);
+    }, [session, profile, params.username]);
 
     return (
         <Layout labelHeader={label}>
@@ -47,7 +48,7 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
                 isCurrentUser={isCurrentUser}
                 accessToken={session ? session?.user.accessToken : ''}
             />
-            {accessToken && <TweetsByUser user_id={profile._id} accessToken={accessToken} />}
+            {accessToken && profile._id !== '' && <TweetsByUser user_id={profile._id} accessToken={accessToken} user={profile} />}
         </Layout>
     );
 }

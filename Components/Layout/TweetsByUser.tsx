@@ -4,7 +4,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react"
 import PostItem from "../Post/PostItem"
 import useGetTweetsByUser from "@/hooks/useGetTweetsByUser"
 
-const TweetsByUser = ({ user_id, accessToken }: { user_id: string, accessToken: string }) => {
+const TweetsByUser = ({ user_id, accessToken, user }: { user_id: string, accessToken: string, user: any }) => {
   const [pageNumber, setPageNumber] = useState(1)
   const { loading, newfeeds, error, hasMore } = useGetTweetsByUser(pageNumber, user_id, accessToken)
   const observer = useRef<IntersectionObserver | undefined>()
@@ -32,11 +32,11 @@ const TweetsByUser = ({ user_id, accessToken }: { user_id: string, accessToken: 
       {newfeeds.map((data, index) => {
         if (newfeeds.length === index + 1) {
           return (
-            <div key={index} ref={lastNewfeedsElementRef}><PostItem data={data} /></div>
+            <div key={index} ref={lastNewfeedsElementRef}><PostItem data={data} user={user} accessToken={accessToken} /></div>
           )
         } else {
           return (
-            <div key={index}><PostItem data={data} /></div>
+            <div key={index}><PostItem data={data} user={user} accessToken={accessToken} /></div>
           )
         }
       })}
