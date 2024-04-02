@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import { memo, use, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage, AiOutlineRetweet } from 'react-icons/ai';
 import { format, set } from 'date-fns';
 import Avatar from '../Avatar';
@@ -18,29 +18,29 @@ interface PostItemProps {
 }
 
 export interface dataProps {
-  _id?: string;
-  user_id?: string;
-  content?: string;
-  audience?: TweetAudience | number;
-  media?: Media[];
-  mention?: string[];
-  parent_id?: string;
-  hashtag?: string[];
-  user_views?: number;
-  guest_views?: number;
-  tweet_circle?: string[];
-  type?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  likes?: number;
-  author?: {
-    _id?: string;
-    username?: string;
-    name?: string;
-    avatar?: string;
+  _id: string;
+  user_id: string;
+  content: string;
+  audience: TweetAudience | number;
+  media: Media[];
+  mention: string[];
+  parent_id: string;
+  hashtag: string[];
+  user_views: number;
+  guest_views: number;
+  tweet_circle: string[];
+  type: number;
+  createdAt: string;
+  updatedAt: string;
+  likes: number;
+  author: {
+    _id: string;
+    username: string;
+    name: string;
+    avatar: string;
   };
-  retweets?: number;
-  comments?: number;
+  retweets: number;
+  comments: number;
 }
 
 const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
@@ -49,7 +49,12 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
   const [hasLiked, setHasLiked] = useState(false);
   const [hasBookmark, setBookmark] = useState(false);
   const [isRetweet, setIsRetweet] = useState(false);
-
+  const [isComment, setIsComment] = useState(false);
+  const [tweet, setTweet] = useState<dataProps>(data);
+  const createdAt = useMemo(() => {
+    if (!data.createdAt) return;
+    return format(new Date(data.createdAt), 'MMMM dd, yyyy');
+  }, [data._id]);
   useEffect(() => {
     const fecthParent = async () => {
       try {
@@ -63,8 +68,11 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
         setIsRetweet(true);
       }
       fecthParent().then((res) => {
-        data = res?.result
+        setTweet(res?.result);
       })
+    }
+    if (data.type === TweetType.Comment) {
+      setIsComment(true);
     }
     const fetchData = async () => {
       try {
@@ -89,13 +97,13 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
 
   const goToUser = useCallback((ev: any) => {
     ev.stopPropagation();
-    router.push(`/${data.author.username}`)
-  }, [router, data.author?._id.toString()]);
+    router.push(`/${tweet?.author.username}`)
+  }, [router, tweet?.author?._id.toString()]);
 
   const goToPost = useCallback((ev: any) => {
     ev.stopPropagation();
-    router.push(`/posts/${data._id}`);
-  }, [router, data._id]);
+    router.push(`/post/${tweet._id}`);
+  }, [router, tweet?._id]);
 
   const onLike = useCallback(async (ev: any) => {
     ev.stopPropagation();
@@ -106,14 +114,14 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
       setHasLiked(false);
       if (like > 0) {
         setLike(like - 1);
-        await likeServices.unlike(accessToken, data._id)
+        await likeServices.unlike(accessToken, tweet?._id)
       }
     } else {
       setHasLiked(true);
       setLike(like + 1);
-      await likeServices.like(accessToken, data._id)
+      await likeServices.like(accessToken, tweet?._id)
     }
-  }, [hasLiked, data._id, accessToken]);
+  }, [hasLiked, tweet?._id, accessToken]);
 
   const onBookmark = useCallback(async (ev: any) => {
     ev.stopPropagation();
@@ -122,12 +130,12 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
     }
     if (hasBookmark) {
       setBookmark(false);
-      await bookmarkServices.unbookmark(accessToken, data._id)
+      await bookmarkServices.unbookmark(accessToken, tweet._id)
     } else {
       setBookmark(true);
-      await bookmarkServices.bookmark(accessToken, data._id)
+      await bookmarkServices.bookmark(accessToken, tweet._id)
     }
-  }, [hasBookmark, data._id, accessToken]);
+  }, [hasBookmark, tweet?._id, accessToken]);
 
   const onRetweet = useCallback(async (ev: any) => {
     ev.stopPropagation();
@@ -189,15 +197,15 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
                   hidden
                   md:block
               ">
-            @{data.author.username}
+            @{user.username}
           </span>
           <span className="text-neutral-500 text-sm">
-            {format(new Date(data.createdAt), 'MMMM dd, yyyy')}
+            {createdAt}
           </span>
         </div>}
         <div className={isRetweetStyle}>
           <div className="flex flex-row items-center gap-2">
-            <Avatar username={data.author.username} avatarURL={data.author.avatar} isLarge={false} />
+            <Avatar username={tweet?.author.username} avatarURL={tweet?.author.avatar} isLarge={false} />
             <p
               onClick={goToUser}
               className="
@@ -206,7 +214,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
                   cursor-pointer 
                   hover:underline
               ">
-              {data.author.name}
+              {tweet?.author.name}
             </p>
             <span
               onClick={goToUser}
@@ -217,20 +225,20 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
                   hidden
                   md:block
               ">
-              @{data.author.username}
+              @{tweet?.author.username}
             </span>
             <span className="text-neutral-500 text-sm">
-              {format(new Date(data.createdAt), 'MMMM dd, yyyy')}
+              {createdAt}
             </span>
           </div>
           <div className="text-white mt-1">
-            {data.content}
+            {tweet?.content}
           </div>
           <div className="grid grid-cols-4 gap-1 m-2">
-            {data.media.map((mediaItem) => (
+            {tweet && tweet.media.map((mediaItem) => (
               <div key={mediaItem._id} className={mediaItem.type === MediaType.Video ? "col-span-4" : ""}>
                 {mediaItem.type === MediaType.Video && (
-                  <Player url={mediaItem.url} username={data.author.username} />
+                  <Player url={mediaItem.url} username={tweet.author.username} />
                 )}
                 {mediaItem.type === MediaType.Image && (
                   <div>
@@ -245,14 +253,14 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
                         </div>
                       </div>
                     </dialog>
-                    <Image src={mediaItem.url} alt={`Image from ${data.author.username}`} width={100} height={100} onClick={() => (document.getElementById(`${mediaItem._id}`) as HTMLDialogElement).showModal()} />
+                    <Image src={mediaItem.url} alt={`Image from ${tweet.author.username}`} width={100} height={100} onClick={() => (document.getElementById(`${mediaItem._id}`) as HTMLDialogElement).showModal()} />
                   </div>
                 )}
               </div>
             ))}
           </div>
           <div className="flex flex-row items-center mt-3 gap-10">
-            <div
+            {!isComment && <div
               className="
                   flex 
                   flex-row 
@@ -265,10 +273,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
               onClick={goToPost}
             >
               <AiOutlineMessage size={20} />
-              <p>
-                {data.comments || 0}
-              </p>
-            </div>
+            </div>}
             <div
               onClick={onLike}
               className="
@@ -300,7 +305,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
               ">
               <BookmarkIcon color={hasBookmark ? 'blue' : ''} size={20} />
             </div>
-            {accessToken && <div
+            {!isRetweet && accessToken && <div
               onClick={onRetweet}
               className="
                   flex 
@@ -312,7 +317,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
                   transition 
                   hover:text-blue-500
               ">
-              {!isRetweet && <AiOutlineRetweet size={20} />}
+              <AiOutlineRetweet size={20} />
             </div>}
           </div>
         </div>

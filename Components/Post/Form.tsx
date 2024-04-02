@@ -172,11 +172,11 @@ const Form: React.FC<FormProps> = ({ isComment, postId }) => {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
-              <Textarea
+              {!isComment && <Textarea
                 placeholder="Add hastag ex: #hashtag"
                 value={hashtag}
                 onChange={(e) => handleHashtag(e)}
-              />
+              />}
               <div className="flex items-center flex-row gap-2">
                 {user && (
                   <>
@@ -224,7 +224,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId }) => {
                 <Button
                   onClick={() => onSubmit()}
                   disabled={isLoading || content.length === 0}
-                  label="Tweet"
+                  label={isComment ? 'Comment' : 'Tweet'}
                 />
               </div>
             </div>
