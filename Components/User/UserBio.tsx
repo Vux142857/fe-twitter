@@ -12,6 +12,9 @@ interface UserBioProps {
     accessToken: string
 }
 const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }) => {
+    console.log('followers', profile.followers)
+    console.log('following', profile.following)
+
     const dob = useMemo(() => {
         if (!profile.date_of_birth) return;
         return format(new Date(profile.date_of_birth), 'MMMM dd, yyyy');
@@ -74,11 +77,11 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
                 </div>
                 <div className="flex flex-row items-center mt-4 gap-6">
                     <div className="flex flex-row items-center gap-1">
-                        {/* <p className="text-primary-content">{following}</p> */}
+                        <p className="text-primary-content">{profile.following}</p>
                         <p className="text-neutral-500">Following</p>
                     </div>
                     <div className="flex flex-row items-center gap-1">
-                        {/* <p className="text-primary-content">{followed}</p> */}
+                        <p className="text-primary-content">{profile.followers}</p>
                         <p className="text-neutral-500">Followers</p>
                     </div>
                 </div>

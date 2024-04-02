@@ -14,6 +14,8 @@ export type UserProfile = {
     created_at?: string;
     updated_at?: string;
     verify?: number;
+    followers?: number;
+    following?: number;
 };
 
 type UserStore = {

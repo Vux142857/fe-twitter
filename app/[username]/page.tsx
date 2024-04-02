@@ -6,11 +6,12 @@ import userServices from "@/services/user.services";
 import UserView from "@/Components/User/UserView";
 import { useSession } from "next-auth/react";
 import TweetsByUser from "@/Components/Layout/TweetsByUser";
+import { UserProfile } from "@/hooks/useMutateUser";
 
 const MyProfile = ({ params }: { params: { username: string } }) => {
     const { data: session } = useSession();
     const [accessToken, setAccessToken] = useState('')
-    const [profile, setProfile] = useState({
+    const [profile, setProfile] = useState<UserProfile>({
         _id: '',
         avatar: '',
         cover_photo: '',
@@ -21,7 +22,7 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
         website: '',
         location: '',
         date_of_birth: '',
-        followed: 0,
+        followers: 0,
         following: 0
     });
     const [label, setLabel] = useState('Profile');
@@ -30,9 +31,9 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
         setAccessToken(session?.user?.accessToken)
         const fetchData = async () => {
             const res = await userServices.getUserProfile(params.username)
-            const { user } = res;
-            if (user) {
-                setProfile(user);
+            if (res && res.result) {
+                const { user, followers, following } = res.result;
+                setProfile({ ...user, followers, following });
                 setLabel(user.username);
                 setIsCurrentUser(session?.user.username === user.username);
                 setAccessToken(session?.user.accessToken);

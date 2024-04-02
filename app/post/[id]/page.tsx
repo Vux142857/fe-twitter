@@ -1,4 +1,5 @@
 'use client'
+import Comments from "@/Components/Layout/Comments";
 import Layout from "@/Components/Layout/Layout";
 import Form from "@/Components/Post/Form";
 import PostItem, { dataProps } from "@/Components/Post/PostItem";
@@ -13,8 +14,8 @@ const PostPage = ({ params }: { params: { id: string } }) => {
     const id = useRef(params.id);
     const currentUser = useUserStore((state) => state.userProfile);
     const [accessToken, setAccessToken] = useState<string>(session?.user.accessToken)
-    const [data, setData] = useState<dataProps>(null); // [1
-    const [author, setAuthor] = useState<any>(null); // [1
+    const [data, setData] = useState<dataProps>(null);
+    const [author, setAuthor] = useState<any>(null);
     const router = useRouter();
     useEffect(() => {
         if (session?.error) {
@@ -33,9 +34,9 @@ const PostPage = ({ params }: { params: { id: string } }) => {
         }
         if (accessToken) {
             fetchData().then((res) => {
-                if (res) {
-                    setData(res.result);
-                    setAuthor(res.result.author);
+                if (res && res.result) {
+                    setData(res?.result);
+                    setAuthor(res?.result.author);
                 }
             })
         }
@@ -44,6 +45,7 @@ const PostPage = ({ params }: { params: { id: string } }) => {
         <Layout labelHeader="Post">
             {data && accessToken && author && <PostItem data={data} user={author} accessToken={accessToken} />}
             <Form isComment={true} postId={id.current} />
+            {accessToken && currentUser && <Comments user_id={id.current} accessToken={accessToken} user={currentUser} />}
         </Layout>
     );
 }

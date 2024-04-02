@@ -45,6 +45,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId }) => {
   }, [session])
   useEffect(() => {
     if (session) {
+      console.log(session)
       setUser(session.user)
     }
   }, [session])
@@ -220,7 +221,6 @@ const Form: React.FC<FormProps> = ({ isComment, postId }) => {
                     multiple={true}
                   />
                 </label>
-
                 <Button
                   onClick={() => onSubmit()}
                   disabled={isLoading || content.length === 0}

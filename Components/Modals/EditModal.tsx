@@ -64,8 +64,10 @@ const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
                 date_of_birth: dob.toISOString()
             }
             await userServices.editProfile(editBody, accessToken);
-            const result = await userServices.getMe(accessToken);
-            setUser(result?.user)
+            const res = await userServices.getMe(accessToken);
+            if (res && res.result && res.result.user) {
+                setUser(res.result.user)
+            }
             router.refresh();
         } catch (error) {
             console.log(error)

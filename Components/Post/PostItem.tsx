@@ -66,13 +66,13 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
     if (data.parent_id) {
       if (data.type === TweetType.Retweet) {
         setIsRetweet(true);
+        fecthParent().then((res) => {
+          setTweet(res?.result);
+        })
       }
-      fecthParent().then((res) => {
-        setTweet(res?.result);
-      })
-    }
-    if (data.type === TweetType.Comment) {
-      setIsComment(true);
+      if (data.type === TweetType.Comment) {
+        setIsComment(true);
+      }
     }
     const fetchData = async () => {
       try {

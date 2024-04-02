@@ -31,7 +31,10 @@ const Sidebar = () => {
           return await userServices.getMe(user?.accessToken)
         }
         fetchData().then((res) => {
-          setCurrentUser(res?.user)
+          if (res && res.result) {
+            const { user, followers, following } = res.result
+            setCurrentUser({ ...user, followers, following })
+          }
         }).catch((error) => {
           console.log(error)
         })

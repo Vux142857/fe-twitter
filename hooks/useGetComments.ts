@@ -26,7 +26,7 @@ const useGetComments = (pageNumber: number, user_id: string, accessToken: string
                 return [...new Set([...prev, ...res.data.result.tweetsChildren])]
             })
             console.log(res.data.result)
-            setHasMore(res.data.result.tweetsChildren.length > 0)
+            setHasMore(res.data.result.total > res.data.result.tweetsChildren.length)
             setLoading(false)
         }).catch(e => {
             if (axios.isCancel(e)) return

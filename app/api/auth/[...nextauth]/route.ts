@@ -33,8 +33,10 @@ const handler = NextAuth({
               ])
               if (decodedRT) {
                 const res = await userServices.getMe(result.accessToken);
-                const user = setUserSession(res, result, decodedRT, decodeAT);
-                return user;
+                if (res && res.result && res.result.user) {
+                  const user = setUserSession(res.result.user, result, decodedRT, decodeAT);
+                  return user;
+                }
               } else {
                 console.error('Error decoding access token');
                 return null;
@@ -94,8 +96,10 @@ const handler = NextAuth({
               ])
               if (decodedRT) {
                 const res = await userServices.getMe(result.accessToken);
-                const user = setUserSession(res, result, decodedRT, decodeAT);
-                return user;
+                if (res && res.result && res.result.user) {
+                  const user = setUserSession(res.result.user, result, decodedRT, decodeAT);
+                  return user;
+                }
               } else {
                 console.error('Error decoding access token');
                 return null;
@@ -198,10 +202,10 @@ export { handler as GET, handler as POST }
 const setUserSession = (res: any, result: any, decodedRT: any, decodeAT) => {
   return {
     id: decodedRT.user_id,
-    username: res && res.user && res.user.username,
+    username: res.username,
     accessToken: result.accessToken,
     refreshToken: result.refreshToken,
-    avatar: res && res.user && res.user.avatar,
+    avatar: res.avatar,
     exp: decodedRT.exp,
     expAT: decodeAT.exp
   };
