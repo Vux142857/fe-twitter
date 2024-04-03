@@ -44,6 +44,20 @@ class UserServices {
     async logout(refreshToken: string, accessToken) {
         return await fetcher.postWithAuth(`${SERVER}/user/logout`, { refresh_token: refreshToken }, accessToken)
     }
+
+    // async verifyEmail(token: string) {}
+
+    async createForgotPassword(email: string) {
+        return await fetcher.post(`${SERVER}/user/create-forgot-password`, { email })
+    }
+
+    async verifyForgotPassword(token: string) {
+        return await fetcher.post(`${SERVER}/user/verify-forgot-password`, { forgot_password_token: token })
+    }
+
+    async changePassword(password: string, token: string, confirm_password: string) {
+        return await fetcher.post(`${SERVER}/user/reset-password`, { password, confirm_password, forgot_password_token: token })
+    }
 }
 
 const userServices = new UserServices()

@@ -11,6 +11,12 @@ export interface UserData {
     date_of_birth: string
 }
 
+export enum UserVerifyStatus {
+    Unverified,
+    Verified,
+    Banned
+}
+
 export interface EditBody {
     name: string
     username: string

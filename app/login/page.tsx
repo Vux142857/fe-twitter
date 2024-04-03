@@ -5,7 +5,7 @@ import daisyImg from "@/public/daisy-flowers-blue-3840x2160-12883.jpeg"
 import TypingEffect from '@/Components/TypingEffect'
 import Link from 'next/link'
 import { signIn, useSession } from 'next-auth/react'
-import {  useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 // import { FcGoogle } from 'react-icons/fc'
 
@@ -63,6 +63,13 @@ const Login = () => {
                                 <FcGoogle className='ml-2' />
                             </button>
                         </div> */}
+                        <div className='form-control'>
+                            <label className="label">
+                                <span className="label-text">Forgot password ?
+                                    <Link href='/forgot-password' > Change password </Link>
+                                </span>
+                            </label>
+                        </div>
                         <div className='form-control'>
                             <label className="label">
                                 <span className="label-text">Do not have account?

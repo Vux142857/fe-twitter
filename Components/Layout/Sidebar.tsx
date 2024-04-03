@@ -10,6 +10,8 @@ import { memo, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import userServices from "@/services/user.services";
 import useUserStore from "@/hooks/useMutateUser";
+import toast from "react-hot-toast";
+import { UserVerifyStatus } from "@/constants/dataBody";
 
 const Sidebar = () => {
   const router = useRouter()
@@ -38,6 +40,9 @@ const Sidebar = () => {
         }).catch((error) => {
           console.log(error)
         })
+      }
+      if (currentUser && currentUser.verify == UserVerifyStatus.Unverified) {
+        toast.error('Please verify your email')
       }
     } else {
       setIsLogin(false)
