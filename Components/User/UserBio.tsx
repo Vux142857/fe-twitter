@@ -12,9 +12,6 @@ interface UserBioProps {
     accessToken: string
 }
 const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }) => {
-    console.log('followers', profile.followers)
-    console.log('following', profile.following)
-
     const dob = useMemo(() => {
         if (!profile.date_of_birth) return;
         return format(new Date(profile.date_of_birth), 'MMMM dd, yyyy');
@@ -33,7 +30,6 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
     const onFollow = useCallback(async (ev: any) => {
         ev.stopPropagation();
         if (hasFollowed) {
-            console.log('unfollow', accessToken, profile._id)
             await followServices.unfollow(accessToken, profile._id)
             setFollowed(false);
         } else {

@@ -11,13 +11,16 @@ import SelectUser from "../Layout/FollowList";
 import { useMentionStore, useTweetCircleStore } from "@/hooks/useChosenList";
 import tweetServices, { TweetReqBody } from "@/services/twitter.service";
 import { TweetAudience, TweetType } from "@/constants/dataBody";
+import { useRouter } from "next/navigation";
 interface FormProps {
   isComment: boolean;
   postId?: string;
+  user: any;
 }
-const Form: React.FC<FormProps> = ({ isComment, postId }) => {
-  const { data: session } = useSession();
-  const [user, setUser] = useState(session?.user);
+const Form: React.FC<FormProps> = ({ isComment, postId, user }) => {
+  // const { data: session } = useSession();
+  // const [user, setUser] = useState(session?.user);
+  const router = useRouter();
   const [body, setBody] = useState<TweetReqBody>({
     audience: TweetAudience.Everyone,
     content: '',
@@ -38,18 +41,6 @@ const Form: React.FC<FormProps> = ({ isComment, postId }) => {
   const [files, setFiles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isImage, setTypeMedia] = useState(false);
-  useEffect(() => {
-    if (!session?.error) {
-      setUser(session?.user)
-    }
-  }, [session])
-  useEffect(() => {
-    if (session) {
-      console.log(session)
-      setUser(session.user)
-    }
-  }, [session])
-
   const handleMediaChange = useCallback((event) => {
     event.stopPropagation()
     const filesList: File[] = Array.from(event.target.files);
@@ -95,13 +86,11 @@ const Form: React.FC<FormProps> = ({ isComment, postId }) => {
         // Now that mediaData is set, you can set the body data
         const temp = []
         if (isImage && Array.isArray(mediaData)) {
-          console.log('mediaData', mediaData)
           mediaData.forEach((media) => {
             temp.push(media)
           })
         } else {
           temp.push(mediaData)
-          console.log('temp', temp)
         }
         body.media = temp;
         body.tweet_circle = getTweetCircle;
@@ -120,6 +109,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId }) => {
         setFiles([]);
         clearMention();
         clearTweetCircle();
+        router.refresh();
       }).catch((error) => {
         console.error('Error submitting tweet:', error);
         toast.error('Something went wrong');
@@ -142,6 +132,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId }) => {
           setFiles([]);
           clearMention();
           clearTweetCircle();
+          router.refresh();
         }).catch((error) => {
           console.error('Error submitting tweet:', error);
           toast.error('Something went wrong');

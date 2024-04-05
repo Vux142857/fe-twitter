@@ -119,14 +119,21 @@ const handler = NextAuth({
   debug: true,
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       try {
+        if (trigger === 'update') {
+          return {
+            ...token,
+            ...session.user
+          }
+        }
         if (user) {
           return {
             id: user.id,
             username: user.username,
             accessToken: user.accessToken,
             refreshToken: user.refreshToken,
+            email: user.email,
             avatar: user.avatar,
             profile: user.profile,
             exp: user.exp,
@@ -150,6 +157,7 @@ const handler = NextAuth({
         session.user.id = token.id as string
         session.user.accessToken = token.accessToken as string
         session.user.refreshToken = token.refreshToken as string
+        session.user.email = token.email as string
         session.user.username = token.username as string
         session.user.avatar = token.avatar as string
         session.expires = toISODateString(token.exp as number) as string
@@ -203,6 +211,7 @@ const setUserSession = (res: any, result: any, decodedRT: any, decodeAT) => {
   return {
     id: decodedRT.user_id,
     username: res.username,
+    email: res.email,
     accessToken: result.accessToken,
     refreshToken: result.refreshToken,
     avatar: res.avatar,

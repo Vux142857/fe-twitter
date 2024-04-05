@@ -1,21 +1,24 @@
 'use client'
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Layout from '../../Components/Layout/Layout';
 import { useSession } from "next-auth/react";
 import BookmarkList from '@/Components/Layout/BookmarkList';
 
 const BookmarksList = () => {
   const { data: session } = useSession();
-  const [accessToken, setAccessToken] = useState(null)
-  useLayoutEffect(() => {
-    if (session) {
-      setAccessToken(session.user.accessToken)
+  const [userSession, setUser] = useState(session?.user || null);
+  useEffect(() => {
+    if (session?.error) {
+      return
+    }
+    if (session?.user) {
+      setUser(session?.user)
     }
   }, [session])
   return (
-    <Layout labelHeader="Bookmarks">
-      {accessToken &&
-        <BookmarkList accessToken={accessToken} />
+    <Layout labelHeader="Bookmarks" userSession={useSession}>
+      {userSession &&
+        <BookmarkList accessToken={userSession?.accessToken} />
       }
     </Layout>
   );

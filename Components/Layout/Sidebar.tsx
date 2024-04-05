@@ -5,55 +5,33 @@ import { FaUser } from "react-icons/fa";
 import SidebarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
 import SidebarTweetButton from "./SidebarTweetButton";
-import { signOut, useSession } from "next-auth/react";
-import { memo, useEffect, useState } from "react";
+import { signOut } from "next-auth/react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import userServices from "@/services/user.services";
 import useUserStore from "@/hooks/useMutateUser";
 import toast from "react-hot-toast";
-import { UserVerifyStatus } from "@/constants/dataBody";
-
-const Sidebar = () => {
+interface SidebarProps {
+  userSession?: any;
+}
+const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
   const router = useRouter()
-  const { data: session } = useSession();
-  const setCurrentUser = useUserStore((state) => state.setUserProfile)
   const currentUser = useUserStore((state) => state.userProfile)
-  const user = session?.user;
+  console.log(currentUser)
   const [isLogin, setIsLogin] = useState(false);
-  useEffect(() => {
-    if (session?.error) {
-      setIsLogin(false)
-      router.push('/login')
-      return
-    }
-    if (session?.user) {
-      setIsLogin(true)
-      if (user && !currentUser) {
-        const fetchData = async () => {
-          return await userServices.getMe(user?.accessToken)
-        }
-        fetchData().then((res) => {
-          if (res && res.result) {
-            const { user, followers, following } = res.result
-            setCurrentUser({ ...user, followers, following })
-          }
-        }).catch((error) => {
-          console.log(error)
-        })
-      }
-      if (currentUser && currentUser.verify == UserVerifyStatus.Unverified) {
-        toast.error('Please verify your email')
-      }
-    } else {
-      setIsLogin(false)
-    }
-  }, [session])
 
-  const handleLogout = async () => {
+  useEffect(() => {
+    if (userSession) {
+      
+      setIsLogin(true)
+    }
+  }, [userSession])
+
+  const handleLogout = useCallback(async () => {
     signOut({ redirect: false })
-    await userServices.logout(user?.refreshToken, user?.accessToken)
+    await userServices.logout(userSession?.refreshToken, userSession?.accessToken)
     setIsLogin(false)
-  }
+  }, [userSession])
   const items = [
     {
       label: "Home",

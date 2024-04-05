@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
 export type UserProfile = {
     _id: string;
@@ -19,7 +19,7 @@ export type UserProfile = {
 };
 
 type UserStore = {
-    userProfile: UserProfile | null;
+    userProfile: any | null;
     setUserProfile: (profile: UserProfile) => void;
     clearUserProfile: () => void;
 };

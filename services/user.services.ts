@@ -45,7 +45,13 @@ class UserServices {
         return await fetcher.postWithAuth(`${SERVER}/user/logout`, { refresh_token: refreshToken }, accessToken)
     }
 
-    // async verifyEmail(token: string) {}
+    async verifyEmail(token: string, accessToken: string) {
+        return await fetcher.postWithAuth(`${SERVER}/user/verify-email`, { verify_email_token: token }, accessToken)
+    }
+
+    async resendVerifyEmail(email: string, accessToken: string) {
+        return await fetcher.postWithAuth(`${SERVER}/user/resend-verify-email`, { email }, accessToken)
+    }
 
     async createForgotPassword(email: string) {
         return await fetcher.post(`${SERVER}/user/create-forgot-password`, { email })

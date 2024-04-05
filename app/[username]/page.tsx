@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { useEffect, useState } from "react";
 import Layout from "@/Components/Layout/Layout";
@@ -10,7 +9,15 @@ import { UserProfile } from "@/hooks/useMutateUser";
 
 const MyProfile = ({ params }: { params: { username: string } }) => {
     const { data: session } = useSession();
-    const [accessToken, setAccessToken] = useState('')
+    const [userSession, setUser] = useState(session?.user || null);
+    useEffect(() => {
+        if (session?.error) {
+            return
+        }
+        if (session?.user) {
+            setUser(session?.user)
+        }
+    }, [session])
     const [profile, setProfile] = useState<UserProfile>({
         _id: '',
         avatar: '',
@@ -28,28 +35,26 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
     const [label, setLabel] = useState('Profile');
     const [isCurrentUser, setIsCurrentUser] = useState(false);
     useEffect(() => {
-        setAccessToken(session?.user?.accessToken)
         const fetchData = async () => {
             const res = await userServices.getUserProfile(params.username)
             if (res && res.result) {
                 const { user, followers, following } = res.result;
                 setProfile({ ...user, followers, following });
                 setLabel(user.username);
-                setIsCurrentUser(session?.user.username === user.username);
-                setAccessToken(session?.user.accessToken);
+                setIsCurrentUser(userSession?.username === user.username);
             }
         }
         fetchData()
-    }, [session, profile, params.username]);
+    }, [session, profile, params.username, userSession]);
 
     return (
-        <Layout labelHeader={label}>
+        <Layout labelHeader={label} userSession={userSession}>
             <UserView
                 user={profile}
                 isCurrentUser={isCurrentUser}
                 accessToken={session ? session?.user.accessToken : ''}
             />
-            {accessToken && profile._id !== '' && <TweetsByUser user_id={profile._id} accessToken={accessToken} user={profile} />}
+            {userSession && profile._id !== '' && <TweetsByUser user_id={profile._id} accessToken={userSession?.accessToken} user={profile} />}
         </Layout>
     );
 }

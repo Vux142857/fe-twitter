@@ -49,7 +49,7 @@ const Register = () => {
             if (res?.error) {
                 setError(res.error)
             } else {
-                router.push('/')
+                router.push('/send-verify')
             }
         } catch (error) {
             console.log(error)

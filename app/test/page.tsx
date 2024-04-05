@@ -85,7 +85,6 @@ const PostItem: React.FC<PostItemProps> = (mockData) => {
   const router = useRouter();
   mockData = mock
   const data = mock.data;
-  console.log(data.likes)
   const accessToken = mock.accessToken;
   const [like, setLike] = useState(data.likes);
   const [hasLiked, setHasLiked] = useState(false);

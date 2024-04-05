@@ -8,23 +8,28 @@ import TweetsByUser from "@/Components/Layout/TweetsByUser";
 import useUserStore from "@/hooks/useMutateUser";
 
 const MyProfile = () => {
-    const profile = useUserStore(state => state.userProfile);
     const { data: session } = useSession();
-    const [accessToken, setAccessToken] = useState(session?.user?.accessToken);
+    const profile = useUserStore((state) => state.userProfile);
+    const [userSession, setUser] = useState(session?.user || null);
     useEffect(() => {
-        setAccessToken(session?.user?.accessToken)
-    }, [session]);
+        if (session?.error) {
+            return
+        }
+        if (session?.user) {
+            setUser(session?.user)
+        }
+    }, [session])
     return (
-        <Layout labelHeader={profile?.username}>
+        <Layout labelHeader={profile?.username} userSession={userSession}>
             {
-                accessToken && profile &&
+                userSession && profile &&
                 <UserView
                     user={profile}
                     isCurrentUser={true}
-                    accessToken={accessToken}
+                    accessToken={userSession?.accessToken}
                 />
             }
-            {accessToken && profile && <TweetsByUser user_id={profile._id.toString()} accessToken={accessToken} user={profile} />}
+            {userSession && profile && <TweetsByUser user_id={profile._id.toString()} accessToken={userSession?.accessToken} user={profile} />}
         </Layout>
     );
 }

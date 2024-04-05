@@ -24,8 +24,6 @@ const useGetTweetsByUser = (pageNumber: number, user_id: string, accessToken: st
             setNewfeeds(prev => {
                 return [...new Set([...prev, ...res.data.result.tweetsByUser])]
             })
-            console.log(res.data.result)
-            console.log(skip, LIMIT_POST, res.data.result.tweetsByUser.length)
             setHasMore(res.data.result.tweetsByUser.length > 0)
             setLoading(false)
         }).catch(e => {

@@ -18,6 +18,7 @@ declare module 'next-auth' {
             accessToken: string
             refreshToken: string
             id: string
+            email: string
             username: string
             avatar: string
         },

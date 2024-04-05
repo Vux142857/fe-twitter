@@ -15,13 +15,16 @@ const PostPage = ({ params }: { params: { id: string } }) => {
     const currentUser = useUserStore((state) => state.userProfile);
     const [accessToken, setAccessToken] = useState<string>(session?.user.accessToken)
     const [data, setData] = useState<dataProps>(null);
+    const [userSession, setUserSession] = useState<any>(session?.user)
     const [author, setAuthor] = useState<any>(null);
     const router = useRouter();
     useEffect(() => {
         if (session?.error) {
             router.push('/login');
+            return;
         } else {
             setAccessToken(session?.user?.accessToken)
+            setUserSession(session?.user)
         }
     }, [session])
     useEffect(() => {
@@ -40,11 +43,11 @@ const PostPage = ({ params }: { params: { id: string } }) => {
                 }
             })
         }
-    })
+    }, [accessToken])
     return (
-        <Layout labelHeader="Post">
+        <Layout labelHeader="Post" userSession={userSession}>
             {data && accessToken && author && <PostItem data={data} user={author} accessToken={accessToken} />}
-            <Form isComment={true} postId={id.current} />
+            {userSession && <Form isComment={true} postId={id.current} user={userSession} />}
             {accessToken && currentUser && <Comments user_id={id.current} accessToken={accessToken} user={currentUser} />}
         </Layout>
     );
