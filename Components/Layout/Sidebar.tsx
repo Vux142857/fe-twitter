@@ -9,20 +9,14 @@ import { signOut } from "next-auth/react";
 import { memo, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import userServices from "@/services/user.services";
-import useUserStore from "@/hooks/useMutateUser";
-import toast from "react-hot-toast";
 interface SidebarProps {
   userSession?: any;
 }
 const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
   const router = useRouter()
-  const currentUser = useUserStore((state) => state.userProfile)
-  console.log(currentUser)
   const [isLogin, setIsLogin] = useState(false);
-
   useEffect(() => {
     if (userSession) {
-      
       setIsLogin(true)
     }
   }, [userSession])
@@ -38,11 +32,11 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
       href: "/",
       icon: BsHouseFill,
     },
-    {
-      label: "Notifications",
-      href: "/notifications",
-      icon: BsBellFill,
-    },
+    // {
+    //   label: "Notifications",
+    //   href: "/notifications",
+    //   icon: BsBellFill,
+    // },
     {
       label: "Bookmarks",
       href: "/bookmark",

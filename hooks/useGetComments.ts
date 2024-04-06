@@ -1,7 +1,7 @@
 import { TweetType } from "@/constants/dataBody";
 import axios, { Canceler } from "axios";
 import { useEffect, useState } from "react";
-const LIMIT_POST = 4
+const LIMIT_POST = 10
 
 const useGetComments = (pageNumber: number, user_id: string, accessToken: string) => {
     const [loading, setLoading] = useState(true)
@@ -25,7 +25,7 @@ const useGetComments = (pageNumber: number, user_id: string, accessToken: string
             setComments(prev => {
                 return [...new Set([...prev, ...res.data.result.tweetsChildren])]
             })
-            setHasMore(res.data.result.total > res.data.result.tweetsChildren.length)
+            setHasMore(res.data.result?.total > comments.length)
             setLoading(false)
         }).catch(e => {
             if (axios.isCancel(e)) return

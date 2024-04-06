@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -12,13 +11,15 @@ const MyProfile = () => {
     const profile = useUserStore((state) => state.userProfile);
     const [userSession, setUser] = useState(session?.user || null);
     useEffect(() => {
+        console.log(profile)
+        console.log(userSession)
         if (session?.error) {
             return
         }
         if (session?.user) {
             setUser(session?.user)
         }
-    }, [session])
+    }, [session, userSession])
     return (
         <Layout labelHeader={profile?.username} userSession={userSession}>
             {

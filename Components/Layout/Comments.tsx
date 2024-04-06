@@ -32,11 +32,11 @@ const Comments = ({ user_id, accessToken, user }: { user_id: string, accessToken
       {comments.map((data, index) => {
         if (comments.length === index + 1) {
           return (
-            <div key={index} ref={lastNewfeedsElementRef}><PostItem data={data} user={user} accessToken={accessToken} /></div>
+            <div key={index} ref={lastNewfeedsElementRef}><PostItem data={data} user={user} accessToken={accessToken} inPost={true} /></div>
           )
         } else {
           return (
-            <div key={index}><PostItem data={data} user={user} accessToken={accessToken} /></div>
+            <div key={index}><PostItem data={data} user={user} accessToken={accessToken} inPost={true} /></div>
           )
         }
       })}

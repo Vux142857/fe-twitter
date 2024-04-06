@@ -32,11 +32,11 @@ const TweetsByUser = ({ user_id, accessToken, user }: { user_id: string, accessT
       {newfeeds.map((data, index) => {
         if (newfeeds.length === index + 1) {
           return (
-            <div key={index} ref={lastNewfeedsElementRef}><PostItem data={data} user={user} accessToken={accessToken} /></div>
+            <div key={index} ref={lastNewfeedsElementRef}><PostItem data={data} user={user} accessToken={accessToken} inPost={false} /></div>
           )
         } else {
           return (
-            <div key={index}><PostItem data={data} user={user} accessToken={accessToken} /></div>
+            <div key={index}><PostItem data={data} user={user} accessToken={accessToken} inPost={false} /></div>
           )
         }
       })}

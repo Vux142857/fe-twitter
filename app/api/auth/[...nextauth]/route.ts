@@ -135,7 +135,7 @@ const handler = NextAuth({
             refreshToken: user.refreshToken,
             email: user.email,
             avatar: user.avatar,
-            profile: user.profile,
+            verify: user.verify,
             exp: user.exp,
             expAT: user.expAT
           }
@@ -160,6 +160,7 @@ const handler = NextAuth({
         session.user.email = token.email as string
         session.user.username = token.username as string
         session.user.avatar = token.avatar as string
+        session.user.verify = token.verify as number
         session.expires = toISODateString(token.exp as number) as string
         session.error = token.error as string
       }
@@ -214,6 +215,7 @@ const setUserSession = (res: any, result: any, decodedRT: any, decodeAT) => {
     email: res.email,
     accessToken: result.accessToken,
     refreshToken: result.refreshToken,
+    verify: res.verify,
     avatar: res.avatar,
     exp: decodedRT.exp,
     expAT: decodeAT.exp

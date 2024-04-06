@@ -7,13 +7,11 @@ import useUserStore from "@/hooks/useMutateUser";
 import tweetServices from "@/services/twitter.service";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const PostPage = ({ params }: { params: { id: string } }) => {
     const { data: session } = useSession();
-    const id = useRef(params.id);
     const currentUser = useUserStore((state) => state.userProfile);
-    const [accessToken, setAccessToken] = useState<string>(session?.user.accessToken)
     const [data, setData] = useState<dataProps>(null);
     const [userSession, setUserSession] = useState<any>(session?.user)
     const [author, setAuthor] = useState<any>(null);
@@ -23,19 +21,18 @@ const PostPage = ({ params }: { params: { id: string } }) => {
             router.push('/login');
             return;
         } else {
-            setAccessToken(session?.user?.accessToken)
             setUserSession(session?.user)
         }
-    }, [session])
+    }, [session, params.id, userSession])
     useEffect(() => {
         const fetchData = async () => {
             try {
-                return await tweetServices.getTweetById(accessToken, id.current);
+                return await tweetServices.getTweetById(userSession?.accessToken, params.id);
             } catch (error) {
                 console.error('Error fetching parent tweet:', error);
             }
         }
-        if (accessToken) {
+        if (userSession) {
             fetchData().then((res) => {
                 if (res && res.result) {
                     setData(res?.result);
@@ -43,12 +40,12 @@ const PostPage = ({ params }: { params: { id: string } }) => {
                 }
             })
         }
-    }, [accessToken])
+    }, [session, params.id, userSession])
     return (
         <Layout labelHeader="Post" userSession={userSession}>
-            {data && accessToken && author && <PostItem data={data} user={author} accessToken={accessToken} />}
-            {userSession && <Form isComment={true} postId={id.current} user={userSession} />}
-            {accessToken && currentUser && <Comments user_id={id.current} accessToken={accessToken} user={currentUser} />}
+            {data && userSession && author && <PostItem data={data} user={author} accessToken={userSession?.accessToken} />}
+            {userSession && <Form isComment={true} postId={params.id} user={userSession} />}
+            {userSession && currentUser && <Comments user_id={params.id} accessToken={userSession?.accessToken} user={currentUser} />}
         </Layout>
     );
 }

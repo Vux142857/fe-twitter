@@ -1,6 +1,6 @@
 import axios, { Canceler } from "axios";
 import { useEffect, useState } from "react";
-const LIMIT_POST = 4
+const LIMIT_POST = 10
 
 const useNewfeeds = (pageNumber: number) => {
     const [loading, setLoading] = useState(true)

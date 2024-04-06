@@ -5,13 +5,16 @@ import Form from "@/Components/Post/Form";
 import useUserStore from "@/hooks/useMutateUser";
 import userServices from "@/services/user.services";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 export default function Home() {
   const { data: session } = useSession();
+  const router = useRouter()
   const setCurrentUser = useUserStore((state) => state.setUserProfile);
   const [userSession, setUser] = useState(session?.user || null);
   useEffect(() => {
     if (session?.error) {
+      router.push('/login')
       return
     }
     if (session?.user || userSession) {
@@ -20,9 +23,7 @@ export default function Home() {
       }
       fetchData().then((res) => {
         if (res && res.result) {
-          console.log(res)
           const { user, followers, following } = res.result
-          console.log(user, followers, following)
           setCurrentUser({ ...user, followers, following })
         }
       }).catch((error) => {
@@ -30,7 +31,7 @@ export default function Home() {
       })
     }
     setUser(session?.user)
-  }, [session])
+  }, [session, userSession])
 
   return (
     <Layout labelHeader="Home" userSession={userSession}>

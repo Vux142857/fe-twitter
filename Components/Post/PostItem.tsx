@@ -1,8 +1,8 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import { memo, use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage, AiOutlineRetweet } from 'react-icons/ai';
-import { format, set } from 'date-fns';
+import { format } from 'date-fns';
 import Avatar from '../Avatar';
 import likeServices from '@/services/like.services';
 import { BsFillBookmarkFill, BsBookmark } from 'react-icons/bs';
@@ -15,6 +15,7 @@ interface PostItemProps {
   data: dataProps;
   accessToken?: string;
   user?: any;
+  inPost?: boolean;
 }
 
 export interface dataProps {
@@ -43,7 +44,7 @@ export interface dataProps {
   comments: number;
 }
 
-const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
+const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) => {
   const router = useRouter();
   const [like, setLike] = useState(data.likes);
   const [hasLiked, setHasLiked] = useState(false);
@@ -55,18 +56,30 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
     if (!data.createdAt) return;
     return format(new Date(data.createdAt), 'MMMM dd, yyyy');
   }, [data._id]);
-  useEffect(() => {
-    const fecthParent = async () => {
-      try {
-        return await tweetServices.getTweetById(accessToken, data.parent_id);
-      } catch (error) {
-        console.error('Error fetching parent tweet:', error);
-      }
+
+  const commentValue = useMemo(() => {
+    if (data.type === TweetType.Comment) {
+      return data.content;
     }
+  }, [data._id]);
+
+  useEffect(() => {
     if (data.parent_id) {
-      if (data.type === TweetType.Retweet) {
-        setIsRetweet(true);
-        fecthParent().then((res) => {
+      if (data.type === TweetType.Retweet || (data.type === TweetType.Comment && inPost === false)) {
+        if (data.type === TweetType.Retweet) {
+          setIsRetweet(true);
+        }
+        if (data.type === TweetType.Comment) {
+          setIsComment(true);
+        }
+        const fetchParent = async () => {
+          try {
+            return await tweetServices.getTweetById(accessToken, data.parent_id);
+          } catch (error) {
+            console.error('Error fetching parent tweet:', error);
+          }
+        }
+        fetchParent().then((res) => {
           setTweet(res?.result);
         })
       }
@@ -74,7 +87,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
         setIsComment(true);
       }
     }
-    const fetchData = async () => {
+    const fetchReact = async () => {
       try {
         const [likeResponse, bookmarkResponse] = await Promise.all([
           likeServices.getLike(accessToken, data._id),
@@ -91,9 +104,13 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
       }
     }
     if (accessToken) {
-      fetchData()
+      fetchReact()
     }
   }, [accessToken, data._id]);
+
+  // const fetchParent = useCallback(
+  //   , [accessToken, data.parent_id]
+  // )
 
   const goToUser = useCallback((ev: any) => {
     ev.stopPropagation();
@@ -162,7 +179,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
 
   const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart
   const BookmarkIcon = hasBookmark ? BsFillBookmarkFill : BsBookmark
-  const isRetweetStyle = isRetweet ? 'pl-4' : '';
+  const isRetweetStyle = (isRetweet || isComment) ? 'pl-4' : '';
   return (
     <>
       <div
@@ -175,33 +192,36 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
           transition
         "
       >
-        {isRetweet && user && <div className="flex flex-row items-center gap-2 border-b-[1px] 
+        {(isRetweet || isComment) && user && !inPost && <div className="flex flex-col border-b-[1px] 
           border-neutral-800 mb-2 pb-2">
-          <Avatar username={user.username} avatarURL={user.avatar} isLarge={false} />
-          <p
-            onClick={goToUser}
-            className="
-                  text-white 
-                  font-semibold 
-                  cursor-pointer 
-                  hover:underline
-              ">
-            {user.name}
-          </p>
-          <span
-            onClick={goToUser}
-            className="
-                  text-neutral-500
-                  cursor-pointer
-                  hover:underline
-                  hidden
-                  md:block
-              ">
-            @{user.username}
-          </span>
-          <span className="text-neutral-500 text-sm">
-            {createdAt}
-          </span>
+          <div className='flex flex-row items-center gap-2'>
+            <Avatar username={user.username} avatarURL={user.avatar} isLarge={false} />
+            <p
+              onClick={goToUser}
+              className="
+                    text-white 
+                    font-semibold 
+                    cursor-pointer 
+                    hover:underline
+                ">
+              {user.name}
+            </p>
+            <span
+              onClick={goToUser}
+              className="
+                    text-neutral-500
+                    cursor-pointer
+                    hover:underline
+                    hidden
+                    md:block
+                ">
+              @{user.username}
+            </span>
+            <span className="text-neutral-500 text-sm">
+              {createdAt}
+            </span>
+          </div>
+          {isComment && !inPost && <div className="text-white p-4">{commentValue}</div>}
         </div>}
         <div className={isRetweetStyle}>
           <div className="flex flex-row items-center gap-2">
@@ -231,7 +251,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user }) => {
               {createdAt}
             </span>
           </div>
-          <div className="text-white mt-1">
+          <div className="text-white mt-1" onClick={goToPost}>
             {tweet?.content}
           </div>
           <div className="grid grid-cols-4 gap-1 m-2">

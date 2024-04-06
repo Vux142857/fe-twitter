@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-
+import { persist, createJSONStorage } from 'zustand/middleware'
 export type UserProfile = {
     _id: string;
     name: string;
@@ -18,16 +18,23 @@ export type UserProfile = {
     following?: number;
 };
 
-type UserStore = {
-    userProfile: any | null;
-    setUserProfile: (profile: UserProfile) => void;
-    clearUserProfile: () => void;
-};
+// type UserStore = {
+//     userProfile: any | null;
+//     setUserProfile: (profile: any) => void;
+//     clearUserProfile: () => void;
+// };
 
-const useUserStore = create<UserStore>((set) => ({
-    userProfile: null,
-    setUserProfile: (profile) => set({ userProfile: profile }),
-    clearUserProfile: () => set({ userProfile: null }),
-}));
+const useUserStore = create(
+    persist(
+        (set, get) => ({
+            userProfile: null,
+            setUserProfile: (profile: any) => set({ userProfile: profile }),
+            clearUserProfile: () => set({ userProfile: null }),
+        }),
+        {
+            name: 'user-storage',
+            storage: createJSONStorage(() => sessionStorage),
+        },
+    ));
 
 export default useUserStore;
