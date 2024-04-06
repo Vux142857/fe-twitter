@@ -20,11 +20,6 @@ const Comments = ({ user_id, accessToken, user }: { user_id: string, accessToken
     })
     if (node) observer.current.observe(node)
   }, [loading, hasMore])
-  useEffect(() => {
-    if (pageNumber > 8) {
-      redirect('/')
-    }
-  }, [pageNumber]);
 
   return (
     <>

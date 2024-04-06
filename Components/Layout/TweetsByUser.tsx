@@ -1,10 +1,11 @@
 'use client'
-import { redirect } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { memo, useCallback, useEffect, useRef, useState } from "react"
 import PostItem from "../Post/PostItem"
 import useGetTweetsByUser from "@/hooks/useGetTweetsByUser"
 
 const TweetsByUser = ({ user_id, accessToken, user }: { user_id: string, accessToken: string, user: any }) => {
+  const router = useRouter()
   const [pageNumber, setPageNumber] = useState(1)
   const { loading, newfeeds, error, hasMore } = useGetTweetsByUser(pageNumber, user_id, accessToken)
   const observer = useRef<IntersectionObserver | undefined>()
@@ -20,11 +21,6 @@ const TweetsByUser = ({ user_id, accessToken, user }: { user_id: string, accessT
     })
     if (node) observer.current.observe(node)
   }, [loading, hasMore])
-  useEffect(() => {
-    if (pageNumber > 8) {
-      redirect('/')
-    }
-  }, [pageNumber]);
 
   return (
     <>

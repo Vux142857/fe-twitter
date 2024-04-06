@@ -20,11 +20,6 @@ const BookmarkList = ({ accessToken }: { accessToken: string }) => {
     })
     if (node) observer.current.observe(node)
   }, [loading, hasMore])
-  useLayoutEffect(() => {
-    if (pageNumber > 8) {
-      redirect('/bookmark')
-    }
-  }, [pageNumber]);
 
   return (
     <>
