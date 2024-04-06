@@ -2,13 +2,12 @@ import axios, { Canceler } from "axios";
 import { useEffect, useState } from "react";
 const LIMIT_POST = 10
 
-const useFollowList = (pageNumber: number, user_id: string, accessToken: string, isFollower: boolean) => {
+const useFollowerList = (pageNumber: number, user_id: string, accessToken: string) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
-    const [followList, setFollowList] = useState<any[]>([])
+    const [followers, setFollowers] = useState<any[]>([])
     const [hasMore, setHasMore] = useState(false)
     const skip = (pageNumber - 1) * LIMIT_POST
-    const query = isFollower ? 'followers' : 'following'
     useEffect(() => {
         setLoading(true)
         setError(false)
@@ -19,20 +18,15 @@ const useFollowList = (pageNumber: number, user_id: string, accessToken: string,
                 'Authorization': `Bearer ${accessToken}`,
             },
             url: process.env.SERVER + `/user/follows/${user_id}`,
-            params: { limit: LIMIT_POST, type: query, skip },
+            params: { limit: LIMIT_POST, type: 'followers', skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {
-            if (isFollower) {
-                setFollowList(prev => {
+            if (res.data.result.followers.length > 0) {
+                setFollowers(prev => {
                     return [...new Set([...prev, ...res.data.result.followers])]
                 })
-                setHasMore(res.data.result.followers.length > 0)
-            } else {
-                setFollowList(prev => {
-                    return [...new Set([...prev, ...res.data.result.following])]
-                })
-                setHasMore(res.data.result.following.length > 0)
             }
+            setHasMore(res.data.result?.followers > followers.length)
             setLoading(false)
         }).catch(e => {
             if (axios.isCancel(e)) return
@@ -40,7 +34,7 @@ const useFollowList = (pageNumber: number, user_id: string, accessToken: string,
         })
         return () => cancel()
     }, [pageNumber])
-    return { loading, error, followList, hasMore }
+    return { loading, followers, error, hasMore }
 }
 
-export default useFollowList;
+export default useFollowerList;

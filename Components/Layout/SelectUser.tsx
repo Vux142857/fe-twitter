@@ -4,7 +4,7 @@ import { memo, use, useCallback, useEffect, useRef, useState } from "react";
 import MyModal from "@/Components/Modals/MyModal";
 import Button from "@/Components/Button";
 import { useMentionStore, useTweetCircleStore } from "@/hooks/useChosenList";
-import useFollowList from "@/hooks/useGetFollowList";
+import useFollowList from "@/hooks/useGetFollowerList";
 import { is } from "date-fns/locale";
 
 interface SelectUserProps {
@@ -20,7 +20,7 @@ const SelectUser: React.FC<SelectUserProps> = ({ isLoading, user_id, accessToken
   const isFollower = true
   const useChosenList = isTweetCirle ? useTweetCircleStore((state) => state.setTweetCircle) : useMentionStore((state) => state.setMention)
 
-  const { loading, followList, error, hasMore } = useFollowList(pageNumber, user_id, accessToken, isFollower)
+  const { loading, followers, error, hasMore } = useFollowList(pageNumber, user_id, accessToken, isFollower)
   const observer = useRef<IntersectionObserver | undefined>()
   const lastNewfeedsElementRef = useCallback((node: HTMLDivElement | null) => {
     if (loading) return
@@ -63,8 +63,8 @@ const SelectUser: React.FC<SelectUserProps> = ({ isLoading, user_id, accessToken
         <h4 className="mb-4 text-2xl font-bold">Followers</h4>
         <div className='overflow-y-auto'>
           <div className="flex flex-col gap-4">
-            {followList.map((follower, index) => {
-              if (followList.length === index + 1) {
+            {followers.map((follower, index) => {
+              if (followers.length === index + 1) {
                 return (
                   <div key={index} ref={lastNewfeedsElementRef} className="flex items-center justify-between gap-2">
                     <div className="flex flex-col">

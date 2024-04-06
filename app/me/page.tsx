@@ -8,7 +8,7 @@ import useUserStore from "@/hooks/useMutateUser";
 
 const MyProfile = () => {
     const { data: session } = useSession();
-    const profile = useUserStore((state) => state.userProfile);
+    const profile = useUserStore((state: any) => state.userProfile);
     const [userSession, setUser] = useState(session?.user || null);
     useEffect(() => {
         console.log(profile)

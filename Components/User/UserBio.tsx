@@ -6,6 +6,8 @@ import Button from '../Button';
 import followServices from '@/services/follow.services';
 import EditModal from '../Modals/EditModal';
 import { UserProfile } from '@/hooks/useMutateUser';
+import FollowingList from '../Layout/FollowingList';
+import FollowerList from '../Layout/FollowerList';
 interface UserBioProps {
     profile: UserProfile
     isCurrentUser?: boolean
@@ -74,11 +76,11 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
                 <div className="flex flex-row items-center mt-4 gap-6">
                     <div className="flex flex-row items-center gap-1">
                         <p className="text-primary-content">{profile.following}</p>
-                        <p className="text-neutral-500">Following</p>
+                        <FollowingList accessToken={accessToken} user_id={profile?._id} />
                     </div>
                     <div className="flex flex-row items-center gap-1">
                         <p className="text-primary-content">{profile.followers}</p>
-                        <p className="text-neutral-500">Followers</p>
+                        <FollowerList accessToken={accessToken} user_id={profile?._id} />
                     </div>
                 </div>
             </div>

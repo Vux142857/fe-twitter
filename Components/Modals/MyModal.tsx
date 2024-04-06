@@ -1,12 +1,12 @@
 import Button from "../Button";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 
 interface MyModalProps {
-    onSubmit: any;
+    onSubmit?: any;
     title?: string;
     body?: React.ReactElement;
     footer?: React.ReactElement;
-    actionLabel: string;
+    actionLabel?: string;
     disabled?: boolean;
 }
 
@@ -22,9 +22,9 @@ const MyModal: React.FC<MyModalProps> = ({ onSubmit, title, body, actionLabel, f
         <>
             {/* Open the modal using document.getElementById('ID').showModal() method */}
             <Button label={`${title}`} onClick={() =>
-                (document.getElementById(`${actionLabel}`) as HTMLDialogElement).showModal()
+                (document.getElementById(`${title}`) as HTMLDialogElement).showModal()
             } />
-            <dialog id={`${actionLabel}`} className="modal modal-bottom sm:modal-middle">
+            <dialog id={`${title}`} className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">{title}</h3>
                     {/*body*/}
@@ -32,10 +32,10 @@ const MyModal: React.FC<MyModalProps> = ({ onSubmit, title, body, actionLabel, f
                         {body}
                     </div>
                     {/*footer*/}
-                    <div className="flex flex-col gap-2">
+                    {onSubmit && <div className="flex flex-col gap-2">
                         <Button disabled={disabled} label={actionLabel} secondary fullWidth large onClick={handleSubmit} />
                         {footer}
-                    </div>
+                    </div>}
                     <div className="modal-action">
                         <form method="dialog">
                             {/* if there is a button in form, it will close the modal */}
@@ -47,4 +47,4 @@ const MyModal: React.FC<MyModalProps> = ({ onSubmit, title, body, actionLabel, f
         </>)
 }
 
-export default MyModal;
+export default memo(MyModal);

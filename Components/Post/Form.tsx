@@ -1,13 +1,12 @@
 'use client'
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import Avatar from "../Avatar";
-import { useSession } from "next-auth/react";
 import Button from "../Button";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Input from "../Input";
 import Textarea from "../TextArea";
-import SelectUser from "../Layout/FollowList";
+import SelectUser from "../Layout/SelectUser";
 import { useMentionStore, useTweetCircleStore } from "@/hooks/useChosenList";
 import tweetServices, { TweetReqBody } from "@/services/twitter.service";
 import { TweetAudience, TweetType } from "@/constants/dataBody";
