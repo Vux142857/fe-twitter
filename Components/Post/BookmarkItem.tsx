@@ -37,7 +37,7 @@ const PostItem: React.FC<BookmarkItem> = ({ tweet, author }) => {
     }, [router, author?._id.toString()]);
 
     const goToPost = useCallback(() => {
-        router.push(`/posts/${tweet._id}`);
+        router.push(`/post/${tweet._id}`);
     }, [router, tweet._id]);
 
     return (

@@ -4,8 +4,7 @@ import { memo, use, useCallback, useEffect, useRef, useState } from "react";
 import MyModal from "@/Components/Modals/MyModal";
 import Button from "@/Components/Button";
 import { useMentionStore, useTweetCircleStore } from "@/hooks/useChosenList";
-import useFollowList from "@/hooks/useGetFollowerList";
-import { is } from "date-fns/locale";
+import useFollowerList from "@/hooks/useGetFollowerList";
 
 interface SelectUserProps {
   isLoading: boolean;
@@ -17,10 +16,8 @@ interface SelectUserProps {
 const SelectUser: React.FC<SelectUserProps> = ({ isLoading, user_id, accessToken, isTweetCirle }) => {
   const [chosenList, setChosenList] = useState<any[]>([]);
   const [pageNumber, setPageNumber] = useState(1)
-  const isFollower = true
   const useChosenList = isTweetCirle ? useTweetCircleStore((state) => state.setTweetCircle) : useMentionStore((state) => state.setMention)
-
-  const { loading, followers, error, hasMore } = useFollowList(pageNumber, user_id, accessToken, isFollower)
+  const { loading, followers, error, hasMore } = useFollowerList(pageNumber, user_id, accessToken)
   const observer = useRef<IntersectionObserver | undefined>()
   const lastNewfeedsElementRef = useCallback((node: HTMLDivElement | null) => {
     if (loading) return

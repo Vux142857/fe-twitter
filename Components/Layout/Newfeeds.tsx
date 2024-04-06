@@ -9,7 +9,7 @@ import useUserStore from "@/hooks/useMutateUser"
 const Newfeeds = () => {
   const { data: session } = useSession()
   const [accessToken, setAccessToken] = useState('')
-  const currentUser = useUserStore(state => state.userProfile)
+  const currentUser = useUserStore((state: any) => state.userProfile)
   const [pageNumber, setPageNumber] = useState(1)
   useEffect(() => {
     if (session) {

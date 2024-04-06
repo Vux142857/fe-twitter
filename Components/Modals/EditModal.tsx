@@ -17,7 +17,7 @@ interface EditModalProps {
     accessToken: string;
 }
 const EditModal: React.FC<EditModalProps> = ({ user, accessToken }) => {
-    const setUser = useUserStore(state => state.setUserProfile);
+    const setUser = useUserStore((state: any) => state.setUserProfile);
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [coverImage, setCoverImage] = useState<File | null>(null);
     const [name, setName] = useState('');

@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const { data: session } = useSession();
   const router = useRouter()
-  const setCurrentUser = useUserStore((state) => state.setUserProfile);
+  const setCurrentUser = useUserStore((state: any) => state.setUserProfile);
   const [userSession, setUser] = useState(session?.user || null);
   useEffect(() => {
     if (session?.error) {

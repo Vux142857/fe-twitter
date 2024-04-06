@@ -1,5 +1,4 @@
 'use client'
-import { redirect } from 'next/navigation'
 import { memo, useCallback, useEffect, useRef, useState } from "react"
 import PostItem from "../Post/PostItem"
 import useMessages from "@/hooks/useGetMessages"
@@ -7,10 +6,11 @@ import useMessages from "@/hooks/useGetMessages"
 interface MessageListProps {
   page: number
   conversation_id: string
+  accessToken: string
 }
-const MessagesList: React.FC<MessageListProps> = ({ page, conversation_id }) => {
+const MessagesList: React.FC<MessageListProps> = ({ page, conversation_id, accessToken }) => {
   const [pageNumber, setPageNumber] = useState(1)
-  const { loading, messages, error, hasMore } = useMessages(page, conversation_id)
+  const { loading, messages, error, hasMore } = useMessages(page, conversation_id, accessToken)
   const observer = useRef<IntersectionObserver | undefined>()
   const lastNewfeedsElementRef = useCallback((node: HTMLDivElement | null) => {
     if (loading) return

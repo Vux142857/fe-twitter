@@ -22,7 +22,7 @@ const BookmarkList = ({ accessToken }: { accessToken: string }) => {
   }, [loading, hasMore])
   useLayoutEffect(() => {
     if (pageNumber > 8) {
-      redirect('/')
+      redirect('/bookmark')
     }
   }, [pageNumber]);
 

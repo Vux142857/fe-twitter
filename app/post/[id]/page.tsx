@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 
 const PostPage = ({ params }: { params: { id: string } }) => {
     const { data: session } = useSession();
-    const currentUser = useUserStore((state) => state.userProfile);
+    const currentUser = useUserStore((state: any) => state.userProfile);
     const [data, setData] = useState<dataProps>(null);
     const [userSession, setUserSession] = useState<any>(session?.user)
     const [author, setAuthor] = useState<any>(null);
