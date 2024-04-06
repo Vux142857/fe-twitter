@@ -1,5 +1,5 @@
 'use client'
-import { BsHouseFill, BsBellFill, BsFillBookmarkFill } from "react-icons/bs";
+import { BsHouseFill, BsBellFill, BsFillBookmarkFill, BsSearch } from "react-icons/bs";
 import { BiLogIn, BiLogOut, BiSolidMessage } from 'react-icons/bi'
 import { FaUser } from "react-icons/fa";
 import SidebarLogo from "./SidebarLogo";
@@ -37,6 +37,12 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
     //   href: "/notifications",
     //   icon: BsBellFill,
     // },
+    {
+      label: "Search",
+      href: "/search",
+      icon: BsSearch
+    }
+    ,
     {
       label: "Bookmarks",
       href: "/bookmark",
