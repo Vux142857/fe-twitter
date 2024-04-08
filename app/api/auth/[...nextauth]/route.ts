@@ -32,7 +32,7 @@ const handler = NextAuth({
                   })
               ])
               if (decodedRT) {
-                console.log('Decoded refresh token:', decodedRT)
+                // console.log('Decoded refresh token:', decodedRT)
                 const res = await userServices.getMe(result.accessToken);
                 if (res && res.result && res.result.user) {
                   const user = setUserSession(res.result.user, result, decodedRT, decodeAT);
@@ -131,7 +131,6 @@ const handler = NextAuth({
             ...session.user
           }
         }
-        console.log('JWT token:', token)
         if (user && !token?.refreshToken) {
           return {
             id: user.id,
@@ -147,12 +146,12 @@ const handler = NextAuth({
         }
         if (token) {
           if (token.expAT as number > Date.now() / 1000) {
-            console.log('Access token is still valid:', token);
+            // console.log('Access token is still valid:', token);
             return token;
           } else {
-            console.log('User token has expired, refreshing access token...');
+            // console.log('User token has expired, refreshing access token...');
             const newToken = await refreshAccessToken(token.refreshToken as string, token)
-            console.log('New token:', newToken);
+            // console.log('New token:', newToken);
             return newToken;
           }
         }
@@ -189,11 +188,11 @@ function toISODateString(numericDate: number) {
 
 async function refreshAccessToken(refreshToken: string, token: JWT) {
   try {
-    console.log('Refreshing access token:', refreshToken)
+    // console.log('Refreshing access token:', refreshToken)
     const response = await userServices.refreshToken(refreshToken)
-    console.log('response:', response)
+    // console.log('response:', response)
     const refreshedTokens = await response.result
-    console.log('refreshedTokens:', refreshedTokens)
+    // console.log('refreshedTokens:', refreshedTokens)
     if (!refreshedTokens) {
       throw 'Error refreshing access token'
     }
@@ -212,10 +211,10 @@ async function refreshAccessToken(refreshToken: string, token: JWT) {
     if (!decodedRT) {
       throw 'Error decoding refresh token'
     }
-    console.log('decodedRT:', decodedRT)
     const newToken = {
       ...token,
       accessToken: refreshedTokens.accessToken,
+      refreshToken: refreshedTokens.refreshToken,
       expRT: decodedRT.exp,
       expAT: decodeAT.exp
     }
