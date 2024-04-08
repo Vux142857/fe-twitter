@@ -32,6 +32,7 @@ const handler = NextAuth({
                   })
               ])
               if (decodedRT) {
+                console.log('Decoded refresh token:', decodedRT)
                 const res = await userServices.getMe(result.accessToken);
                 if (res && res.result && res.result.user) {
                   const user = setUserSession(res.result.user, result, decodedRT, decodeAT);
@@ -118,6 +119,9 @@ const handler = NextAuth({
   ],
   debug: true,
   secret: process.env.NEXTAUTH_SECRET,
+  jwt: {
+    maxAge: 24 * 60 * 60, //  days
+  },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       try {
@@ -127,7 +131,8 @@ const handler = NextAuth({
             ...session.user
           }
         }
-        if (user) {
+        console.log('JWT token:', token)
+        if (user && !token?.refreshToken) {
           return {
             id: user.id,
             username: user.username,
@@ -136,19 +141,23 @@ const handler = NextAuth({
             email: user.email,
             avatar: user.avatar,
             verify: user.verify,
-            exp: user.exp,
+            expRT: user.expRT,
             expAT: user.expAT
           }
         }
-        if (token.expAT as number > Date.now() / 1000) {
-          // console.log('Access token is still valid:', token);
-          return token;
-        } else {
-          // console.log('User token has expired, refreshing access token...');
-          return await refreshAccessToken(token.refreshToken as string, token);
+        if (token) {
+          if (token.expAT as number > Date.now() / 1000) {
+            console.log('Access token is still valid:', token);
+            return token;
+          } else {
+            console.log('User token has expired, refreshing access token...');
+            const newToken = await refreshAccessToken(token.refreshToken as string, token)
+            console.log('New token:', newToken);
+            return newToken;
+          }
         }
       } catch (error) {
-        // console.error('Error during JWT processing:', error);
+        console.error('Error during JWT processing:', error);
         return token;
       }
     },
@@ -161,7 +170,7 @@ const handler = NextAuth({
         session.user.username = token.username as string
         session.user.avatar = token.avatar as string
         session.user.verify = token.verify as number
-        session.expires = toISODateString(token.exp as number) as string
+        // session.expires = toISODateString(token.exp as number) as string
         session.error = token.error as string
       }
       return session
@@ -171,7 +180,7 @@ const handler = NextAuth({
 
 function toISODateString(numericDate: number) {
   if (!numericDate || isNaN(numericDate)) {
-    // console.error('Invalid numericDate:', numericDate);
+    console.error('Invalid numericDate:', numericDate);
     return null;
   }
   const date = new Date(numericDate * 1000); // Convert seconds to milliseconds
@@ -180,25 +189,39 @@ function toISODateString(numericDate: number) {
 
 async function refreshAccessToken(refreshToken: string, token: JWT) {
   try {
-    // console.log('Refreshing access token:', refreshToken)
+    console.log('Refreshing access token:', refreshToken)
     const response = await userServices.refreshToken(refreshToken)
+    console.log('response:', response)
     const refreshedTokens = await response.result
+    console.log('refreshedTokens:', refreshedTokens)
     if (!refreshedTokens) {
       throw 'Error refreshing access token'
     }
-    const decodedRT = await verifyToken(
-      {
-        token: refreshedTokens.refreshToken,
-        secretKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
-      });
+    const [decodedRT, decodeAT] = await Promise.all([
+      verifyToken(
+        {
+          token: refreshedTokens.refreshToken,
+          secretKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
+        }),
+      verifyToken(
+        {
+          token: refreshedTokens.accessToken,
+          secretKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
+        })
+    ])
+    if (!decodedRT) {
+      throw 'Error decoding refresh token'
+    }
+    console.log('decodedRT:', decodedRT)
     const newToken = {
       ...token,
       accessToken: refreshedTokens.accessToken,
-      session_exp: decodedRT.exp
+      expRT: decodedRT.exp,
+      expAT: decodeAT.exp
     }
     return newToken
   } catch (error) {
-    // console.log('Error refreshing access token:', error)
+    console.log('Error refreshing access token:', error)
     return {
       ...token,
       error: "RefreshAccessTokenError",
@@ -208,7 +231,7 @@ async function refreshAccessToken(refreshToken: string, token: JWT) {
 export { handler as GET, handler as POST }
 
 // Utils
-const setUserSession = (res: any, result: any, decodedRT: any, decodeAT) => {
+const setUserSession = (res: any, result: any, decodedRT, decodeAT) => {
   return {
     id: decodedRT.user_id,
     username: res.username,
@@ -217,7 +240,7 @@ const setUserSession = (res: any, result: any, decodedRT: any, decodeAT) => {
     refreshToken: result.refreshToken,
     verify: res.verify,
     avatar: res.avatar,
-    exp: decodedRT.exp,
+    expRT: decodedRT.exp,
     expAT: decodeAT.exp
   };
 }

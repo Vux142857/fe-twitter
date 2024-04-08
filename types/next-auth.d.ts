@@ -10,7 +10,7 @@ declare module 'next-auth' {
         avatar: string
         email: string
         verify: number
-        exp: number // Numberic time stamp seconds - experation time of user
+        expRT: number // Numberic time stamp seconds - experation time of user
         expAT: number // Numberic time stamp seconds - experation time of access token
     }
 
