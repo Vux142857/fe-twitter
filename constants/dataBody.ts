@@ -61,3 +61,10 @@ export enum StatusType {
     Cancelled,
     Abandoned
 }
+
+export enum SearchFilterQuery {
+    Video = 'video',
+    Image = 'image',
+    User = 'user',
+    Tweet = ''
+}

@@ -1,6 +1,6 @@
 import axios, { Canceler } from "axios";
 import { useEffect, useState } from "react";
-const LIMIT_POST = 4
+const LIMIT_POST = 10
 
 const useGetTweetsByUser = (pageNumber: number, user_id: string, accessToken: string) => {
     const [loading, setLoading] = useState(true)

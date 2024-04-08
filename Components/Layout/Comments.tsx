@@ -23,7 +23,7 @@ const Comments = ({ user_id, accessToken, user }: { user_id: string, accessToken
 
   return (
     <>
-      {loading && (<span className="loading loading-ring loading-lg"></span>)}
+      {loading && (<div className="flex flex-row justify-center items-center"><span className="loading loading-ring loading-lg"></span></div>)}
       {comments.map((data, index) => {
         if (comments.length === index + 1) {
           return (
@@ -35,7 +35,6 @@ const Comments = ({ user_id, accessToken, user }: { user_id: string, accessToken
           )
         }
       })}
-      <div>{error && 'Error'}</div>
     </>
   )
 }

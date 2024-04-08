@@ -38,7 +38,7 @@ const Newfeeds = () => {
 
   return (
     <>
-      {loading && (<span className="loading loading-ring loading-lg"></span>)}
+      {loading && (<div className="flex flex-row justify-center items-center"><span className="loading loading-ring loading-lg"></span></div>)}
       {newfeeds.map((data, index) => {
         if (newfeeds.length === index + 1) {
           return (
@@ -50,7 +50,6 @@ const Newfeeds = () => {
           )
         }
       })}
-      <div>{error && 'Error'}</div>
     </>
   )
 }

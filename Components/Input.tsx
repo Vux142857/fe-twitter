@@ -9,9 +9,10 @@ interface InputProps {
   label?: string;
   accept?: string;
   multiple?: boolean;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-const Input: React.FC<InputProps> = ({ placeholder, value, type = "text", onChange, disabled, label, accept, multiple }) => {
+const Input: React.FC<InputProps> = ({ placeholder, value, type = "text", onChange, disabled, label, accept, multiple, onKeyDown }) => {
   return (
     <div className="w-full">
       {label && <p className="text-xl text-primary-content font-semibold mb-2">{label}</p>}
@@ -39,6 +40,7 @@ const Input: React.FC<InputProps> = ({ placeholder, value, type = "text", onChan
             disabled:opacity-70
             disabled:cursor-not-allowed
           "
+        onKeyDown={onKeyDown}
       />
     </div>
   );

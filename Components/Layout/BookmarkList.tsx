@@ -23,7 +23,7 @@ const BookmarkList = ({ accessToken }: { accessToken: string }) => {
 
   return (
     <>
-      <div>{loading && 'Loading...'}</div>
+      {loading && (<div className="flex flex-row justify-center items-center"><span className="loading loading-ring loading-lg"></span></div>)}
       {bookmarks.map((data, index) => {
         if (bookmarks.length === index + 1) {
           return (

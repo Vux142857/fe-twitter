@@ -114,7 +114,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
 
   const goToUser = useCallback((ev: any) => {
     ev.stopPropagation();
-    router.push(`/${tweet?.author.username}`)
+    router.push(`/${tweet?.author?.username}`)
   }, [router, tweet?.author?._id.toString()]);
 
   const goToPost = useCallback((ev: any) => {
@@ -185,10 +185,9 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
       <div
         className="
           border-b-[1px] 
-          border-neutral-800 
-          p-5 
+          p-5
           cursor-pointer 
-          hover:bg-neutral-900 
+          hover:bg-secondary
           transition
         "
       >
@@ -225,7 +224,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
         </div>}
         <div className={isRetweetStyle}>
           <div className="flex flex-row items-center gap-2">
-            <Avatar username={tweet?.author.username} avatarURL={tweet?.author.avatar} isLarge={false} />
+            <Avatar username={tweet?.author?.username} avatarURL={tweet?.author?.avatar} isLarge={false} />
             <p
               onClick={goToUser}
               className="
@@ -234,7 +233,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
                   cursor-pointer 
                   hover:underline
               ">
-              {tweet?.author.name}
+              {tweet?.author?.name}
             </p>
             <span
               onClick={goToUser}
@@ -245,7 +244,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
                   hidden
                   md:block
               ">
-              @{tweet?.author.username}
+              @{tweet?.author?.username}
             </span>
             <span className="text-neutral-500 text-sm">
               {createdAt}
@@ -255,10 +254,10 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
             {tweet?.content}
           </div>
           <div className="grid grid-cols-4 gap-1 m-2">
-            {tweet && tweet.media.map((mediaItem) => (
+            {tweet && tweet?.media && tweet.media.map((mediaItem) => (
               <div key={mediaItem._id} className={mediaItem.type === MediaType.Video ? "col-span-4" : ""}>
                 {mediaItem.type === MediaType.Video && (
-                  <Player url={mediaItem.url} username={tweet.author.username} />
+                  <Player url={mediaItem.url} username={tweet?.author?.username} />
                 )}
                 {mediaItem.type === MediaType.Image && (
                   <div>
@@ -273,7 +272,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
                         </div>
                       </div>
                     </dialog>
-                    <Image src={mediaItem.url} alt={`Image from ${tweet.author.username}`} width={100} height={100} onClick={() => (document.getElementById(`${mediaItem._id}`) as HTMLDialogElement).showModal()} />
+                    <Image src={mediaItem.url} alt={`Image from ${tweet?.author?.username}`} width={100} height={100} onClick={() => (document.getElementById(`${mediaItem._id}`) as HTMLDialogElement).showModal()} />
                   </div>
                 )}
               </div>

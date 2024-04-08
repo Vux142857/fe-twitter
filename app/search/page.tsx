@@ -2,13 +2,16 @@
 import { useSession } from "next-auth/react";
 import { memo, useEffect, useState } from "react";
 import Layout from "@/Components/Layout/Layout";
-import Link from "next/link";
-import Button from "@/Components/Button";
+import Input from "@/Components/Input";
+import { SearchFilterQuery } from "@/constants/dataBody";
+import SearchResult from "@/Components/Layout/SearchResult";
 
 const MyProfile = () => {
     const { data: session } = useSession();
     const [searchQuery, setSearchQuery] = useState("");
+    const [filter, setFilter] = useState(SearchFilterQuery.Tweet);
     const [userSession, setUser] = useState(session?.user || null);
+    const [searchValue, setSearchValue] = useState("");
     useEffect(() => {
         if (session?.error) {
             return
@@ -17,41 +20,41 @@ const MyProfile = () => {
             setUser(session?.user)
         }
     }, [session, userSession])
-    //
-    const search = async () => {
-        try {
-            // Gọi API tìm kiếm dựa trên searchQuery
-            // Ví dụ: const response = await fetch(`/api/search?query=${searchQuery}`);
-            // const data = await response.json();
-            // setSearchResults(data);
-            console.log("Searching for:", searchQuery);
-        } catch (error) {
-            console.error("Error searching:", error);
-        }
-    }
-    // Hàm xử lý khi người dùng ấn nút Search
+
     const handleSearchSubmit = (event) => {
         event.preventDefault();
-        search();
+        setSearchValue(searchQuery)
     }
-    // Hàm xử lý sự kiện khi người dùng nhập vào input
+
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            handleSearchSubmit(event);
+        }
+    };
+
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     }
+
+    const handleTabClick = (tabName) => {
+        setFilter(tabName);
+    }
+
     return (
         <Layout labelHeader={"Search"} userSession={userSession}>
-            <form onSubmit={handleSearchSubmit}>
-                <label className="input input-bordered flex items-center gap-2">
-                    <input type="text" className="grow" placeholder="Search" value={searchQuery} onChange={handleSearchChange} />
-                    <Button label="Search" onClick={handleSearchSubmit} />
-                </label>
-            </form>
+            <Input type="text" placeholder="Search" value={searchQuery} onChange={handleSearchChange} onKeyDown={handleKeyDown} />
             <div role="tablist" className="tabs tabs-lifted tabs-lg w-full p-4">
-                <Link href="/search?type=tweet" role="tab" className="tab">Tweet</Link>
-                <Link href="/search?type=video" role="tab" className="tab">Video</Link>
-                <Link href="/search?type=image" role="tab" className="tab">Image</Link>
-                <Link href="/search?type=user" role="tab" className="tab">User</Link>
+                <p role="tab" className={`tab ${filter === SearchFilterQuery.Tweet ? "tab-active" : ""}`}
+                    onClick={() => handleTabClick(SearchFilterQuery.Tweet)}>Tweet</p>
+                <p role="tab" className={`tab ${filter === SearchFilterQuery.Video ? "tab-active" : ""}`}
+                    onClick={() => handleTabClick(SearchFilterQuery.Video)}>Video</p>
+                <p role="tab" className={`tab ${filter === SearchFilterQuery.Image ? "tab-active" : ""}`}
+                    onClick={() => handleTabClick(SearchFilterQuery.Image)}>Image</p>
+                <p role="tab" className={`tab ${filter === SearchFilterQuery.User ? "tab-active" : ""}`}
+                    onClick={() => handleTabClick(SearchFilterQuery.User)}>User</p>
             </div>
+            {userSession?.accessToken && searchValue !== '' && <SearchResult accessToken={userSession?.accessToken} filter={filter} searchValue={searchValue} />}
         </Layout>
     );
 }
