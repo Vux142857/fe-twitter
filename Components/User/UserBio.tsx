@@ -8,6 +8,8 @@ import EditModal from '../Modals/EditModal';
 import { UserProfile } from '@/hooks/useMutateUser';
 import FollowingList from '../Layout/FollowingList';
 import FollowerList from '../Layout/FollowerList';
+import conversationServices from '@/services/conversation.service';
+import { useRouter } from 'next/navigation';
 interface UserBioProps {
     profile: UserProfile
     isCurrentUser?: boolean
@@ -19,6 +21,8 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
         return format(new Date(profile.date_of_birth), 'MMMM dd, yyyy');
     }, [profile.date_of_birth]);
     const [hasFollowed, setFollowed] = useState(false);
+    // const [conversation, setConversation] = useState<string>('');
+    const router = useRouter();
     useEffect(() => {
         const fetchData = async () => {
             return await followServices.getFollow(accessToken, profile._id)
@@ -39,6 +43,23 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
             setFollowed(true);
         }
     }, [hasFollowed, accessToken, profile._id]);
+
+    const sendMessage = useCallback(async (ev: any) => {
+        ev.stopPropagation();
+        try {
+            await conversationServices.enterConversation(accessToken, profile._id)
+                .then(res => {
+                    console.log(res?.result)
+                    return router.push(`/chat/${res?.result._id}`)
+                }).catch(err => {
+                    console.log(err)
+                })
+        } catch (error) {
+            console.log(error)
+        }
+
+    }, [accessToken, profile._id]);
+
     const isFollowed = hasFollowed ? 'Unfollow' : 'Follow';
     return (
         <div className="border-b-2 border-neutral-200 pb-4 mt-4">
@@ -46,11 +67,18 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
                 {isCurrentUser ? (
                     <EditModal accessToken={accessToken} user={profile} />
                 ) : (
-                    <Button
-                        onClick={onFollow}
-                        label={isFollowed}
-                        secondary={!hasFollowed}
-                    />
+                    <div className='flex flex-row items-center gap-4'>
+                        <Button
+                            onClick={onFollow}
+                            label={isFollowed}
+                            secondary={!hasFollowed}
+                        />
+                        {accessToken && <Button
+                            onClick={sendMessage}
+                            label={'Send message'}
+                            secondary={true}
+                        />}
+                    </div>
                 )}
             </div>
             <div className="mt-8 px-4">

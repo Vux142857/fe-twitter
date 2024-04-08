@@ -2,6 +2,7 @@
 import { memo, useCallback, useRef, useState } from "react";
 import MyModal from "@/Components/Modals/MyModal";
 import useFollowerList from "@/hooks/useGetFollowerList";
+import Link from "next/link";
 
 interface FollowerListProps {
   user_id: string;
@@ -37,7 +38,7 @@ const FollowerList: React.FC<FollowerListProps> = ({ user_id, accessToken }) => 
                   <div key={index} ref={lastNewfeedsElementRef} className="flex items-center justify-between gap-2">
                     <div className="flex flex-col">
                       <span className="font-bold">{follower.follower_user.name}</span>
-                      <span className="text-gray-500">@{follower.follower_user.username}</span>
+                      <Link href={`/${follower.follower_user.username}`} className="text-gray-500">@{follower.follower_user.username}</Link>
                     </div>
                   </div>
                 )
@@ -46,7 +47,7 @@ const FollowerList: React.FC<FollowerListProps> = ({ user_id, accessToken }) => 
                   <div key={index} className="flex items-center justify-between gap-2">
                     <div className="flex flex-col">
                       <span className="font-bold">{follower.follower_user.name}</span>
-                      <span className="text-gray-500">@{follower.follower_user.username}</span>
+                      <Link href={`/${follower.follower_user.username}`} className="text-gray-500">@{follower.follower_user.username}</Link>
                     </div>
                   </div>
                 )

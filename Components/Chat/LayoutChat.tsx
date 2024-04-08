@@ -3,6 +3,8 @@ import { Message } from "@/app/chat/page"
 import UserInChat from "./UserInChat"
 import Link from "next/link"
 import { memo } from "react"
+import SidebarItem from "../Layout/SidebarItem"
+import { BsHouseFill } from "react-icons/bs"
 
 export interface User {
     conversation: string
@@ -33,6 +35,7 @@ const LayoutChat: React.FC<LayoutChatProps> = ({ children, conversations }) => {
                 <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
                 <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
                     {/* Sidebar content here */}
+                    <SidebarItem href={"/"} label={"Home"} icon={BsHouseFill} />
                     {conversations.map((toUser, index) => (
                         <li key={index}>
                             <Link href={`/chat/${toUser.conversation}`}>
