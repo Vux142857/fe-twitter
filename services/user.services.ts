@@ -62,7 +62,7 @@ class UserServices {
     }
 
     async changePassword(password: string, token: string, confirm_password: string) {
-        return await fetcher.post(`${SERVER}/user/reset-password`, { password, confirm_password, forgot_password_token: token })
+        return await fetcher.post(`${SERVER}/user/reset-password`, { password: password, confirm_password: confirm_password, forgot_password_token: token })
     }
 }
 

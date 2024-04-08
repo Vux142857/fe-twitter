@@ -38,14 +38,14 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
         }
         try {
             const res = await userServices.changePassword(password, params.token, confirmPassword)
-            if (res && res?.message) {
+            if (res && res?.result) {
                 router.push('/')
             }
         } catch (error) {
             console.log(error)
             setError(error?.message)
         }
-    }, [params.token])
+    }, [params.token, password, confirmPassword])
 
     return (
         <div className="hero min-h-screen bg-base-200" style={{ backgroundImage: 'url(https://i.pinimg.com/originals/d2/e4/ed/d2e4ed3306b60642a22aceb4f49c6e9d.jpg)' }}>
