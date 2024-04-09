@@ -13,7 +13,7 @@ const VerifyEmail = ({ params }: { params: { token: string } }) => {
     const [userSession, setUser] = useState(session?.user || null);
     const router = useRouter()
     useEffect(() => {
-        if (session?.error || userSession.verify === UserVerifyStatus.Verified) {
+        if (session?.error) {
             router.push('/login')
             return
         }
