@@ -6,6 +6,7 @@ interface ButtonProps {
     onClick?: any;
     disabled?: boolean;
     outline?: boolean;
+    type?: any;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -15,12 +16,14 @@ const Button: React.FC<ButtonProps> = ({
     onClick,
     large,
     disabled,
-    outline
+    outline,
+    type
 }) => {
     return (
         <button
             disabled={disabled}
             onClick={onClick}
+            type={type}
             className={`
           disabled:opacity-70
           disabled:cursor-not-allowed

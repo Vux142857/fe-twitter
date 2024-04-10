@@ -50,7 +50,7 @@ const ForgotPassword = () => {
                         <div className="card bg-base-content shadow-xl image-full">
                             <figure><Image src={daisyImg} alt='Daisy flower' ></Image></figure>
                             <div className="card-body">
-                                <TypingEffect text=' CHECK YOUR EMAIL <3' />
+                                <TypingEffect text=' CHECK YOUR EMAIL <3, ( may be in spam email :(( )' />
                             </div>
                         </div>
                     </div>

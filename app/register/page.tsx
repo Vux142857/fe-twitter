@@ -4,8 +4,7 @@ import daisyImg from "@/public/daisy-flowers-blue-3840x2160-12883.jpeg"
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import Link from 'next/link'
-import { use, useEffect, useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import Button from '@/Components/Button';
@@ -25,14 +24,6 @@ const Register = () => {
             setError('')
         }
     }, [error, password, confirmPassword])
-    // const [formData, setFormData] = useState({
-    //     name: '',
-    //     email: '',
-    //     username: '',
-    //     password: '',
-    //     confirmPassword: '',
-    //     date_of_birth: dob
-    // })
     const [matchPassword, setMatchPassword] = useState(true)
 
     useEffect(() => {
@@ -62,6 +53,12 @@ const Register = () => {
     }
 
     // const loginWithGoogle = () => { signIn('google', { callbackUrl: '/' }) }
+    const handleKeyDown = async (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            handleSubmit(event);
+        }
+    };
 
     return (
         <div className="hero min-h-screen bg-base-200" style={{ backgroundImage: 'url(https://i.pinimg.com/originals/d2/e4/ed/d2e4ed3306b60642a22aceb4f49c6e9d.jpg)' }}>
@@ -75,7 +72,7 @@ const Register = () => {
                             <label className="label">
                                 <span className="label-text">What is your name ?</span>
                             </label>
-                            <input name='name' value={name} type="text" placeholder="Type here" className="input input-bordered" onChange={(e) => setName(e.target.value)} required />
+                            <input name='name' value={name} type="text" placeholder="Type here" className="input input-bordered" onChange={(e) => setName(e.target.value)} autoFocus required />
                         </div>
                         <div className="form-control">
                             <label className="label">
@@ -95,11 +92,17 @@ const Register = () => {
                             </label>
                             <input name='password' value={password} type="password" placeholder="Type here" className="input input-bordered" onChange={(e) => setPassword(e.target.value)} required />
                         </div>
+                        <div className='form-control'>
+                            <label className='label'>
+                                <span className="label-text">Password with at least 8 characters: at least 1 symbols, number, lowercase and uppercase.</span>
+                            </label>
+                            <span>Ex: !Abc1234</span>
+                        </div>
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Confirm password</span>
                             </label>
-                            <input name='confirmPassword' value={confirmPassword} type="password" placeholder="Type here" onChange={(e) => setConfirmPassword(e.target.value)} className="input input-bordered" required />
+                            <input name='confirmPassword' value={confirmPassword} type="password" placeholder="Type here" onChange={(e) => setConfirmPassword(e.target.value)} className="input input-bordered" onKeyDown={handleKeyDown} required />
                         </div>
                         <div className='form-control items-center'>
                             <label htmlFor="DatePicker" className="mr-3 text-2xl text-white">Date of birth</label>
@@ -114,7 +117,7 @@ const Register = () => {
                             </label>
                         </div>
                         <div className="form-control items-center">
-                            <Button onClick={handleSubmit} disabled={!matchPassword} label='Register' />
+                            <Button onClick={handleSubmit} disabled={!matchPassword} label='Register' type={'submit'} />
                         </div>
                         {/* <div className="form-control mt-2">
                             <button className="btn" onClick={loginWithGoogle}>
