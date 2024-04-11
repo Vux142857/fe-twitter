@@ -21,7 +21,6 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
         return format(new Date(profile.date_of_birth), 'MMMM dd, yyyy');
     }, [profile.date_of_birth]);
     const [hasFollowed, setFollowed] = useState(false);
-    // const [conversation, setConversation] = useState<string>('');
     const router = useRouter();
     useEffect(() => {
         const fetchData = async () => {
@@ -32,7 +31,7 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
                 setFollowed(true);
             }
         })
-    }, [accessToken])
+    }, [accessToken, profile._id, router])
     const onFollow = useCallback(async (ev: any) => {
         ev.stopPropagation();
         if (hasFollowed) {
@@ -42,7 +41,7 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
             await followServices.follow(accessToken, profile._id)
             setFollowed(true);
         }
-    }, [hasFollowed, accessToken, profile._id]);
+    }, [hasFollowed, accessToken, profile._id, router]);
 
     const sendMessage = useCallback(async (ev: any) => {
         ev.stopPropagation();
@@ -57,7 +56,7 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
             console.log(error)
         }
 
-    }, [accessToken, profile._id]);
+    }, [accessToken, profile._id, router]);
 
     const isFollowed = hasFollowed ? 'Unfollow' : 'Follow';
     return (
