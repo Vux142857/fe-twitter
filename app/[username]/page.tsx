@@ -5,11 +5,12 @@ import userServices from "@/services/user.services";
 import UserView from "@/Components/User/UserView";
 import { useSession } from "next-auth/react";
 import TweetsByUser from "@/Components/Layout/TweetsByUser";
-import { UserProfile } from "@/hooks/useMutateUser";
+import useUserStore, { UserProfile } from "@/hooks/useMutateUser";
 
 const MyProfile = ({ params }: { params: { username: string } }) => {
     const { data: session } = useSession();
     const [userSession, setUser] = useState(session?.user || null);
+    const currentUser = useUserStore((state: any) => state.userProfile);
     useEffect(() => {
         if (session?.error) {
             return
@@ -35,13 +36,13 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
     const [label, setLabel] = useState('Profile');
     const [isCurrentUser, setIsCurrentUser] = useState(false);
     useEffect(() => {
+        setIsCurrentUser(currentUser.username == params.username);
         const fetchData = async () => {
             const res = await userServices.getUserProfile(params.username)
             if (res && res.result) {
                 const { user, followers, following } = res.result;
                 setProfile({ ...user, followers, following });
                 setLabel(user.username);
-                setIsCurrentUser(userSession?.username === user.username);
             }
         }
         fetchData()

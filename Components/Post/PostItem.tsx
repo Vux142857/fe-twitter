@@ -114,8 +114,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
 
   const goToUser = useCallback((ev: any) => {
     ev.stopPropagation();
-    // router.push(`/${tweet?.author?.username}`)
-    router.replace(`/${tweet?.author?.username}`)
+    router.push(`/${tweet?.author?.username}`)
   }, [router, tweet?.author?._id.toString()]);
 
   const goToPost = useCallback((ev: any) => {
