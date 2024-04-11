@@ -15,7 +15,7 @@ interface SidebarProps {
 }
 const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
   const router = useRouter()
-  const clearSession = useUserStore((state: any) => state.clearUserProfile)
+  const clearSession = useUserStore((state: any) => state.setUserProfile);
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
     if (userSession) {
@@ -26,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
   const handleLogout = useCallback(async () => {
     signOut({ redirect: false })
     await userServices.logout(userSession?.refreshToken, userSession?.accessToken)
-    clearSession()
+    clearSession(null)
     setIsLogin(false)
   }, [userSession])
   const items = [
