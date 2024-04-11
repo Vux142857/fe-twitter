@@ -9,11 +9,13 @@ import { signOut } from "next-auth/react";
 import { memo, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import userServices from "@/services/user.services";
+import useUserStore from "@/hooks/useMutateUser";
 interface SidebarProps {
   userSession?: any;
 }
 const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
   const router = useRouter()
+  const clearSession = useUserStore((state: any) => state.clearUserProfile)
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
     if (userSession) {
@@ -24,6 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
   const handleLogout = useCallback(async () => {
     signOut({ redirect: false })
     await userServices.logout(userSession?.refreshToken, userSession?.accessToken)
+    clearSession()
     setIsLogin(false)
   }, [userSession])
   const items = [
