@@ -49,7 +49,6 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
         try {
             await conversationServices.enterConversation(accessToken, profile._id)
                 .then(res => {
-                    console.log(res?.result)
                     return router.push(`/chat/${res?.result._id}`)
                 }).catch(err => {
                     console.log(err)

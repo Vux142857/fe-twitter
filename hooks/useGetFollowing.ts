@@ -22,11 +22,9 @@ const useFollowingList = (pageNumber: number, user_id: string, accessToken: stri
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {
             if (res.data.result.followings.length > 0) {
-                console.log(res.data.result.followings)
                 setFollowings(prev => {
                     return [...new Set([...prev, ...res.data.result.followings])]
                 })
-                console.log(followings)
             }
             setHasMore(res.data.result?.totalFollowings > followings.length)
             setLoading(false)
