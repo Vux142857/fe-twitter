@@ -45,7 +45,7 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
             }
         }
         fetchData()
-    }, [session, profile, params.username, userSession]);
+    }, [params.username, userSession, profile?._id]);
 
     return (
         <Layout labelHeader={label} userSession={userSession}>
