@@ -11,7 +11,7 @@ const FollowBar = () => {
                         <div className="flex flex-row gap-4">
                             <Avatar username="Vu142857" avatarURL="" />
                             <div className="flex flex-col">
-                                <Link href='/vu'>@Vu142857</Link>
+                                <Link href='/admin'>@admin</Link>
                                 <p>Tran Thanh Vu</p>
                             </div>
                         </div>
