@@ -30,7 +30,7 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
   useEffect(() => {
     user.current = session?.user;
   }, [session]);
-  const { loading, messages, error, hasMore } = useMessages(pageNumber, params.conversationID, user.current?.accessToken)
+  const { messages, hasMore } = useMessages(pageNumber, params.conversationID, user.current?.accessToken)
 
   useEffect(() => {
     const fetchData = async () => {
