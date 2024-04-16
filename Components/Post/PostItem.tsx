@@ -7,10 +7,11 @@ import Avatar from '../Avatar';
 import likeServices from '@/services/like.services';
 import { BsFillBookmarkFill, BsBookmark } from 'react-icons/bs';
 import bookmarkServices from '@/services/bookmark.services';
-import { Media, MediaType, TweetAudience, TweetType } from '@/constants/dataBody';
+import { ActionNotify, Media, MediaType, TweetAudience, TweetType } from '@/constants/dataBody';
 import Player from '../Player';
 import Image from 'next/image';
 import tweetServices, { TweetReqBody } from '@/services/twitter.service';
+import { useSendNotify } from '@/hooks/useNotify';
 interface PostItemProps {
   data: dataProps;
   accessToken?: string;
@@ -136,7 +137,16 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
     } else {
       setHasLiked(true);
       setLike(like + 1);
-      await likeServices.like(accessToken, tweet?._id)
+      const notifyData = {
+        from: user?.username,
+        to: tweet?.author?._id.toString(),
+        link: `/post/${tweet?._id.toString()}`,
+        action: ActionNotify.LIKE
+      }
+      Promise.all([
+        await likeServices.like(accessToken, tweet?._id),
+        useSendNotify(notifyData)
+      ])
     }
   }, [hasLiked, tweet?._id, accessToken]);
 

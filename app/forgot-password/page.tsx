@@ -5,20 +5,15 @@ import daisyImg from "@/public/daisy-flowers-blue-3840x2160-12883.jpeg"
 import TypingEffect from '@/Components/TypingEffect'
 import { useState } from 'react'
 import userServices from '@/services/user.services'
-import toast from 'react-hot-toast'
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('')
     const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         try {
-            const res = await userServices.createForgotPassword(email)
-            if (res && res?.message) {
-                toast.success(res.message)
-            }
+            await userServices.createForgotPassword(email)
         } catch (error) {
             console.log(error)
-            toast.error(error?.message)
         }
     }
 
@@ -42,7 +37,7 @@ const ForgotPassword = () => {
                     <div className="card bg-base-content shadow-xl image-full">
                         <figure><Image src={daisyImg} alt='Daisy flower' ></Image></figure>
                         <div className="card-body">
-                            <TypingEffect text='WELCOME BACK HAVE A GOOD DAY <3' />
+                            <TypingEffect text='PLS CHECK YOUR EMAIL AFTER SEND (MAYBE IN SPAM :(( )' />
                         </div>
                     </div>
                 </div>

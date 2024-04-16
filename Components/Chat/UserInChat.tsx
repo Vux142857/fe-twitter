@@ -1,9 +1,8 @@
 'use client'
-import { useParams, usePathname } from "next/navigation"
+import { useParams } from "next/navigation"
 import Avatar from "../Avatar"
 import { memo } from "react"
 
-/* eslint-disable @next/next/no-img-element */
 interface UserInChatProps {
     hasNewMessages: boolean
     username: string

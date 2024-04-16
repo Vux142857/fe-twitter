@@ -1,26 +1,15 @@
-import { User } from "@/Components/Chat/LayoutChat";
+import { ActionNotify } from "@/constants/dataBody";
 import { notifySocket } from "@/libs/socket";
-import { useEffect, useState } from "react";
 
-export const useReceiveNotify = ({ user, accessToken }) => {
-    const [usersOnline, setUserOnline] = useState<User[]>([]);
-    useEffect(() => {
-        notifySocket.auth = { id: user._id, username: user.username, accessToken };
-        notifySocket.connect();
-        notifySocket.on("users", (users) => {
-            const arrayOfUsers: User[] = Object.values(users);
-            setUserOnline(arrayOfUsers)
-        });
-
-
-
-        return () => {
-            notifySocket.disconnect();
-        }
-    }, []);
-    return usersOnline
+export interface NotificationConstructor {
+  from: string // username of sender
+  to: string
+  action: ActionNotify
+  link: string
 }
 
-export const useSendNotify = ({ user, accessToken }) => {
-
+export const useSendNotify = async (data: NotificationConstructor) => {
+  const { from, to, action, link } = data;
+  console.log('Sending notify from', from);
+  notifySocket.emit('notify', { from, action, to, link });
 }

@@ -36,13 +36,13 @@ const MyProfile = ({ params }: { params: { username: string } }) => {
     const [label, setLabel] = useState('Profile');
     const [isCurrentUser, setIsCurrentUser] = useState(false);
     useEffect(() => {
-        setIsCurrentUser(currentUser.username == params.username);
+        setIsCurrentUser(currentUser?.username == params.username);
         const fetchData = async () => {
             const res = await userServices.getUserProfile(params.username)
             if (res && res.result) {
                 const { user, followers, following } = res.result;
                 setProfile({ ...user, followers, following });
-                setLabel(user.username);
+                setLabel(user?.username);
             }
         }
         fetchData()

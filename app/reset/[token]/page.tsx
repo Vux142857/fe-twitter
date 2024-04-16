@@ -6,7 +6,7 @@ import TypingEffect from '@/Components/TypingEffect'
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import userServices from '@/services/user.services'
-import toast from 'react-hot-toast'
+import { toast } from 'react-toastify'
 
 const ResetPassword = ({ params }: { params: { token: string } }) => {
     const router = useRouter()

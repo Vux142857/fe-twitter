@@ -89,10 +89,6 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
         </div>
       </div>
       <div className="h-full col-span-1 pr-4 md:pr-2">
-        <div className="flex flex-col items-center">
-          <div className="space-y-2 lg:w-[180px]">
-          </div>
-        </div>
       </div>
     </>
   );

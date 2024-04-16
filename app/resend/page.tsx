@@ -4,12 +4,12 @@ import daisyImg from "@/public/daisy-flowers-blue-3840x2160-12883.jpeg"
 import TypingEffect from '@/Components/TypingEffect'
 import { useCallback, useEffect, useState } from 'react'
 import userServices from '@/services/user.services'
-import toast from 'react-hot-toast'
+import toast from 'react-toastify'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Button from '@/Components/Button'
 
-const ForgotPassword = () => {
+const ResendEmail = () => {
     const { data: session } = useSession();
     const [userSession, setUser] = useState(session?.user || null);
     const router = useRouter()
@@ -25,13 +25,9 @@ const ForgotPassword = () => {
     const handleSubmit = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         try {
-            const res = await userServices.resendVerifyEmail(userSession.email, userSession.accessToken)
-            if (res && res?.message) {
-                toast.success(res.message)
-            }
+            await userServices.resendVerifyEmail(userSession.email, userSession.accessToken)
         } catch (error) {
             console.log(error)
-            toast.error(error?.message)
         }
     }, [userSession])
 
@@ -60,4 +56,4 @@ const ForgotPassword = () => {
     )
 }
 
-export default ForgotPassword;
+export default ResendEmail;

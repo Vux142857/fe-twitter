@@ -2,7 +2,6 @@
 import { memo, useCallback, useState } from "react";
 import Avatar from "../Avatar";
 import Button from "../Button";
-import toast from "react-hot-toast";
 import axios from "axios";
 import Input from "../Input";
 import Textarea from "../TextArea";
@@ -11,6 +10,7 @@ import { useMentionStore, useTweetCircleStore } from "@/hooks/useChosenList";
 import tweetServices, { TweetReqBody } from "@/services/twitter.service";
 import { TweetAudience, TweetType } from "@/constants/dataBody";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 interface FormProps {
   isComment: boolean;
   postId?: string;
@@ -164,7 +164,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user }) => {
                 onChange={(e) => setContent(e.target.value)}
               />
               {!isComment && <Textarea
-                placeholder="Add hastag ex: #hashtag"
+                placeholder="Add hashtag ex: #hashtag"
                 value={hashtag}
                 onChange={(e) => handleHashtag(e)}
               />}
