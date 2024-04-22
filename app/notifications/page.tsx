@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../Components/Layout/Layout';
 import { useSession } from "next-auth/react";
-import BookmarkList from '@/Components/Layout/BookmarkList';
+import NotificationList from '@/Components/Layout/NotificationList';
 
-const BookmarksList = () => {
+const NotificationsList = () => {
   const { data: session } = useSession();
   const [userSession, setUser] = useState(session?.user || null);
   useEffect(() => {
@@ -16,12 +16,12 @@ const BookmarksList = () => {
     }
   }, [session])
   return (
-    <Layout labelHeader="Bookmarks" userSession={useSession}>
+    <Layout labelHeader="Notifications" userSession={useSession}>
       {userSession &&
-        <BookmarkList accessToken={userSession?.accessToken} />
+        <NotificationList accessToken={userSession?.accessToken} />
       }
     </Layout>
   );
 }
 
-export default BookmarksList;
+export default NotificationsList;

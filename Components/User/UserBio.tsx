@@ -5,11 +5,13 @@ import { BiCalendar } from 'react-icons/bi';
 import Button from '../Button';
 import followServices from '@/services/follow.services';
 import EditModal from '../Modals/EditModal';
-import { UserProfile } from '@/hooks/useMutateUser';
+import useUserStore, { UserProfile } from '@/hooks/useMutateUser';
 import FollowingList from '../Layout/FollowingList';
 import FollowerList from '../Layout/FollowerList';
 import conversationServices from '@/services/conversation.service';
 import { useRouter } from 'next/navigation';
+import { ActionNotify } from '@/constants/dataBody';
+import { useSendNotify } from '@/hooks/useNotify';
 interface UserBioProps {
     profile: UserProfile
     isCurrentUser?: boolean
@@ -21,6 +23,7 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
         return format(new Date(profile.date_of_birth), 'MMMM dd, yyyy');
     }, [profile.date_of_birth]);
     const [hasFollowed, setFollowed] = useState(false);
+    const currentUser = useUserStore((state: any) => state.userProfile);
     const router = useRouter();
     useEffect(() => {
         const fetchData = async () => {
@@ -38,7 +41,16 @@ const UserBio: React.FC<UserBioProps> = ({ profile, isCurrentUser, accessToken }
             await followServices.unfollow(accessToken, profile._id)
             setFollowed(false);
         } else {
-            await followServices.follow(accessToken, profile._id)
+            const notifyData = {
+                from: currentUser && currentUser?.username,
+                to: profile._id,
+                link: '/me',
+                action: ActionNotify.FOLLOW
+            }
+            Promise.all([
+                await followServices.follow(accessToken, profile._id),
+                useSendNotify(notifyData)
+            ])
             setFollowed(true);
         }
     }, [hasFollowed, accessToken, profile._id, router]);

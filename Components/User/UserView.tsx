@@ -11,15 +11,15 @@ interface UserViewProps {
 const UserView: React.FC<UserViewProps> = ({ user, isCurrentUser, accessToken }) => {
     return (
         <>
-            <UserHero
+            {user && <UserHero
                 avatarURL={user.avatar}
                 coverPhotoURL={user.cover_photo}
-                username={user.username} />
-            <UserBio
+                username={user.username} />}
+            {user && <UserBio
                 profile={user}
                 isCurrentUser={isCurrentUser}
                 accessToken={accessToken}
-            />
+            />}
         </>
     );
 }

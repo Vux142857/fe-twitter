@@ -4,26 +4,47 @@ import Image from 'next/image'
 import daisyImg from "@/public/daisy-flowers-blue-3840x2160-12883.jpeg"
 import TypingEffect from '@/Components/TypingEffect'
 import Link from 'next/link'
-import { signIn, useSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Bounce, toast } from 'react-toastify'
 // import { FcGoogle } from 'react-icons/fc'
 
 const Login = () => {
     const router = useRouter()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
     const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         try {
+            toast.info('🦄 W8 pls <3', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
             const res = await signIn('Sign In', {
                 redirect: false,
                 email,
                 password,
             })
             if (res?.error) {
-                setError(res.error)
+                toast.warning('Login failure !', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
             } else {
                 router.push('/')
             }
@@ -57,10 +78,6 @@ const Login = () => {
                             </label>
                             <input name='password' type="password" onChange={(e) => { setPassword(e.target.value) }} placeholder="password" className="input input-bordered" value={password} onKeyDown={handleKeyDown} required />
                         </div>
-                        {error && (<div role="alert" className="alert alert-error">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>{error}</span>
-                        </div>)}
                         <div className="form-control mt-6">
                             <button className="btn btn-primary" type='submit'>Login</button>
                         </div>

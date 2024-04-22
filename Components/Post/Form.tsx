@@ -8,17 +8,23 @@ import Textarea from "../TextArea";
 import SelectUser from "../Layout/SelectUser";
 import { useMentionStore, useTweetCircleStore } from "@/hooks/useChosenList";
 import tweetServices, { TweetReqBody } from "@/services/twitter.service";
-import { TweetAudience, TweetType } from "@/constants/dataBody";
+import { ActionNotify, TweetAudience, TweetType } from "@/constants/dataBody";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-interface FormProps {
-  isComment: boolean;
-  postId?: string;
-  user: any;
+import { useSendNotify } from "@/hooks/useNotify";
+export interface AuthorOfPost {
+  _id: string
+  username: string
+  name: string
+  avatar: string
 }
-const Form: React.FC<FormProps> = ({ isComment, postId, user }) => {
-  // const { data: session } = useSession();
-  // const [user, setUser] = useState(session?.user);
+interface FormProps {
+  isComment: boolean
+  postId?: string
+  author?: AuthorOfPost
+  user: any
+}
+const Form: React.FC<FormProps> = ({ isComment, postId, user, author }) => {
   const router = useRouter();
   const [body, setBody] = useState<TweetReqBody>({
     audience: TweetAudience.Everyone,
@@ -99,10 +105,17 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user }) => {
         body.mention = getMention;
         body.content = content;
         body.hashtag = hashtagList;
-        // Post the tweet with the updated body data
         return tweetServices.postTweet(user?.accessToken, body);
       }).then(() => {
         toast.success('Tweet created');
+        if (isComment) {
+          useSendNotify({
+            from: user?.username,
+            to: author?._id,
+            link: `/post/${postId}`,
+            action: ActionNotify.COMMENT
+          })
+        }
         setBody(null);
         setContent('');
         setFiles([]);
@@ -123,6 +136,14 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user }) => {
       await tweetServices.postTweet(user?.accessToken, body)
         .then(() => {
           toast.success('Tweet created');
+          if (isComment) {
+            useSendNotify({
+              from: user?.username,
+              to: author?._id,
+              link: `/post/${postId}`,
+              action: ActionNotify.COMMENT
+            })
+          }
           setBody(null);
           setContent('');
           setFiles([]);

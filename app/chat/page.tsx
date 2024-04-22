@@ -36,7 +36,6 @@ const ChatRoom = () => {
         <LayoutChat conversations={usersInRoom}>
             {/* Page content here */}
             <div className="h-full">
-                <h1>Hello</h1>
             </div>
         </LayoutChat>
     );

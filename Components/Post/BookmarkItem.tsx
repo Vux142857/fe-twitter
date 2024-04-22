@@ -50,20 +50,20 @@ const PostItem: React.FC<BookmarkItem> = ({ tweet, author }) => {
         cursor-pointer 
         hover:bg-neutral-900 
         transition
+        hover:text-primary text-secondary
       "
         >
             <Avatar username={author.username} avatarURL={author.avatar} isLarge={false} />
-            <div className="flex flex-row items-start gap-3">
+            <div className="flex flex-row items-start gap-3 ">
                 <div>
                     <div className="flex flex-row items-center gap-2">
                         <p
                             onClick={goToUser}
                             className="
-                text-white 
-                font-semibold 
-                cursor-pointer 
-                hover:underline
-            ">
+                            font-semibold 
+                            cursor-pointer 
+                            hover:underline
+                                    ">
                             {author.name}
                         </p>
                         <span
@@ -81,7 +81,7 @@ const PostItem: React.FC<BookmarkItem> = ({ tweet, author }) => {
                             {format(new Date(tweet.createdAt), 'MMMM dd, yyyy')}
                         </span>
                     </div>
-                    <div className="text-white mt-1">
+                    <div className=" mt-1">
                         {tweet.content}
                     </div>
                 </div>

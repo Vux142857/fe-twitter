@@ -19,13 +19,13 @@ const SidebarTweetButton: React.FC<SidebarTweetButtonProps> = ({ isLogin }) => {
     <div
       onClick={onClick}
     >
-      <div className="flex items-center justify-center p-4 mt-6 transition rounded-full cursor-pointer lg:hidden h-14 w-14 hover:bg-opacity-80 bg-primary">
+      <div className="flex items-center justify-center p-4 mt-6 transition rounded-full cursor-pointer lg:hidden h-14 w-14 hover:bg-opacity-80 border-2">
         <Link href='/'>
-          <Image src={Icon} width={100} height={100} alt="Daisy flower"/>
+          <Image src={Icon} width={100} height={100} alt="Daisy flower" />
         </Link>
       </div>
-      <div className="hidden px-4 py-4 mt-6 transition rounded-full cursor-pointer lg:block bg-primary hover:bg-opacity-90 ">
-        <p className="hidden lg:block text-center font-semibold text-primary-content text-[20px]">Tweet</p>
+      <div className="hidden px-4 py-4 mt-6 transition rounded-full cursor-pointer lg:block bg-secondary hover:bg-opacity-30 ">
+        <p className="hidden lg:block text-center font-semibold text-primary text-[20px]">Tweet</p>
       </div>
     </div>
   );

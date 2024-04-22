@@ -10,6 +10,5 @@ export interface NotificationConstructor {
 
 export const useSendNotify = async (data: NotificationConstructor) => {
   const { from, to, action, link } = data;
-  console.log('Sending notify from', from);
   notifySocket.emit('notify', { from, action, to, link });
 }

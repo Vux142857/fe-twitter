@@ -44,7 +44,7 @@ const PostPage = ({ params }: { params: { id: string } }) => {
     return (
         <Layout labelHeader="Post" userSession={userSession}>
             {data && userSession && author && <PostItem data={data} user={author} accessToken={userSession?.accessToken} />}
-            {userSession && <Form isComment={true} postId={params.id} user={userSession} />}
+            {userSession && data && <Form author={data?.author} isComment={true} postId={params.id} user={userSession} />}
             {userSession && currentUser && <Comments user_id={params.id} accessToken={userSession?.accessToken} user={currentUser} />}
         </Layout>
     );

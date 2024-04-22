@@ -199,6 +199,8 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
           cursor-pointer 
           hover:bg-secondary
           transition
+          hover:text-primary
+          text-secondary
         "
       >
         {(isRetweet || isComment) && user && !inPost && <div className="flex flex-col border-b-[1px] 
@@ -208,7 +210,6 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
             <p
               onClick={goToUser}
               className="
-                    text-white 
                     font-semibold 
                     cursor-pointer 
                     hover:underline
@@ -230,7 +231,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
               {createdAt}
             </span>
           </div>
-          {isComment && !inPost && <div className="text-white p-4">{commentValue}</div>}
+          {isComment && !inPost && <div className=" p-4">{commentValue}</div>}
         </div>}
         <div className={isRetweetStyle}>
           <div className="flex flex-row items-center gap-2">
@@ -238,7 +239,6 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
             <p
               onClick={goToUser}
               className="
-                  text-white 
                   font-semibold 
                   cursor-pointer 
                   hover:underline
@@ -260,7 +260,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
               {createdAt}
             </span>
           </div>
-          <div className="text-white mt-1" onClick={goToPost}>
+          <div className=" mt-1" onClick={goToPost}>
             {tweet?.content}
           </div>
           <div className="grid grid-cols-4 gap-1 m-2">
@@ -273,7 +273,7 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
                   <div>
                     <dialog id={mediaItem._id} className="modal modal-bottom sm:modal-middle">
                       <div className="modal-box">
-                        <img src={mediaItem.url} className='w-full' />
+                        <img src={mediaItem.url} className='h-full w-auto' alt={`Image from ${tweet?.author?.username}`} />
                         <div className="modal-action">
                           <form method="dialog">
                             {/* if there is a button in form, it will close the modal */}
@@ -282,7 +282,12 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
                         </div>
                       </div>
                     </dialog>
-                    <Image src={mediaItem.url} alt={`Image from ${tweet?.author?.username}`} width={100} height={100} onClick={() => (document.getElementById(`${mediaItem._id}`) as HTMLDialogElement).showModal()} />
+                    <Image
+                      src={mediaItem.url}
+                      alt={`Image from ${tweet?.author?.username}`}
+                      width={200}
+                      height={200}
+                      onClick={() => (document.getElementById(`${mediaItem._id}`) as HTMLDialogElement).showModal()} />
                   </div>
                 )}
               </div>

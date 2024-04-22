@@ -25,30 +25,31 @@ interface LayoutChatProps {
 
 const LayoutChat: React.FC<LayoutChatProps> = ({ children, conversations }) => {
     return (
-        <div className="drawer lg:drawer-open">
-            <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-            <div className="drawer-content relative">
-                {/* Page content here */}
-                {children}
-            </div>
-            <div className="drawer-side">
-                <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-                <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-                    {/* Sidebar content here */}
-                    <SidebarItem href={"/"} label={"Home"} icon={BsHouseFill} />
-                    {conversations.map((toUser, index) => (
-                        <li key={index}>
-                            <Link href={`/chat/${toUser.conversation}`}>
-                                <UserInChat
-                                    username={toUser.username}
-                                    hasNewMessages={toUser.hasNewMessages || false}
-                                    userID={toUser.userID}
-                                    isOnline={toUser.isOnline || false}
-                                />
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
+        <div className="h-screen relative">
+            <div className="container h-full max-w-20xl mx-auto xl:px-30">
+                <div className="grid h-full grid-cols-5 lg:grid-cols-4 relative">
+                    <div className="h-full col-span-1">
+                        <ul className="min-h-full text-base-content">
+                            {/* Sidebar content here */}
+                            <SidebarItem href={"/"} label={"Home"} icon={BsHouseFill} />
+                            {conversations.map((toUser, index) => (
+                                <li key={index} className="hover:bg-secondary mb-4 text-primary-content hover:text-secondary-content">
+                                    <Link href={`/chat/${toUser.conversation}`}>
+                                        <UserInChat
+                                            username={toUser.username}
+                                            userID={toUser.userID}
+                                            isOnline={toUser.isOnline || false}
+                                        />
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="h-full bg-primary col-span-4 lg:col-span-3 border-x-[1px] border-neutral-800">
+                        {/* Page content here */}
+                        {children}
+                    </div>
+                </div>
             </div>
         </div>
     );

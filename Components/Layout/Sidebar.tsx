@@ -64,7 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
   ];
   return (
     <>
-      <div className="h-full col-span-1 pr-4 md:pr-2 fixed">
+      <div className="h-full col-span-1 fixed">
         <div className="flex flex-col items-center">
           <div className="space-y-2 lg:w-[180px]">
             <SidebarLogo />
@@ -76,6 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
                   ))
                 }
                 <>
+                  <div className="lg:hidden"><SidebarItem onClick={() => { router.push('/notifications') }} label="Notifications" icon={BsBellFill} /></div>
                   <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />
                   <SidebarTweetButton isLogin={isLogin} />
                 </>
@@ -88,7 +89,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
           </div>
         </div>
       </div>
-      <div className="h-full col-span-1 pr-4 md:pr-2">
+      <div className="h-full col-span-1">
       </div>
     </>
   );

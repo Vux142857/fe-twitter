@@ -52,6 +52,7 @@ const SearchResults = ({ searchValue, accessToken, filter }) => {
         cursor-pointer 
         hover:bg-secondary
         transition
+        hover:text-primary text-secondary
       "
             >
               <div >
@@ -60,7 +61,6 @@ const SearchResults = ({ searchValue, accessToken, filter }) => {
                   <Link
                     href={`/${data.username}`}
                     className="
-                text-white 
                 font-semibold 
                 cursor-pointer 
                 hover:underline
@@ -78,7 +78,6 @@ const SearchResults = ({ searchValue, accessToken, filter }) => {
             ">
                     @{data.username}
                   </Link>
-
                 </div>
               </div>
             </div>
@@ -91,6 +90,8 @@ const SearchResults = ({ searchValue, accessToken, filter }) => {
           border-b-[1px] 
           p-5
           cursor-pointer 
+          text-secondary
+          hover:text-primary
           hover:bg-secondary
           transition
         "
@@ -101,7 +102,6 @@ const SearchResults = ({ searchValue, accessToken, filter }) => {
                   <Link
                     href={`/${data.username}`}
                     className="
-                  text-white 
                   font-semibold 
                   cursor-pointer 
                   hover:underline
@@ -119,7 +119,6 @@ const SearchResults = ({ searchValue, accessToken, filter }) => {
               ">
                     @{data.username}
                   </Link>
-
                 </div>
               </div>
             </div>

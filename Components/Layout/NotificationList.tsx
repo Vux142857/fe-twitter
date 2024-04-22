@@ -1,11 +1,11 @@
 'use client'
 import { memo, useCallback, useRef, useState } from "react"
-import PostItem from "../Post/PostItem"
-import useGetComments from '@/hooks/useGetComments'
+import BookmarkItem from '../Post/BookmarkItem'
+import useGetNotification from "@/hooks/useGetNotifications"
 
-const Comments = ({ user_id, accessToken, user }: { user_id: string, accessToken: string, user: any }) => {
+const NotificationList = ({ accessToken }: { accessToken: string }) => {
   const [pageNumber, setPageNumber] = useState(1)
-  const { loading, comments, hasMore } = useGetComments(pageNumber, user_id, accessToken)
+  const { loading, notitications, error, hasMore } = useGetNotification(pageNumber, accessToken)
   const observer = useRef<IntersectionObserver | undefined>()
   const lastNewfeedsElementRef = useCallback((node: HTMLDivElement | null) => {
     if (loading) return
@@ -23,19 +23,20 @@ const Comments = ({ user_id, accessToken, user }: { user_id: string, accessToken
   return (
     <>
       {loading && (<div className="flex flex-row justify-center items-center"><span className="loading loading-ring loading-lg"></span></div>)}
-      {comments.map((data, index) => {
-        if (comments.length === index + 1) {
+      {notitications.map((data, index) => {
+        if (notitications.length === index + 1) {
           return (
-            <div key={index} ref={lastNewfeedsElementRef}><PostItem data={data} user={user} accessToken={accessToken} inPost={true} /></div>
+            <div key={index} ref={lastNewfeedsElementRef}><BookmarkItem tweet={data.tweet} author={data.author} /></div>
           )
         } else {
           return (
-            <div key={index}><PostItem data={data} user={user} accessToken={accessToken} inPost={true} /></div>
+            <div key={index}><BookmarkItem tweet={data.tweet} author={data.author} /></div>
           )
         }
       })}
+      <div>{error && 'Error'}</div>
     </>
   )
 }
 
-export default memo(Comments);
+export default memo(NotificationList);

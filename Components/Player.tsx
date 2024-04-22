@@ -73,7 +73,7 @@ const Player = ({ url, username }) => {
     }
 
     return (
-        <div className='h-80 flex justify-center items-center'>
+        <div className='w-full flex justify-center items-center'>
             <MediaPlayer
                 className="player"
                 title={username}

@@ -13,20 +13,20 @@ const config: Config = {
   },
   plugins: [require("daisyui")],
   daisyui: {
-    // themes: [{
-    //   mytheme: {
-    //     "primary": "#FFFFF0", // Ivory
-    //     "secondary": "#FFD700", // Gold
-    //     "accent": "#FF6347", // Tomato
-    //     "neutral": "#F0F8FF", // Alice Blue
-    //     "base-100": "#FFFAF0", // Floral White
-    //     "info": "#FF1493", // Deep Pink
-    //     "success": "#98FB98", // Pale Green
-    //     "warning": "#FF4500", // Orange Red
-    //     "error": "#FFDAB9", // Peach Puff
-    //   },
-    // }],
-    themes: ['retro'],
+    themes: [{
+      mytheme: {
+        "primary": "#FFFFFF", // White
+        "secondary": "#000000", // Black
+        "accent": "#A9A9A9", // Gray
+        "neutral": "#000000", // Black
+        "base-100": "#FFFFFF", // White
+        "info": "#A9A9A9", // Gray
+        "success": "#FFFFFF", // White
+        "warning": "#FFFFFF", // White
+        "error": "#000000", // Black
+      },
+    }],
+    // themes: ['retro'],
     base: true, // applies background color and foreground color for root element by default
     styled: true, // include daisyUI colors and design decisions for all components
     utils: true, // adds responsive and modifier utility classes
