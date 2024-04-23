@@ -10,12 +10,12 @@ const nextConfig = {
     // CLIENT: "http://localhost:3001",
     // WORKER: "http://localhost:3002",
     customKey: "my-value",
-    SERVER: "https://notify-j4qr.onrender.com",
+    SERVER: "https://mytwt-api.xyz",
     JWT_SECRET_ACCESS_TOKEN: "@vu150802",
     JWT_SECRET_REFRESH_TOKEN: "@vu140923",
     NEXTAUTH_SECRET: "@vu070802",
     CLIENT: "https://www.mytweet.one",
-    WORKER: "https://mytwt-api.xyz",
+    WORKER: "https://notify-j4qr.onrender.com",
   },
   images: {
     domains: [
