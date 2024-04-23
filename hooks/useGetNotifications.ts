@@ -17,14 +17,18 @@ const useGetNotification = (pageNumber: number, accessToken: string) => {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             },
-            url: process.env.SERVER + `/notitication`,
+            url: process.env.WORKER + `/notitication`,
             params: { limit: LIMIT_POST, skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {
-            setNotification(prev => {
-                return [...new Set([...prev, ...res.data.result])]
-            })
-            setHasMore(res.data.result.length > 0)
+            console.log(res.data.result)
+            if (res.data.result.length > 0) {
+                setNotification(prev => {
+                    return [...new Set([...prev, ...res?.data?.result])]
+                })
+            }
+            console.log(notitications)
+            setHasMore(res?.data?.result?.length > 0)
             setLoading(false)
         }).catch(e => {
             if (axios.isCancel(e)) return

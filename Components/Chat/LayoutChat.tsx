@@ -2,9 +2,11 @@
 import { Message } from "@/app/chat/page"
 import UserInChat from "./UserInChat"
 import Link from "next/link"
-import { memo } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import SidebarItem from "../Layout/SidebarItem"
 import { BsHouseFill } from "react-icons/bs"
+import { useSession } from "next-auth/react"
+import { notifySocket } from "@/libs/socket"
 
 export interface User {
     conversation: string
@@ -24,6 +26,22 @@ interface LayoutChatProps {
 }
 
 const LayoutChat: React.FC<LayoutChatProps> = ({ children, conversations }) => {
+    const { data: session } = useSession()
+    const socketRef = useRef<any>(null);
+
+    useEffect(() => {
+        if (session?.user) {
+            if (!socketRef.current) {
+                socketRef.current = notifySocket;
+                socketRef.current.auth = {
+                    id: session?.user.id,
+                    username: session?.user.username,
+                    accessToken: session?.user.accessToken
+                };
+                socketRef.current.connect();
+            }
+        }
+    }, [session]);
     return (
         <div className="h-screen relative">
             <div className="container h-full max-w-20xl mx-auto xl:px-30">

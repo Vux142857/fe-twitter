@@ -1,9 +1,10 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, use, useCallback, useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import Avatar from '../Avatar';
 import { ActionNotify } from '@/constants/dataBody';
+import Link from 'next/link';
 
 export interface NotificationItem {
     _id: string
@@ -15,8 +16,22 @@ export interface NotificationItem {
     updated_at?: Date
 }
 
-const PostItem: React.FC<NotificationItem> = (notification: NotificationItem) => {
+const PostItem = ({ notification }: { notification: NotificationItem }) => {
+    const [msg, setMsg] = useState<any>(null);
     const router = useRouter();
+
+    useEffect(() => {
+        if (notification.action == ActionNotify.MESSAGE) {
+            setMsg(<Link href={notification.link}> has send message to you!</Link>)
+        } else if (notification.action == ActionNotify.TWEET) {
+            setMsg(<Link href={notification.link}> has created new tweet!</Link>)
+        } else if (notification.action == ActionNotify.FOLLOW) {
+            setMsg(<Link href={notification.link}> has followed you!</Link>)
+        } else {
+            setMsg(<Link href={notification.link}> has {notification.action}d your tweet!</Link>)
+        }
+    }, [notification._id.toString()])
+
     const goToUser = useCallback((ev: any) => {
         ev.stopPropagation();
         router.push(`/${notification.from}`)
@@ -34,9 +49,10 @@ const PostItem: React.FC<NotificationItem> = (notification: NotificationItem) =>
         border-neutral-800 
         p-5 
         cursor-pointer 
-        hover:bg-neutral-900 
         transition
-        hover:text-primary text-secondary
+        hover:text-secondary-content
+        hover:bg-secondary
+        text-primary-content
       "
         >
             <div className="flex flex-row items-start gap-3 ">
@@ -53,11 +69,11 @@ const PostItem: React.FC<NotificationItem> = (notification: NotificationItem) =>
             ">
                             @{notification.from}
                         </span>
+                        {msg}
                         <span className="text-neutral-500 text-sm">
                             {format(new Date(notification.created_at), 'MMMM dd, yyyy')}
                         </span>
                     </div>
-
                 </div>
             </div>
         </div>

@@ -52,17 +52,17 @@ const Player = ({ url, username }) => {
     }
 
     function changeSource(type: string, url?: string) {
-        const muxPlaybackId = 'VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU';
+        // const muxPlaybackId = 'VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU';
         switch (type) {
             // case 'audio':
             //   setSrc('https://media-files.vidstack.io/sprite-fight/audio.mp3');
             //   break;
             case 'video':
-                setSrc((url) ? url : `https://stream.mux.com/${muxPlaybackId}.m3u8`);
+                setSrc((url) ? url : ``);
                 break;
-            case 'hls':
-                setSrc((url) ? url : `https://stream.mux.com/${muxPlaybackId}.m3u8`);
-                break;
+            // case 'hls':
+            //     setSrc((url) ? url : ``);
+            //     break;
             // case 'youtube':
             //   setSrc('youtube/_cMxraX_5RE');
             //   break;

@@ -2,6 +2,7 @@
 import { memo, useCallback, useRef, useState } from "react"
 import BookmarkItem from '../Post/BookmarkItem'
 import useGetNotification from "@/hooks/useGetNotifications"
+import NotificationItem from "../Post/NotificationItem"
 
 const NotificationList = ({ accessToken }: { accessToken: string }) => {
   const [pageNumber, setPageNumber] = useState(1)
@@ -26,15 +27,16 @@ const NotificationList = ({ accessToken }: { accessToken: string }) => {
       {notitications.map((data, index) => {
         if (notitications.length === index + 1) {
           return (
-            <div key={index} ref={lastNewfeedsElementRef}><BookmarkItem tweet={data.tweet} author={data.author} /></div>
+            <div key={index} ref={lastNewfeedsElementRef}>
+              <NotificationItem notification={data} />
+            </div>
           )
         } else {
           return (
-            <div key={index}><BookmarkItem tweet={data.tweet} author={data.author} /></div>
+            <div key={index}><NotificationItem notification={data} /></div>
           )
         }
       })}
-      <div>{error && 'Error'}</div>
     </>
   )
 }

@@ -8,7 +8,8 @@ export interface NotificationConstructor {
   link: string
 }
 
-export const useSendNotify = async (data: NotificationConstructor) => {
+export const useSendNotify = (data: NotificationConstructor) => {
   const { from, to, action, link } = data;
+  console.log('send notify', data)
   notifySocket.emit('notify', { from, action, to, link });
 }

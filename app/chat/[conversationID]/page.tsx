@@ -1,9 +1,6 @@
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @next/next/no-img-element */
 'use client'
 import LayoutChat, { User } from "@/Components/Chat/LayoutChat";
-import socket from "@/libs/socket";
+import socket, { notifySocket } from "@/libs/socket";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { Message } from "../page";
@@ -12,6 +9,8 @@ import MessageElement from "@/Components/Chat/MessageElement";
 import conversationServices from "@/services/conversation.service";
 import Avatar from "@/Components/Avatar";
 import useMessages from "@/hooks/useGetMessages";
+import { NotificationConstructor, useSendNotify } from "@/hooks/useNotify";
+import { ActionNotify } from "@/constants/dataBody";
 
 const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
   const { data: session } = useSession();
@@ -24,8 +23,11 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
     userID: "",
     username: "",
     avatar: "",
+    isOnline: false
   });
   const [pageNumber, setPageNumber] = useState(1)
+  const [notify, setNotify] = useState<NotificationConstructor | null>(null);
+
   const user = useRef(session?.user);
   useEffect(() => {
     user.current = session?.user;
@@ -58,6 +60,24 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
       setMessages(messages.map((message) => ({ to: message.to, from: message.from, content: message.content, fromSelf: message.from === user.current?.id })));
     }
   }, [pageNumber, messages]);
+
+  useEffect(() => {
+    const isOnline = usersInRoom.find((user) => user.userID === selectedUser.userID)?.isOnline;
+    setSelectedUser({ ...selectedUser, isOnline });
+  }, [usersInRoom])
+
+  useEffect(() => {
+    if (notify && !selectedUser.isOnline) {
+      useSendNotify(notify);
+      setNotify(null);
+    }
+  }, [notify, selectedUser]);
+
+  useEffect(() => {
+    notifySocket.on('inRoom', (data) => {
+      console.log('receive notify', data)
+    })
+  }, [])
 
   useEffect(() => {
     socket.auth = { id: user.current?.id, username: user.current?.username, accessToken: user.current?.accessToken };
@@ -97,8 +117,15 @@ const ChatRoom = ({ params }: { params: { conversationID: string } }) => {
     }
     socket.emit("private message", message);
     setMessages((prev) => [...prev, { to: message.to, from: message.from, content: message.content, fromSelf: true }]);
+    setNotify({
+      from: user.current?.username,
+      to: selectedUser.userID,
+      link: `/chat/${params.conversationID}`,
+      action: ActionNotify.MESSAGE
+    })
     setValue("");
   }
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
