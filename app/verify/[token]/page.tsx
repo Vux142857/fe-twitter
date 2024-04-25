@@ -6,7 +6,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import userServices from '@/services/user.services'
 import { useSession } from 'next-auth/react'
-import { UserVerifyStatus } from '@/constants/dataBody'
 
 const VerifyEmail = ({ params }: { params: { token: string } }) => {
     const { data: session, update } = useSession()
