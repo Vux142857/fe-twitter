@@ -24,6 +24,10 @@ class TweetServices {
     async postTweet(accessToken: string, data: TweetReqBody) {
         return await fetcher.postWithAuth(`${SERVER}/tweet/create-tweet`, data, accessToken)
     }
+
+    async deleteTweet(accessToken: string, tweet_id: string) {
+        return await fetcher.deleteWithAuth(`${SERVER}/tweet/delete/${tweet_id}`, accessToken)
+    }
 }
 
 const tweetServices = new TweetServices()

@@ -10,9 +10,10 @@ import bookmarkServices from '@/services/bookmark.services';
 import { ActionNotify, Media, MediaType, TweetAudience, TweetType } from '@/constants/dataBody';
 import Player from '../Player';
 import Image from 'next/image';
-import tweetServices, { TweetReqBody } from '@/services/twitter.service';
+import tweetServices, { TweetReqBody } from '@/services/tweet.service';
 import { useSendNotify } from '@/hooks/useNotify';
 import DeleteModal from '../Modals/DeleteModal';
+import { Bounce, toast } from 'react-toastify';
 interface PostItemProps {
   data: dataProps;
   accessToken?: string;
@@ -181,7 +182,21 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
         type: TweetType.Retweet,
         tweet_circle: data.tweet_circle
       }
-      await tweetServices.postTweet(accessToken, bodyRetweet)
+      const result = await tweetServices.postTweet(accessToken, bodyRetweet).then(
+        () => {
+          toast.success('🦄 Retweet successfully...', {
+            position: "top-right",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
+      )
     } catch (error) {
       console.error('Error retweeting:', error);
     }

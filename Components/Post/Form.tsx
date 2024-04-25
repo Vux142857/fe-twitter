@@ -7,7 +7,7 @@ import Input from "../Input";
 import Textarea from "../TextArea";
 import SelectUser from "../Layout/SelectUser";
 import { useMentionStore, useTweetCircleStore } from "@/hooks/useChosenList";
-import tweetServices, { TweetReqBody } from "@/services/twitter.service";
+import tweetServices, { TweetReqBody } from "@/services/tweet.service";
 import { ActionNotify, TweetAudience, TweetType } from "@/constants/dataBody";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
