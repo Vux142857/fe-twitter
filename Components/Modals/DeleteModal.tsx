@@ -22,12 +22,11 @@ const DeleteModal = ({ accessToken, tweet_id }: { accessToken: string, tweet_id:
                 theme: "colored",
                 transition: Bounce,
             });
-            const result = await tweetServices.deleteTweet(accessToken, tweet_id).then(
-                () => {
-                    (document.getElementById(`${tweet_id}`) as HTMLDialogElement).close()
-                    window.location.reload()
-                }
-            )
+            const result = await tweetServices.deleteTweet(accessToken, tweet_id)
+            if (result) {
+                (document.getElementById(`${tweet_id}`) as HTMLDialogElement).close()
+                window.location.reload()
+            }
         } catch (error) {
             toast.warning('Something went wrong!', {
                 position: "top-right",
