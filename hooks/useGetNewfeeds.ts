@@ -15,7 +15,7 @@ const useNewfeeds = (pageNumber: number) => {
         axios({
             method: 'GET',
             // /tweet/trending/views?limit=10&type=1&skip=0
-            url: process.env.SERVER + "/tweet/trending/views",
+            url: process.env.NEXT_PUBLIC_SERVER + "/tweet/trending/views",
             params: { limit: LIMIT_POST, type: 0, skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {

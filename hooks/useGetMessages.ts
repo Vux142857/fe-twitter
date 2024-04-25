@@ -17,7 +17,7 @@ const useMessages = (pageNumber: number, conversation_id: string, accessToken: s
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             },
-            url: process.env.SERVER + "/message/" + conversation_id,
+            url: process.env.NEXT_PUBLIC_SERVER + "/message/" + conversation_id,
             params: { limit: LIMIT_MESSAGES, skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {

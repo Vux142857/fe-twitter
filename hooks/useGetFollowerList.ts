@@ -17,7 +17,7 @@ const useFollowerList = (pageNumber: number, user_id: string, accessToken: strin
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             },
-            url: process.env.SERVER + `/user/follows/${user_id}`,
+            url: process.env.NEXT_PUBLIC_SERVER + `/user/follows/${user_id}`,
             params: { limit: LIMIT_POST, type: 'followers', skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {

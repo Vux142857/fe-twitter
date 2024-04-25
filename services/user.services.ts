@@ -1,7 +1,7 @@
 import { EditBody } from "@/constants/dataBody"
 import fetcher from "@/libs/fetcher"
 
-const SERVER = process.env.SERVER as string
+const SERVER = process.env.NEXT_PUBLIC_SERVER as string
 export interface RegisterReqBody {
     name: string
     email: string

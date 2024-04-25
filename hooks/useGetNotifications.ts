@@ -17,7 +17,7 @@ const useGetNotification = (pageNumber: number, accessToken: string) => {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             },
-            url: process.env.WORKER + `/notitication`,
+            url: process.env.NEXT_PUBLIC_WORKER + `/notitication`,
             params: { limit: LIMIT_POST, skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {

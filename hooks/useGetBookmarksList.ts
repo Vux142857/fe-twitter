@@ -17,7 +17,7 @@ const useGetBookmarksList = (pageNumber: number, accessToken: string) => {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             },
-            url: process.env.SERVER + `/bookmark/get-bookmarks`,
+            url: process.env.NEXT_PUBLIC_SERVER + `/bookmark/get-bookmarks`,
             params: { limit: LIMIT_POST, skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {

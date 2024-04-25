@@ -1,3 +1,3 @@
 export const env = {
-    CLIENT: process.env.CLIENT,
+    CLIENT: process.env.NEXT_PUBLIC_CLIENT,
 }

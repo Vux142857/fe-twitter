@@ -18,7 +18,7 @@ const useGetComments = (pageNumber: number, user_id: string, accessToken: string
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             },
-            url: process.env.SERVER + `/tweet/${user_id}/children`,
+            url: process.env.NEXT_PUBLIC_SERVER + `/tweet/${user_id}/children`,
             params: { limit: LIMIT_POST, type: TweetType.Comment, skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {

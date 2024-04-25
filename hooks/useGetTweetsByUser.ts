@@ -17,7 +17,7 @@ const useGetTweetsByUser = (pageNumber: number, user_id: string, accessToken: st
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             },
-            url: process.env.SERVER + `/tweet/${user_id}/tweets`,
+            url: process.env.NEXT_PUBLIC_SERVER + `/tweet/${user_id}/tweets`,
             params: { limit: LIMIT_POST, type: 0, skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {

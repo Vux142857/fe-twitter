@@ -71,7 +71,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user, author }) => {
       const uploadType = isImage ? 'upload-images' : 'upload-video';
 
       new Promise((resolve, reject) => {
-        axios.post(`${process.env.SERVER}/media/${uploadType}`, formData, {
+        axios.post(`${process.env.NEXT_PUBLIC_SERVER}/media/${uploadType}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${user?.accessToken}`,

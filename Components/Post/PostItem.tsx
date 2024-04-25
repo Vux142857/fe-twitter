@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage, AiOutlineRetweet } from 'react-icons/ai';
 import { format } from 'date-fns';
 import Avatar from '../Avatar';
@@ -12,6 +12,7 @@ import Player from '../Player';
 import Image from 'next/image';
 import tweetServices, { TweetReqBody } from '@/services/twitter.service';
 import { useSendNotify } from '@/hooks/useNotify';
+import DeleteModal from '../Modals/DeleteModal';
 interface PostItemProps {
   data: dataProps;
   accessToken?: string;
@@ -205,60 +206,66 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
       >
         {(isRetweet || isComment) && user && !inPost && <div className="flex flex-col border-b-[1px] 
           border-neutral-800 mb-2 pb-2">
-          <div className='flex flex-row items-center gap-2'>
-            <Avatar username={user.username} avatarURL={user.avatar} isLarge={false} />
-            <p
-              onClick={goToUser}
-              className="
+          <div className='flex justify-between'>
+            <div className='flex flex-row items-center gap-2'>
+              <Avatar username={user.username} avatarURL={user.avatar} isLarge={false} />
+              <p
+                onClick={goToUser}
+                className="
+                      font-semibold 
+                      cursor-pointer 
+                      hover:underline
+                  ">
+                {user.name}
+              </p>
+              <span
+                onClick={goToUser}
+                className="
+                      text-neutral-500
+                      cursor-pointer
+                      hover:underline
+                      hidden
+                      md:block
+                  ">
+                @{user.username}
+              </span>
+              <span className="text-neutral-500 text-sm">
+                {createdAt}
+              </span>
+            </div>
+            {user?._id === data?.author?._id && <DeleteModal accessToken={accessToken} tweet_id={data?._id} />}
+          </div>
+          {isComment && !inPost && <div className=" p-4">{commentValue}</div>}
+        </div>}
+        <div className={isRetweetStyle}>
+          <div className='flex justify-between'>
+            <div className="flex flex-row items-center gap-2">
+              <Avatar username={tweet?.author?.username} avatarURL={tweet?.author?.avatar} isLarge={false} />
+              <p
+                onClick={goToUser}
+                className="
                     font-semibold 
                     cursor-pointer 
                     hover:underline
                 ">
-              {user.name}
-            </p>
-            <span
-              onClick={goToUser}
-              className="
+                {tweet?.author?.name}
+              </p>
+              <span
+                onClick={goToUser}
+                className="
                     text-neutral-500
                     cursor-pointer
                     hover:underline
                     hidden
                     md:block
                 ">
-              @{user.username}
-            </span>
-            <span className="text-neutral-500 text-sm">
-              {createdAt}
-            </span>
-          </div>
-          {isComment && !inPost && <div className=" p-4">{commentValue}</div>}
-        </div>}
-        <div className={isRetweetStyle}>
-          <div className="flex flex-row items-center gap-2">
-            <Avatar username={tweet?.author?.username} avatarURL={tweet?.author?.avatar} isLarge={false} />
-            <p
-              onClick={goToUser}
-              className="
-                  font-semibold 
-                  cursor-pointer 
-                  hover:underline
-              ">
-              {tweet?.author?.name}
-            </p>
-            <span
-              onClick={goToUser}
-              className="
-                  text-neutral-500
-                  cursor-pointer
-                  hover:underline
-                  hidden
-                  md:block
-              ">
-              @{tweet?.author?.username}
-            </span>
-            <span className="text-neutral-500 text-sm">
-              {createdAt}
-            </span>
+                @{tweet?.author?.username}
+              </span>
+              <span className="text-neutral-500 text-sm">
+                {createdAt}
+              </span>
+            </div>
+            {user?._id === tweet?.author?._id && <DeleteModal accessToken={accessToken} tweet_id={tweet?._id} />}
           </div>
           <div className=" mt-1" onClick={goToPost}>
             {tweet?.content}

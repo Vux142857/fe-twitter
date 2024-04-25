@@ -22,7 +22,7 @@ const useSearch = (pageNumber: number, value: string, accessToken: string, filte
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             },
-            url: process.env.SERVER + `/search`,
+            url: process.env.NEXT_PUBLIC_SERVER + `/search`,
             params: { limit: LIMIT_POST, filter, skip: (pageNumber - 1) * LIMIT_POST, value },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {

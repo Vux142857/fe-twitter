@@ -1,6 +1,6 @@
 import fetcher from "@/libs/fetcher"
 
-const SERVER = process.env.SERVER as string
+const SERVER = process.env.NEXT_PUBLIC_SERVER as string
 
 class BookmarkServices {
     async getBookmark(accessToken: string, tweetId: string) {
