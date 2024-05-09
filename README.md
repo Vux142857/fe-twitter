@@ -12,6 +12,7 @@ messages.
 
 * Note: Please open link back-end first.
     - Back-end demo (AWS EC2): [Link](https://github.com/Vux142857/Twitter)
+    - Account demo: thanhvu7a1@gmail.com:admindemo
 
 [https://www.mytweet.one](https://www.mytweet.one)
 
