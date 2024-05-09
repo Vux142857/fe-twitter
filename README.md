@@ -1,4 +1,19 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a Front-end of Twitter-clone project
+
+## Twitter clone
+
+This web application incorporates fundamental functionalities like Twitter, including
+user authentication (login/register), tweet creation, retweet,tweet circle, mention, comment, like,
+bookmark, follow/unfollow, and direct messaging among users. It also integrates a notification
+system to inform users about activities such as new followers, likes, comments, and incoming
+messages.
+
+## Demo
+
+* Note: Please open link back-end first.
+    - Back-end demo (AWS EC2): [Link](https://github.com/Vux142857/Twitter)
+
+[https://www.mytweet.one](https://www.mytweet.one)
 
 ## Getting Started
 
@@ -14,7 +29,7 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
