@@ -37,10 +37,12 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
             return
         }
         try {
-            const res = await userServices.changePassword(password, params.token, confirmPassword)
-            if (res && res?.result) {
-                router.push('/')
+            const res = async () => {
+                return await userServices.changePassword(password, params.token, confirmPassword)
             }
+            res().then(() => {
+                router.push('/login')
+            })
         } catch (error) {
             console.log(error)
             setError(error?.message)
@@ -64,10 +66,8 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
                             </label>
                             <input name='confirm-password' type="password" onChange={(e) => { setConfirmPassword(e.target.value) }} placeholder="confirm password" className="input input-bordered" value={confirmPassword} required />
                         </div>
-                        {error && (<div role="alert" className="alert alert-error">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>{error}</span>
-                        </div>)}
+                        {error && <div className="form-control mt-6">
+                            <p className="text-red-500">{error}</p></div>}
                         <div className="form-control mt-6">
                             <button className="btn btn-primary" type='submit'>Change password</button>
                         </div>
