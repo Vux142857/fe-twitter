@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../components/Layout/Layout';
 import { useSession } from "next-auth/react";
-import NotificationList from '@/components/Layout/NotificationList';
+import NotificationList from '../../components/Layout/NotificationList';
 
 const NotificationsList = () => {
   const { data: session } = useSession();
