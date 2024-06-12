@@ -1,13 +1,13 @@
 'use client'
-import LayoutChat, { User } from "@/components/Chat/LayoutChat";
+import LayoutChat, { User } from "@/Components/Chat/LayoutChat";
 import socket, { notifySocket } from "@/libs/socket";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { Message } from "../page";
 import { useRouter } from 'next/navigation'
-import MessageElement from "@/components/Chat/MessageElement";
+import MessageElement from "@/Components/Chat/MessageElement";
 import conversationServices from "@/services/conversation.service";
-import Avatar from "@/components/Avatar";
+import Avatar from "@/Components/Avatar";
 import useMessages from "@/hooks/useGetMessages";
 import { NotificationConstructor, useSendNotify } from "@/hooks/useNotify";
 import { ActionNotify } from "@/constants/dataBody";

@@ -1,6 +1,6 @@
 'use client'
 import { memo, useCallback, useRef, useState } from "react";
-import MyModal from "@/components/Modals/MyModal";
+import MyModal from "@/Components/Modals/MyModal";
 import useFollowingList from "@/hooks/useGetFollowing";
 import Link from "next/link";
 
