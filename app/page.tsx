@@ -1,7 +1,7 @@
 'use client'
-import Layout from "@/Components/Layout/Layout";
-import Newfeeds from "@/Components/Layout/Newfeeds";
-import Form from "@/Components/Post/Form";
+import Layout from "@/components/Layout/Layout";
+import Newfeeds from "@/components/Layout/Newfeeds";
+import Form from "@/components/Post/Form";
 import useUserStore from "@/hooks/useMutateUser";
 import userServices from "@/services/user.services";
 import { useSession } from "next-auth/react";

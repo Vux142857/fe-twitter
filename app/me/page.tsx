@@ -1,9 +1,9 @@
 'use client'
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import Layout from "@/Components/Layout/Layout";
-import UserView from "@/Components/User/UserView";
-import TweetsByUser from "@/Components/Layout/TweetsByUser";
+import Layout from "@/components/Layout/Layout";
+import UserView from "@/components/User/UserView";
+import TweetsByUser from "@/components/Layout/TweetsByUser";
 import useUserStore from "@/hooks/useMutateUser";
 
 const MyProfile = () => {

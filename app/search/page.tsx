@@ -1,10 +1,10 @@
 'use client'
 import { useSession } from "next-auth/react";
 import { memo, useEffect, useState } from "react";
-import Layout from "@/Components/Layout/Layout";
-import Input from "@/Components/Input";
+import Layout from "@/components/Layout/Layout";
+import Input from "@/components/Input";
 import { SearchFilterQuery } from "@/constants/dataBody";
-import SearchResult from "@/Components/Layout/SearchResult";
+import SearchResult from "@/components/Layout/SearchResult";
 
 const MyProfile = () => {
     const { data: session } = useSession();
