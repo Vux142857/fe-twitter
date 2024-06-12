@@ -1,13 +1,13 @@
 'use client'
 import Image from 'next/image'
 import daisyImg from "@/public/daisy-flowers-blue-3840x2160-12883.jpeg"
-import TypingEffect from '@/components/TypingEffect'
+import TypingEffect from '@/Components/TypingEffect'
 import { useCallback, useEffect, useState } from 'react'
 import userServices from '@/services/user.services'
 import toast from 'react-toastify'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Button from '@/components/Button'
+import Button from '@/Components/Button'
 
 const ResendEmail = () => {
     const { data: session } = useSession();

@@ -1,8 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import Layout from '../../components/Layout/Layout';
+import Layout from '../../Components/Layout/Layout';
 import { useSession } from "next-auth/react";
-import NotificationList from '@/components/Layout/NotificationList';
+import NotificationList from '@/Components/Layout/NotificationList';
 
 const NotificationsList = () => {
   const { data: session } = useSession();

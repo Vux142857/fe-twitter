@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import LayoutChat, { User } from "@/components/Chat/LayoutChat";
+import LayoutChat, { User } from "@/Components/Chat/LayoutChat";
 import socket from "@/libs/socket";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
