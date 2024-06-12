@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
-import Button from '@/Components/Button';
+import Button from '@/components/Button';
 import { Bounce, toast } from "react-toastify";
 const Register = () => {
     const router = useRouter()

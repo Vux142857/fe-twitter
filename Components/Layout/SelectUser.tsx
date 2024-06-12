@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { memo, use, useCallback, useEffect, useRef, useState } from "react";
-import MyModal from "@/Components/Modals/MyModal";
-import Button from "@/Components/Button";
+import MyModal from "@/components/Modals/MyModal";
+import Button from "@/components/Button";
 import { useMentionStore, useTweetCircleStore } from "@/hooks/useChosenList";
 import useFollowerList from "@/hooks/useGetFollowerList";
 

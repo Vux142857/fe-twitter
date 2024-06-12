@@ -1,4 +1,4 @@
-import Sidebar from "@/Components/Layout/Sidebar";
+import Sidebar from "@/components/Layout/Sidebar";
 import { ActionNotify } from "@/constants/dataBody";
 import { notifySocket } from "@/libs/socket";
 import Link from "next/link";
