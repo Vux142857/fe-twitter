@@ -35,11 +35,11 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
       href: "/",
       icon: BsHouseFill,
     },
-    // {
-    //   label: "Notifications",
-    //   href: "/notifications",
-    //   icon: BsBellFill,
-    // },
+    {
+      label: "Notifications",
+      href: "/notifications",
+      icon: BsBellFill,
+    },
     {
       label: "Search",
       href: "/search",
@@ -68,24 +68,21 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
         <div className="flex flex-col items-center">
           <div className="space-y-2 lg:w-[180px]">
             <SidebarLogo />
-            {isLogin ? (
-              <>
-                {
-                  items.map((item) => (
-                    <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
-                  ))
-                }
-                <>
-                  <div className="lg:hidden"><SidebarItem onClick={() => { router.push('/notifications') }} label="Notifications" icon={BsBellFill} /></div>
-                  <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />
-                  <SidebarTweetButton isLogin={isLogin} />
-                </>
-              </>
-            ) :
-              <>
+            <>
+              {
+                items.map((item) => (
+                  <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
+                ))
+              }
+              <div className="lg:hidden"><SidebarItem onClick={() => { router.push('/notifications') }} label="Notifications" icon={BsBellFill} /></div>
+              {isLogin ? (
+                <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />
+              ) : (
                 <SidebarItem onClick={() => { router.push('/login') }} label="Login" icon={BiLogIn} />
-              </>
-            }
+              )
+              }
+              <SidebarTweetButton isLogin={isLogin} />
+            </>
           </div>
         </div>
       </div>

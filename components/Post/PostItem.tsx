@@ -14,6 +14,7 @@ import tweetServices, { TweetReqBody } from '@/services/tweet.service';
 import { useSendNotify } from '@/hooks/useNotify';
 import DeleteModal from '../Modals/DeleteModal';
 import { Bounce, toast } from 'react-toastify';
+import Carousel from './Carousel';
 interface PostItemProps {
   data: dataProps;
   accessToken?: string;
@@ -286,34 +287,15 @@ const PostItem: React.FC<PostItemProps> = ({ data, accessToken, user, inPost }) 
             {tweet?.content}
           </div>
           <div className="grid grid-cols-4 gap-1 m-2">
-            {tweet && tweet?.media && tweet.media.map((mediaItem) => (
-              <div key={mediaItem._id} className={mediaItem.type === MediaType.Video ? "col-span-4" : ""}>
-                {mediaItem.type === MediaType.Video && (
-                  <Player url={mediaItem.url} username={tweet?.author?.username} />
-                )}
-                {mediaItem.type === MediaType.Image && (
-                  <div>
-                    <dialog id={mediaItem._id} className="modal modal-bottom sm:modal-middle">
-                      <div className="modal-box">
-                        <img src={mediaItem.url} className='h-full w-auto' alt={`Image from ${tweet?.author?.username}`} />
-                        <div className="modal-action">
-                          <form method="dialog">
-                            {/* if there is a button in form, it will close the modal */}
-                            <button className="btn">Close</button>
-                          </form>
-                        </div>
-                      </div>
-                    </dialog>
-                    <Image
-                      src={mediaItem.url}
-                      alt={`Image from ${tweet?.author?.username}`}
-                      width={200}
-                      height={200}
-                      onClick={() => (document.getElementById(`${mediaItem._id}`) as HTMLDialogElement).showModal()} />
-                  </div>
-                )}
-              </div>
-            ))}
+
+            <div className='col-span-4'>
+              {tweet && tweet?.media && tweet.media[0]?.type === MediaType.Video && (
+                <Player url={tweet.media[0].url} username={tweet?.author?.username} />
+              )}
+              {tweet && tweet?.media && tweet.media[0]?.type === MediaType.Image && tweet.media.length > 0 && (
+                <Carousel imgs={tweet.media} author={tweet?.author?.username} />
+              )}
+            </div>
           </div>
           <div className="flex flex-row items-center mt-3 gap-10">
             {!isComment && <div

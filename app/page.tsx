@@ -35,7 +35,7 @@ export default function Home() {
 
   return (
     <Layout labelHeader="Home" userSession={userSession}>
-      {userSession && <Form isComment={false} user={userSession} />}
+      <Form isComment={false} user={userSession} />
       <Newfeeds />
     </Layout>
   );
