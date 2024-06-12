@@ -1,4 +1,4 @@
-import UserHero from "@/Components/User/UserHero";
+import UserHero from "@/components/User/UserHero";
 import UserBio from "./UserBio";
 import { UserProfile } from "@/hooks/useMutateUser";
 import { memo } from "react";

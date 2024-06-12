@@ -2,7 +2,7 @@
 'use client'
 import Image from 'next/image'
 import daisyImg from "@/public/daisy-flowers-blue-3840x2160-12883.jpeg"
-import TypingEffect from '@/Components/TypingEffect'
+import TypingEffect from '@/components/TypingEffect'
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import userServices from '@/services/user.services'
