@@ -1,8 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import Layout from '../../components/Layout/Layout';
+import Layout from '../../Components/Layout/Layout';
 import { useSession } from "next-auth/react";
-import BookmarkList from '@/components/Layout/BookmarkList';
+import BookmarkList from '@/Components/Layout/BookmarkList';
 
 const BookmarksList = () => {
   const { data: session } = useSession();

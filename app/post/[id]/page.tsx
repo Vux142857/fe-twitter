@@ -1,8 +1,8 @@
 'use client'
-import Comments from "@/components/Layout/Comments";
-import Layout from "@/components/Layout/Layout";
-import Form from "@/components/Post/Form";
-import PostItem, { dataProps } from "@/components/Post/PostItem";
+import Comments from "@/Components/Layout/Comments";
+import Layout from "@/Components/Layout/Layout";
+import Form from "@/Components/Post/Form";
+import PostItem, { dataProps } from "@/Components/Post/PostItem";
 import useUserStore from "@/hooks/useMutateUser";
 import tweetServices from "@/services/tweet.service";
 import { useSession } from "next-auth/react";
