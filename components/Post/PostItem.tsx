@@ -9,7 +9,6 @@ import { BsFillBookmarkFill, BsBookmark } from 'react-icons/bs';
 import bookmarkServices from '@/services/bookmark.services';
 import { ActionNotify, Media, MediaType, TweetAudience, TweetType } from '@/constants/dataBody';
 import Player from '../Player';
-import Image from 'next/image';
 import tweetServices, { TweetReqBody } from '@/services/tweet.service';
 import { useSendNotify } from '@/hooks/useNotify';
 import DeleteModal from '../Modals/DeleteModal';

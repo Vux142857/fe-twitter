@@ -61,7 +61,7 @@ const Layout = ({
         }
     }, [userSession]);
     return (
-        <div className="h-screen relative">
+        <div className="h-screen">
             <div className="container h-full max-w-20xl mx-auto xl:px-30">
                 <div className="grid h-full grid-cols-6 lg:grid-cols-4 relative">
                     <Sidebar userSession={userSession} />
