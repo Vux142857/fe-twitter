@@ -29,6 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
     clearSession(null)
     setIsLogin(false)
   }, [userSession])
+
   const items = [
     {
       label: "Home",
@@ -74,7 +75,6 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
                   <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
                 ))
               }
-              <div className="lg:hidden"><SidebarItem onClick={() => { router.push('/notifications') }} label="Notifications" icon={BsBellFill} /></div>
               {isLogin ? (
                 <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />
               ) : (
