@@ -46,6 +46,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user, author }) => {
   const [files, setFiles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isImage, setTypeMedia] = useState(false);
+
   const handleMediaChange = useCallback((event) => {
     event.stopPropagation()
     const filesList: File[] = Array.from(event.target.files);
@@ -234,7 +235,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user, author }) => {
                 </label>
                 <Button
                   onClick={() => onSubmit()}
-                  disabled={isLoading || content.length === 0}
+                  disabled={isLoading || (content.length === 0 && files?.length === 0)}
                   label={isComment ? 'Comment' : 'Tweet'}
                 />
               </div>
