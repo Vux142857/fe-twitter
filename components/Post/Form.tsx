@@ -1,5 +1,5 @@
 'use client'
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import Avatar from "../Avatar";
 import Button from "../Button";
 import axios from "axios";
@@ -98,7 +98,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user, author }) => {
           temp.push(mediaData)
         }
         body.media = temp;
-        body.tweet_circle = getTweetCircle;
+        body.tweet_circle = getTweetCircle || [];
         if (body.tweet_circle.length > 0) {
           body.audience = TweetAudience.TweetCircle;
         }
@@ -119,6 +119,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user, author }) => {
         setBody(null);
         setContent('');
         setFiles([]);
+        setHashtag('');
         clearMention();
         clearTweetCircle();
         router.refresh();
@@ -127,9 +128,10 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user, author }) => {
         toast.error('Something went wrong');
       }).finally(() => {
         setIsLoading(false);
+        window.location.reload()
       });
     } else {
-      body.tweet_circle = getTweetCircle;
+      body.tweet_circle = getTweetCircle || [];
       body.mention = getMention;
       body.content = content;
       body.hashtag = hashtagList;
@@ -150,6 +152,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user, author }) => {
           setBody(null);
           setContent('');
           setFiles([]);
+          setHashtag('');
           clearMention();
           clearTweetCircle();
           router.refresh();
@@ -158,17 +161,18 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user, author }) => {
           toast.error('Something went wrong');
         }).finally(() => {
           setIsLoading(false);
+          window.location.reload();
         });
     }
   }, [body, isComment, files, getTweetCircle, getMention, content, isImage, hashtagList, user]);
 
-
-  const handleHashtag = useCallback((e) => {
-    const value = e.target.value;
-    setHashtag(value);
+  useEffect(() => {
+    const value = hashtag.replace(/[^\w,]/g, '');
     if (value && value.includes(',')) {
       const arrayHashtag = value.split(',');
       setHashtagList(arrayHashtag);
+    } else if (value && !value.includes(',')) {
+      setHashtagList([value]);
     }
   }, [hashtag])
 
@@ -187,7 +191,7 @@ const Form: React.FC<FormProps> = ({ isComment, postId, user, author }) => {
               {!isComment && <Textarea
                 placeholder="Add hashtag ex: #hashtag"
                 value={hashtag}
-                onChange={(e) => handleHashtag(e)}
+                onChange={(e) => setHashtag(e.target.value)}
               />}
               <div className="flex items-center flex-row gap-2">
                 {user && (

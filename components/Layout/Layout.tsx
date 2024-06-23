@@ -31,13 +31,13 @@ const Layout = ({
                 const { from, action, link } = data;
                 let msg
                 if (action == ActionNotify.MESSAGE) {
-                    msg = <Link className='text-secondary text-bold' href={link}>{from} has send message to you!</Link>
+                    msg = <Link className='text-bold' href={link}><p className="font-bold">{from}</p> has send message to you!</Link>
                 } else if (action == ActionNotify.TWEET) {
-                    msg = <Link className='text-secondary text-bold' href={link}>{from} has created new tweet!</Link>
+                    msg = <Link className='text-bold' href={link}><p className="font-bold">{from}</p> has created new tweet!</Link>
                 } else if (action == ActionNotify.FOLLOW) {
-                    msg = <Link className='text-secondary text-bold' href={link}>{from} has followed you!</Link>
+                    msg = <Link className='text-bold' href={link}><p className="font-bold">{from}</p> has followed you!</Link>
                 } else {
-                    msg = <Link className='text-secondary text-bold' href={link}>{from} has {action}d your tweet!</Link>
+                    msg = <Link className='text-bold' href={link}><p className="font-bold">{from}</p> has {action}d your tweet!</Link>
                 }
                 toast(msg, {
                     position: "top-right",

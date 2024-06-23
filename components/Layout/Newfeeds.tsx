@@ -11,13 +11,16 @@ const Newfeeds = () => {
   const [accessToken, setAccessToken] = useState('')
   const currentUser = useUserStore((state: any) => state.userProfile)
   const [pageNumber, setPageNumber] = useState(1)
+
   useEffect(() => {
     if (session) {
       setAccessToken(session.user.accessToken)
     }
   }, [session])
-  const { loading, newfeeds, error, hasMore } = useNewfeeds(pageNumber)
+
+  const { loading, newfeeds, hasMore } = useNewfeeds(pageNumber)
   const observer = useRef<IntersectionObserver | undefined>()
+
   const lastNewfeedsElementRef = useCallback((node: HTMLDivElement | null) => {
     if (loading) return
     if (observer.current) observer.current.disconnect()
@@ -30,6 +33,7 @@ const Newfeeds = () => {
     })
     if (node) observer.current.observe(node)
   }, [loading, hasMore])
+
   useLayoutEffect(() => {
     if (pageNumber > 8) {
       redirect('/')

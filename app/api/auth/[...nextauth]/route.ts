@@ -220,7 +220,7 @@ async function refreshAccessToken(refreshToken: string, token: JWT) {
     }
     return newToken
   } catch (error) {
-    console.log('Error refreshing access token:', error)
+    // console.log('Error refreshing access token:', error)
     return {
       ...token,
       error: "RefreshAccessTokenError",

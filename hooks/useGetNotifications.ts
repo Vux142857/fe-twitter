@@ -17,11 +17,10 @@ const useGetNotification = (pageNumber: number, accessToken: string) => {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
             },
-            url: process.env.NEXT_PUBLIC_WORKER + `/notitication`,
+            url: process.env.NEXT_PUBLIC_WORKER + `/notification`,
             params: { limit: LIMIT_POST, skip },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then(res => {
-            console.log(res.data.result)
             if (res.data.result.length > 0) {
                 setNotification(prev => {
                     return [...new Set([...prev, ...res?.data?.result])]

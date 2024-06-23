@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { RiDeleteBack2Fill } from "react-icons/ri";
 import Button from "../Button";
 import tweetServices from "@/services/tweet.service";
@@ -42,6 +42,7 @@ const DeleteModal = ({ accessToken, tweet_id }: { accessToken: string, tweet_id:
             });
         }
     }, [accessToken, tweet_id])
+    
     return (
         <div className=''>
             <dialog id={tweet_id} className="modal modal-bottom sm:modal-middle">
@@ -63,4 +64,4 @@ const DeleteModal = ({ accessToken, tweet_id }: { accessToken: string, tweet_id:
     );
 }
 
-export default DeleteModal;
+export default memo(DeleteModal);

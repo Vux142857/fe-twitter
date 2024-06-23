@@ -6,7 +6,7 @@ import NotificationItem from "../Post/NotificationItem"
 
 const NotificationList = ({ accessToken }: { accessToken: string }) => {
   const [pageNumber, setPageNumber] = useState(1)
-  const { loading, notitications, error, hasMore } = useGetNotification(pageNumber, accessToken)
+  const { loading, notitications, hasMore } = useGetNotification(pageNumber, accessToken)
   const observer = useRef<IntersectionObserver | undefined>()
   const lastNewfeedsElementRef = useCallback((node: HTMLDivElement | null) => {
     if (loading) return
