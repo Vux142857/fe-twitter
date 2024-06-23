@@ -2,22 +2,76 @@
 import { useRouter } from "next/navigation";
 import SidebarItem from "./SidebarItem";
 import { BsBellFill } from "react-icons/bs";
+import Avatar from "../Avatar";
+import test from "node:test";
+import Button from "../Button";
 
 const RightBar = () => {
-    const router = useRouter();
-    return (
-        <>
-            <div className="h-2/4 w-94 lg:block col-span-1 fixed right-0 hidden  ">
-                {/* <div className="flex flex-col items-center border-dotted border-2 border-base-300 h-full w">
+  const router = useRouter();
+  return (
+    <>
+      <div className="h-full p-4 col-span-1 w-full hidden lg:block">
+        <div className="h-full flex flex-col gap-4">
+          {/* Trends for you */}
+          <div className="border-2 flex flex-col gap-2 rounded-lg overflow-hidden">
+            <h1 className="font-bold text-xl px-4 py-4">Trends for you</h1>
+            <ul className="flex flex-col gap-2">
+              <li className="flex flex-col gap-2 hover:bg-gray-300 p-4 cursor-pointer">
+                <p className="font-bold">ABC</p>
+                <span>123 posts</span>
+              </li>
+              <li className="flex flex-col gap-2 hover:bg-gray-300 p-4 cursor-pointer">
+                <p className="font-bold">ABC</p>
+                <span>123 posts</span>
+              </li>
+            </ul>
+            <a className="px-4 py-2 cursor-pointer hover:bg-gray-200">See more</a>
+          </div>
+          {/* Who to follow */}
+          <div className="border-2 flex flex-col gap-2 rounded-lg overflow-hidden">
+            <h1 className="font-bold text-xl px-4 py-4">Who to follow</h1>
+            <ul className="flex flex-col gap-2">
+              <li className="flex flex-col gap-2 hover:bg-gray-300 p-4 cursor-pointer">
+                <div className="flex flex-row justify-between">
+                  <div className="flex flex-row items-center gap-2">
+                    <Avatar username={"Test"} avatarURL={""} isLarge={false} />
+                    <div className="flex flex-col">
+                      <p
+                        onClick={() => router.push("/profile")}
+                        className="
+                      font-semibold 
+                      cursor-pointer 
+                      hover:underline
+                  ">
+                        {"Test"}
+                      </p>
+                      <span
+                        onClick={() => router.push("/profile")}
+                        className="
+                      text-neutral-500
+                      cursor-pointer
+                      hover:underline
+                      hidden
+                      md:block
+                  ">
+                        @{"test"}
+                      </span>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => { }}
+                    label={'Follow'}
+                    secondary={false}
+                  />
                 </div>
-                <div className="space-y-2 lg:w-[180px]">
-                    <SidebarItem onClick={() => { router.push('/notifications') }} label="Notifications" icon={BsBellFill} />
-                </div> */}
-            </div>
-            <div className="h-full col-span-1">
-            </div>
-        </>
-    );
+              </li>
+            </ul>
+            <a className="px-4 py-2 cursor-pointer hover:bg-gray-200">See more</a>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 export default RightBar;
