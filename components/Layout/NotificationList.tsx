@@ -1,6 +1,5 @@
 'use client'
 import { memo, useCallback, useRef, useState } from "react"
-import BookmarkItem from '../Post/BookmarkItem'
 import useGetNotification from "@/hooks/useGetNotifications"
 import NotificationItem from "../Post/NotificationItem"
 
