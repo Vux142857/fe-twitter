@@ -103,14 +103,6 @@ const Login = () => {
                         </div>
                     </form>
                 </div>
-                <div className="text-center lg:text-left static">
-                    <div className="card bg-base-content shadow-xl image-full">
-                        <figure><Image src={daisyImg} alt='Daisy flower' ></Image></figure>
-                        <div className="card-body">
-                            <TypingEffect text='WELCOME BACK HAVE A GOOD DAY <3' />
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     )

@@ -64,31 +64,25 @@ const Sidebar: React.FC<SidebarProps> = ({ userSession }) => {
     },
   ];
   return (
-    <>
-      <div className="h-full col-span-1 fixed">
-        <div className="flex flex-col items-center">
-          <div className="space-y-2 lg:w-[180px]">
-            <SidebarLogo />
-            <>
-              {
-                items.map((item) => (
-                  <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
-                ))
-              }
-              {isLogin ? (
-                <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />
-              ) : (
-                <SidebarItem onClick={() => { router.push('/login') }} label="Login" icon={BiLogIn} />
-              )
-              }
-              <SidebarTweetButton isLogin={isLogin} />
-            </>
-          </div>
-        </div>
+    <div className="w-full" >
+      <div className="lg:w-full flex flex-col items-start justify-center gap-2 sticky top-0 px-20">
+        <SidebarLogo />
+        <>
+          {
+            items.map((item) => (
+              <SidebarItem key={item.href} href={item.href} label={item.label} icon={item.icon} />
+            ))
+          }
+          {isLogin ? (
+            <SidebarItem onClick={handleLogout} label="Logout" icon={BiLogOut} />
+          ) : (
+            <SidebarItem onClick={() => { router.push('/login') }} label="Login" icon={BiLogIn} />
+          )
+          }
+          <SidebarTweetButton isLogin={isLogin} />
+        </>
       </div>
-      <div className="h-full col-span-1">
-      </div>
-    </>
+    </div>
   );
 };
 

@@ -61,16 +61,12 @@ const Layout = ({
         }
     }, [userSession]);
     return (
-        <div className="h-screen">
-            <div className="container h-full w-full mx-auto">
-                <div className="grid h-full grid-cols-6 lg:grid-cols-4 relative">
-                    <Sidebar userSession={userSession} />
-                    <div className="h-full bg-primary col-span-5 lg:col-span-2 border-x-[1px] border-neutral-800 relative">
-                        {children}
-                    </div>
-                    <RightBar />
-                </div>
+        <div className="grid h-screen grid-cols-6 lg:grid-cols-4 relative overflow-visible">
+            <Sidebar userSession={userSession} />
+            <div className="h-full bg-primary col-span-5 lg:col-span-2 border-x-[1px] border-neutral-800 relative">
+                {children}
             </div>
+            <RightBar />
         </div>);
 }
 

@@ -18,6 +18,7 @@ const SidebarTweetButton: React.FC<SidebarTweetButtonProps> = ({ isLogin }) => {
   return (
     <div
       onClick={onClick}
+      className="w-full"
     >
       <div className="flex items-center justify-center p-4 mt-6 transition rounded-full cursor-pointer lg:hidden h-14 w-14 hover:bg-opacity-80 border-2">
         <Link href='/'>
